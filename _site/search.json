@@ -33,5 +33,82 @@
     "title": "Hands-on Exercise 1",
     "section": "",
     "text": "exam_data &lt;- read_csv(\"data/Exam_data.csv\")\n\nRows: 322 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): ID, CLASS, GENDER, RACE\ndbl (3): ENGLISH, MATHS, SCIENCE\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#using-stat_summary",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#using-stat_summary",
+    "title": "Hands-on Exercise 1",
+    "section": "using stat_summary()",
+    "text": "using stat_summary()\n\nggplot(data=exam_data, \n       aes(y = MATHS, x= GENDER)) +\n  geom_boxplot() +\n  stat_summary(geom = \"point\",       \n               fun.y=\"mean\",         \n               colour =\"red\",        \n               size=4)               \n\nWarning: The `fun.y` argument of `stat_summary()` is deprecated as of ggplot2 3.3.0.\nℹ Please use the `fun` argument instead."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#using-geom",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#using-geom",
+    "title": "Hands-on Exercise 1",
+    "section": "using geom()",
+    "text": "using geom()\n\nggplot(data=exam_data, \n       aes(y = MATHS, x= GENDER)) +\n  geom_boxplot() +\n  geom_point(stat=\"summary\",        \n             fun.y=\"mean\",           \n             colour =\"red\",          \n             size=4)              \n\nWarning in geom_point(stat = \"summary\", fun.y = \"mean\", colour = \"red\", :\nIgnoring unknown parameters: `fun.y`\n\n\nNo summary function supplied, defaulting to `mean_se()`"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#using-default-smoothing-loess",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#using-default-smoothing-loess",
+    "title": "Hands-on Exercise 1",
+    "section": "Using default smoothing: loess",
+    "text": "Using default smoothing: loess\n\nggplot(data=exam_data, \n       aes(x= MATHS, y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(size=0.5)           \n\nWarning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.\nℹ Please use `linewidth` instead.\n\n\n`geom_smooth()` using method = 'loess' and formula = 'y ~ x'"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#using-linear-model-smoothing",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#using-linear-model-smoothing",
+    "title": "Hands-on Exercise 1",
+    "section": "Using linear model smoothing",
+    "text": "Using linear model smoothing\n\nggplot(data=exam_data, \n       aes(x= MATHS, \n           y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(method=lm, \n              size=0.5)           \n\n`geom_smooth()` using formula = 'y ~ x'"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_gray",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_gray",
+    "title": "Hands-on Exercise 1",
+    "section": "theme_gray()",
+    "text": "theme_gray()\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_gray()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_classic",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_classic",
+    "title": "Hands-on Exercise 1",
+    "section": "theme_classic()",
+    "text": "theme_classic()\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_classic()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_minimal",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_minimal",
+    "title": "Hands-on Exercise 1",
+    "section": "theme_minimal()",
+    "text": "theme_minimal()\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_minimal()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#vertical",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#vertical",
+    "title": "Hands-on Exercise 1",
+    "section": "Vertical",
+    "text": "Vertical\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#horizontal",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#horizontal",
+    "title": "Hands-on Exercise 1",
+    "section": "Horizontal",
+    "text": "Horizontal\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar() +\n  coord_flip()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#original",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#original",
+    "title": "Hands-on Exercise 1",
+    "section": "Original",
+    "text": "Original\n\nggplot(data=exam_data, \n       aes(x= MATHS, y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(method=lm, size=0.5) \n\n`geom_smooth()` using formula = 'y ~ x'"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#change-limit-to-x-100-y-100",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#change-limit-to-x-100-y-100",
+    "title": "Hands-on Exercise 1",
+    "section": "Change limit to x = 100, y = 100",
+    "text": "Change limit to x = 100, y = 100\n\nggplot(data=exam_data, \n       aes(x= MATHS, y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(method=lm, \n              size=0.5) +  \n  coord_cartesian(xlim=c(0,100),\n                  ylim=c(0,100))    \n\n`geom_smooth()` using formula = 'y ~ x'"
   }
 ]
