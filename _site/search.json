@@ -7,13 +7,6 @@
     "text": "Welcome to ISSS608 Visual Analytics and Applications. In this website, you will find me coursework prepared for this course."
   },
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "About this site\n\n1 + 1\n\n[1] 2"
-  },
-  {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
     "title": "Hands-on Exercise 1",
@@ -63,27 +56,6 @@
     "text": "Using linear model smoothing\n\nggplot(data=exam_data, \n       aes(x= MATHS, \n           y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(method=lm, \n              size=0.5)           \n\n`geom_smooth()` using formula = 'y ~ x'"
   },
   {
-    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_gray",
-    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_gray",
-    "title": "Hands-on Exercise 1",
-    "section": "theme_gray()",
-    "text": "theme_gray()\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_gray()"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_classic",
-    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_classic",
-    "title": "Hands-on Exercise 1",
-    "section": "theme_classic()",
-    "text": "theme_classic()\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_classic()"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_minimal",
-    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_minimal",
-    "title": "Hands-on Exercise 1",
-    "section": "theme_minimal()",
-    "text": "theme_minimal()\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_minimal()"
-  },
-  {
     "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#vertical",
     "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#vertical",
     "title": "Hands-on Exercise 1",
@@ -110,5 +82,47 @@
     "title": "Hands-on Exercise 1",
     "section": "Change limit to x = 100, y = 100",
     "text": "Change limit to x = 100, y = 100\n\nggplot(data=exam_data, \n       aes(x= MATHS, y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(method=lm, \n              size=0.5) +  \n  coord_cartesian(xlim=c(0,100),\n                  ylim=c(0,100))    \n\n`geom_smooth()` using formula = 'y ~ x'"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_gray",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_gray",
+    "title": "Hands-on Exercise 1",
+    "section": "theme_gray()",
+    "text": "theme_gray()\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_gray()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_classic",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_classic",
+    "title": "Hands-on Exercise 1",
+    "section": "theme_classic()",
+    "text": "theme_classic()\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_classic()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_minimal",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html#theme_minimal",
+    "title": "Hands-on Exercise 1",
+    "section": "theme_minimal()",
+    "text": "theme_minimal()\n\nggplot(data=exam_data, \n       aes(x=RACE)) +\n  geom_bar() +\n  coord_flip() +\n  theme_minimal()"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site\n\n1 + 1\n\n[1] 2"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex01/In-class_Ex01.html",
+    "href": "In-class_Ex/In-class_Ex01/In-class_Ex01.html",
+    "title": "In-Class Exercise 1",
+    "section": "",
+    "text": "In the code chunk below, p_load() of pacman package is used to load tidyverse family of packages.\n\npacman::p_load(tidyverse)\n\n\nrealis &lt;- read_csv(\"data/realis2019.csv\")\n\n\nrealis.csv &lt;- read.csv(\"data/realis2019.csv\")\n\n\nggplot(data = realis, \n       aes(x = `Unit Price ($ psm)`)) +\n  geom_histogram()"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex01/In-class_Ex01.html#loading-r-packages",
+    "href": "In-class_Ex/In-class_Ex01/In-class_Ex01.html#loading-r-packages",
+    "title": "In-Class Exercise 1",
+    "section": "",
+    "text": "In the code chunk below, p_load() of pacman package is used to load tidyverse family of packages.\n\npacman::p_load(tidyverse)\n\n\nrealis &lt;- read_csv(\"data/realis2019.csv\")\n\n\nrealis.csv &lt;- read.csv(\"data/realis2019.csv\")\n\n\nggplot(data = realis, \n       aes(x = `Unit Price ($ psm)`)) +\n  geom_histogram()"
   }
 ]
