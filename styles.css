@@ -1,1 +1,23 @@
 /* css styles */
+/* General body styling */
+body {
+  font-family: Arial, sans-serif;
+}
+
+/* Navigation bar styling */
+.navbar {
+  background-color: #333;
+  color: #50E2E4;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+}
+
+.navbar a {
+  color: #50E2E4;
+  padding: 10px 20px;
+  text-decoration: none;
+  display: block;
+}
+
+
