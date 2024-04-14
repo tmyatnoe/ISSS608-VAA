@@ -1,6 +1,13 @@
 ---
 title: "Hands-on Exercise 1"
 author: "Thet Myat Noe"
+date: "April 11, 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
 ---
 
 # Getting Started
@@ -45,6 +52,7 @@ ggplot(data=exam_data,
   scale_y_continuous(NULL,           
                      breaks = NULL) 
 ```
+
 # Plotting a histogram
 
 ```{r}
@@ -138,37 +146,44 @@ ggplot(data=exam_data,
 ```
 
 # Adding mean point to box plot
+
 ## using stat_summary()
+
 ```{r}
 ggplot(data=exam_data, 
        aes(y = MATHS, x= GENDER)) +
   geom_boxplot() +
   stat_summary(geom = "point",       
-               fun.y="mean",         
+               fun ="mean",         
                colour ="red",        
                size=4)               
 ```
+
 ## using geom()
+
 ```{r}
 ggplot(data=exam_data, 
        aes(y = MATHS, x= GENDER)) +
   geom_boxplot() +
   geom_point(stat="summary",        
-             fun.y="mean",           
+             fun="mean",           
              colour ="red",          
              size=4)              
 ```
 
 # Adding a best fit curve on a scatterplot
+
 ## Using default smoothing: loess
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x= MATHS, y=ENGLISH)) +
   geom_point() +
-  geom_smooth(size=0.5)           
+  geom_smooth(linewidth =0.5)           
 ```
 
 ## Using linear model smoothing
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x= MATHS, 
@@ -179,6 +194,7 @@ ggplot(data=exam_data,
 ```
 
 # Plotting a plots a trellis plot using facet-wrap()
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x= MATHS)) +
@@ -187,6 +203,7 @@ ggplot(data=exam_data,
 ```
 
 # Plotting a plots a trellis plot using facet_grid()
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x= MATHS)) +
@@ -194,14 +211,18 @@ ggplot(data=exam_data,
     facet_grid(~ CLASS)         
 ```
 
-# Flipping the horizontal bar chart into vertical bar chart 
+# Flipping the vertical bar chart into horizontal bar chart
+
 ## Vertical
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x=RACE)) +
   geom_bar()
 ```
+
 ## Horizontal
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x=RACE)) +
@@ -209,15 +230,19 @@ ggplot(data=exam_data,
   coord_flip()   
 ```
 
-# Changing the y- and x-axis range 
+# Changing the y- and x-axis range
+
 ## Original
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x= MATHS, y=ENGLISH)) +
   geom_point() +
   geom_smooth(method=lm, size=0.5) 
 ```
+
 ## Change limit to x = 100, y = 100
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x= MATHS, y=ENGLISH)) +
@@ -227,8 +252,11 @@ ggplot(data=exam_data,
   coord_cartesian(xlim=c(0,100),
                   ylim=c(0,100))    
 ```
-# Plotting a bar chart using theme 
+
+# Plotting a bar chart using theme
+
 ## theme_gray()
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x=RACE)) +
@@ -238,6 +266,7 @@ ggplot(data=exam_data,
 ```
 
 ## theme_classic()
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x=RACE)) +
@@ -247,6 +276,7 @@ ggplot(data=exam_data,
 ```
 
 ## theme_minimal()
+
 ```{r}
 ggplot(data=exam_data, 
        aes(x=RACE)) +
