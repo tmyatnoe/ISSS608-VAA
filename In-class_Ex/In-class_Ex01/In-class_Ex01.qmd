@@ -9,6 +9,7 @@ execute:
   warning: false
   freeze: true
 ---
+
 ## Loading R Packages
 
 In the code chunk below, [`p_load()`](https://www.rdocumentation.org/packages/pacman/versions/0.5.1/topics/p_load) of [`pacman`](https://trinker.github.io/pacman/vignettes/Introduction_to_pacman.html) package is used to load tidyverse family of packages.
@@ -16,7 +17,6 @@ In the code chunk below, [`p_load()`](https://www.rdocumentation.org/packages/pa
 ```{r}
 pacman::p_load(tidyverse)
 ```
-
 
 ```{r}
 realis <- read_csv("data/realis2019.csv")
