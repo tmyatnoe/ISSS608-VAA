@@ -1,0 +1,58 @@
+---
+title: "Take-home Exercise 1"
+subtitle: "Creating data visualisation beyond default"
+author: "Thet Myat Noe"
+date: "April 16, 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+---
+
+# Overview
+
+## Setting the scene
+
+There are two major residential property market in Singapore, namely public and private housing. Public housing aims to meet the basic need of the general public with monthly household income less than or equal to S\$14,000. For families with monthly household income more than S\$14,000, they need to turn to the private residential market.
+
+## Task
+
+Analyse realis property data to reveal the private residential market and sub-markets of Singapore for the 1st quarter of 2024.
+
+# Getting Started
+
+## Installing and loading the required libraries
+
+```{r}
+pacman::p_load(ggrepel, patchwork, 
+               ggthemes, hrbrthemes,
+               tidyverse)
+```
+
+## Importing Data
+
+```{r}
+realis1 <- read_csv("data/ResidentialTransaction20240308160536.csv")
+realis2 <- read_csv("data/ResidentialTransaction20240308160736.csv")
+realis3 <- read_csv("data/ResidentialTransaction20240308161009.csv")
+realis4 <- read_csv("data/ResidentialTransaction20240308161109.csv")
+realis5 <- read_csv("data/ResidentialTransaction20240414220633.csv")
+
+```
+
+## Data Pre-processing
+
+### Combining all quarter data into one file
+All realis data from different quarters are merged into one file.
+
+```{r}
+realis_merge <- rbind(realis1, realis2, realis3, realis4, realis5)
+```
+
+### Checking for duplicates
+
+```{r}
+realis_merge[duplicated(realis_merge),]
+```

@@ -1,0 +1,15 @@
+{
+  "hash": "cc9e761829cc599bf0bb1329695aebfd",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Take-home Exercise 1\"\nsubtitle: \"Creating data visualisation beyond default\"\nauthor: \"Thet Myat Noe\"\ndate: \"April 16, 2024\"\ndate-modified: \"last-modified\"\nexecute:\n  eval: true\n  echo: true\n  warning: false\n  freeze: true\n---\n\n\n# Overview\n\n## Setting the scene\n\nThere are two major residential property market in Singapore, namely public and private housing. Public housing aims to meet the basic need of the general public with monthly household income less than or equal to S\\$14,000. For families with monthly household income more than S\\$14,000, they need to turn to the private residential market.\n\n## Task\n\nAnalyse realis property data to reveal the private residential market and sub-markets of Singapore for the 1st quarter of 2024.\n\n# Getting Started\n\n## Installing and loading the required libraries\n\n\n::: {.cell}\n\n```{.r .cell-code}\npacman::p_load(ggrepel, patchwork, \n               ggthemes, hrbrthemes,\n               tidyverse)\n```\n:::\n\n\n## Importing Data\n\n\n::: {.cell}\n\n```{.r .cell-code}\nrealis1 <- read_csv(\"data/ResidentialTransaction20240308160536.csv\")\nrealis2 <- read_csv(\"data/ResidentialTransaction20240308160736.csv\")\nrealis3 <- read_csv(\"data/ResidentialTransaction20240308161009.csv\")\nrealis4 <- read_csv(\"data/ResidentialTransaction20240308161109.csv\")\nrealis5 <- read_csv(\"data/ResidentialTransaction20240414220633.csv\")\n```\n:::\n\n\n## Data Pre-processing\n\n### Combining all quarter data into one file\nAll realis data from different quarters are merged into one file.\n\n\n::: {.cell}\n\n```{.r .cell-code}\nrealis_merge <- rbind(realis1, realis2, realis3, realis4, realis5)\n```\n:::\n\n\n### Checking for duplicates\n\n\n::: {.cell}\n\n```{.r .cell-code}\nrealis_merge[duplicated(realis_merge),]\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\n# A tibble: 0 × 21\n# ℹ 21 variables: Project Name <chr>, Transacted Price ($) <dbl>,\n#   Area (SQFT) <dbl>, Unit Price ($ PSF) <dbl>, Sale Date <chr>,\n#   Address <chr>, Type of Sale <chr>, Type of Area <chr>, Area (SQM) <dbl>,\n#   Unit Price ($ PSM) <dbl>, Nett Price($) <chr>, Property Type <chr>,\n#   Number of Units <dbl>, Tenure <chr>, Completion Date <chr>,\n#   Purchaser Address Indicator <chr>, Postal Code <chr>,\n#   Postal District <chr>, Postal Sector <chr>, Planning Region <chr>, …\n```\n\n\n:::\n:::",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
