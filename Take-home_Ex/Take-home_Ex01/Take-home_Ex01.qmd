@@ -26,9 +26,7 @@ Analyse realis property data to reveal the private residential market and sub-ma
 ## Installing and loading the required libraries
 
 ```{r}
-pacman::p_load(ggrepel, patchwork, 
-               ggthemes, hrbrthemes,
-               tidyverse)
+pacman::p_load(tidyverse,dplyr,lubridate)
 ```
 
 ## Importing Data
@@ -45,7 +43,8 @@ realis5 <- read_csv("data/ResidentialTransaction20240414220633.csv")
 ## Data Pre-processing
 
 ### Combining all quarter data into one file
-All realis data from different quarters are merged into one file.
+
+All reseidential property market datat from realis by different quarters are merged into one file.
 
 ```{r}
 realis_merge <- rbind(realis1, realis2, realis3, realis4, realis5)
@@ -55,4 +54,59 @@ realis_merge <- rbind(realis1, realis2, realis3, realis4, realis5)
 
 ```{r}
 realis_merge[duplicated(realis_merge),]
+```
+
+No duplicated rows are present in the data based on duplicate check above.
+
+### Rename columns for further data visualization
+Below glimpse of data set shows the current column name. We can see there are spaces in column name.
+```{r }
+glimpse(realis_merge)
+```
+
+Space in column names will create error when use as it is in R code. Hence, replacing them with underscore is necessary.
+Use gsub() to replace space with underscores and use rename_with() function from 'dplyr' to rename all the columns with new column names.
+```{r }
+realis_merge <- realis_merge %>%
+  rename_with(~ gsub(" ", "_", .), everything())
+```
+
+Now, we can see that column names are renamed accordingly with underscore in place of space.
+```{r }
+glimpse(realis_merge)
+```
+
+### Create Quarter Column
+Use as.Date() function to put Sale_Date column into date object, specify format to ensure as.Date() recognize the content accurately as date.
+Use year() and quarter() functions from 'lubridate' package to extract year and use paste() to concatenate the strings.
+
+::: panel-tabset
+## Code
+
+```{r}
+realis_merge$Sale_Date <- as.Date(realis_merge$Sale_Date, format = "%d %b %Y")
+realis_merge$Quarter <- paste(year(realis_merge$Sale_Date), "Q", quarter(realis_merge$Sale_Date), sep="")
+```
+
+## Data Glimpse
+
+```{r}
+glimpse(realis_merge)
+```
+
+:::
+# Data Visualization 1
+
+```{r}
+# Get number of transactions for each combination of Planning_Region and Quarter
+trans_per_region_quarter <- realis_merge %>%
+  group_by(Planning_Region, Quarter) %>%
+  summarise(Number_of_Transactions = n(), .groups = 'drop')
+
+# Plot the bar chart with a breakdown by quarter
+ggplot(trans_per_region_quarter, aes(x = Planning_Region, y = Number_of_Transactions, fill = Quarter)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal() +
+  labs(x = "Planning Region", y = "Number of Transactions", title = "Number of Transactions by Planning Region and Quarter") 
+
 ```
