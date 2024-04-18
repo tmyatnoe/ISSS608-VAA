@@ -162,13 +162,18 @@ transactions_by_quarter <- realis_merge %>%
   count(Quarter) 
 
 # Plot overall transaction trend
-p2 <- ggplot(transactions_by_quarter, aes(x = Quarter, y = n)) + 
-  geom_bar(stat = "identity") +  
+p2 <- ggplot(transactions_by_quarter, aes(x = Quarter, y = n)) +
+  geom_bar(stat = "identity", fill = "skyblue") +  
   labs(
     title = "Overall Transactions by Quarter",
     x = "Quarter",
     y = "No. of Transactions"
   ) +
+  ylim(0,8000) +
+  geom_text(aes(label = n),  
+            vjust = -0.3,
+            size = rel(3),
+            color = "black") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1), plot.title = element_text(hjust = 0.5, size = 10), axis.title.y = element_text(size = rel(0.8)))
 

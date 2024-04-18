@@ -32,7 +32,7 @@
     "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#importing-data",
     "title": "Take-home Exercise 1",
     "section": "Importing Data",
-    "text": "Importing Data\n\nrealis1 &lt;- read_csv(\"data/ResidentialTransaction20240308160536.csv\")\nrealis2 &lt;- read_csv(\"data/ResidentialTransaction20240308160736.csv\")\nrealis3 &lt;- read_csv(\"data/ResidentialTransaction20240308161009.csv\")\nrealis4 &lt;- read_csv(\"data/ResidentialTransaction20240308161109.csv\")\nrealis5 &lt;- read_csv(\"data/ResidentialTransaction20240414220633.csv\")"
+    "text": "Importing Data\nBelow code imports 5 .csv data from realis into R environment by utilizing read_csv() function of readr package. readr is part of tidyverse packages.\n\nrealis1 &lt;- read_csv(\"data/ResidentialTransaction20240308160536.csv\")\nrealis2 &lt;- read_csv(\"data/ResidentialTransaction20240308160736.csv\")\nrealis3 &lt;- read_csv(\"data/ResidentialTransaction20240308161009.csv\")\nrealis4 &lt;- read_csv(\"data/ResidentialTransaction20240308161109.csv\")\nrealis5 &lt;- read_csv(\"data/ResidentialTransaction20240414220633.csv\")"
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#data-pre-processing",
