@@ -1,9 +1,29 @@
 ---
-title: "About"
+title: "Thet Myat Noe"
+about:
+  id: hero-heading
+  template: jolla
+  image: profile.jpg
+  links:
+    - icon: linkedin
+      text: linkedin
+      href: https://www.linkedin.com/in/myatnoethet/
 ---
 
-About this site
+# About the author
 
-```{r}
-1 + 1
-```
+::: {#hero-heading}
+Thet is currently studying Master of IT in Business at SMU, specializing in analytics track.
+
+## Education
+
+Nanyang Technological University, Singapore
+
+B.Eng in Materials Engineering \| 2012 - 2015
+
+## Experience
+
+AMD \| Senior Packaging Engineer \| May 2022 - present
+
+Micron Technology \| Senior Engineer \| Feb 2015 - May 2022
+:::

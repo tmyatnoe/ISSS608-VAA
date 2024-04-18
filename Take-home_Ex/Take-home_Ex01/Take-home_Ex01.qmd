@@ -26,7 +26,7 @@ Analyse realis property data to reveal the private residential market and sub-ma
 ## Installing and loading the required libraries
 
 ```{r}
-pacman::p_load(tidyverse,dplyr,lubridate)
+pacman::p_load(tidyverse,dplyr,lubridate,patchwork)
 ```
 
 ## Importing Data
@@ -44,7 +44,7 @@ realis5 <- read_csv("data/ResidentialTransaction20240414220633.csv")
 
 ### Combining all quarter data into one file
 
-All reseidential property market datat from realis by different quarters are merged into one file.
+All residential property market data from realis by different quarters are merged into one file.
 
 ```{r}
 realis_merge <- rbind(realis1, realis2, realis3, realis4, realis5)
@@ -64,7 +64,7 @@ Below glimpse of data set shows the current column name. We can see there are sp
 glimpse(realis_merge)
 ```
 
-Space in column names will create error when use as it is in R code. Hence, replacing them with underscore is necessary.
+Space in column names will create error when used as it is in R code. Hence, replacing them with underscore is necessary.
 Use gsub() to replace space with underscores and use rename_with() function from 'dplyr' to rename all the columns with new column names.
 ```{r }
 realis_merge <- realis_merge %>%
@@ -95,18 +95,78 @@ glimpse(realis_merge)
 ```
 
 :::
-# Data Visualization 1
 
-```{r}
-# Get number of transactions for each combination of Planning_Region and Quarter
-trans_per_region_quarter <- realis_merge %>%
-  group_by(Planning_Region, Quarter) %>%
+# Data Visualization 1
+Use ggplot2 to chart transaction count by Planning Region and Property Type breakdown by quarter.
+Use ggplot2 extension called [**patchwork**](https://patchwork.data-imaginist.com/) to combine separate ggplot2 graphs into a single figure.
+
+::: panel-tabset
+## Plot
+
+```{r,echo=FALSE}
+# Get number of transactions for each combination of Property_Type and Quarter
+trans_per_prop_quarter <- realis_merge %>%
+  group_by(Property_Type, Quarter) %>%
   summarise(Number_of_Transactions = n(), .groups = 'drop')
 
 # Plot the bar chart with a breakdown by quarter
-ggplot(trans_per_region_quarter, aes(x = Planning_Region, y = Number_of_Transactions, fill = Quarter)) +
+p1 <- ggplot(trans_per_prop_quarter, aes(x = Property_Type, y = Number_of_Transactions, fill = Quarter)) +
   geom_bar(stat = "identity", position = "dodge") +
   theme_minimal() +
-  labs(x = "Planning Region", y = "Number of Transactions", title = "Number of Transactions by Planning Region and Quarter") 
+  labs(x = "Property Type", y = "No. of Transactions", title = "No. of Transactions by Property Type and Quarter")+
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1), plot.title = element_text(hjust = 0.5, size = 10), axis.title.y = element_text(size = rel(0.8)))
 
+# Get overall transaction count per quarter
+transactions_by_quarter <- realis_merge %>%
+  count(Quarter) 
+
+# Plot overall transaction trend
+p2 <- ggplot(transactions_by_quarter, aes(x = Quarter, y = n)) + 
+  geom_bar(stat = "identity") +  
+  labs(
+    title = "Overall Transactions by Quarter",
+    x = "Quarter",
+    y = "No. of Transactions"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), plot.title = element_text(hjust = 0.5, size = 10), axis.title.y = element_text(size = rel(0.8)))
+
+p <- (p2/p1) 
+p
 ```
+
+## Code
+
+```{r, fig.show = 'hide' }
+# Get number of transactions for each combination of Property_Type and Quarter
+trans_per_prop_quarter <- realis_merge %>%
+  group_by(Property_Type, Quarter) %>%
+  summarise(Number_of_Transactions = n(), .groups = 'drop')
+
+# Plot the bar chart with a breakdown by quarter
+p1 <- ggplot(trans_per_prop_quarter, aes(x = Property_Type, y = Number_of_Transactions, fill = Quarter)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal() +
+  labs(x = "Property Type", y = "No. of Transactions", title = "No. of Transactions by Property Type and Quarter")+
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1), plot.title = element_text(hjust = 0.5, size = 10), axis.title.y = element_text(size = rel(0.8)))
+
+# Get overall transaction count per quarter
+transactions_by_quarter <- realis_merge %>%
+  count(Quarter) 
+
+# Plot overall transaction trend
+p2 <- ggplot(transactions_by_quarter, aes(x = Quarter, y = n)) + 
+  geom_bar(stat = "identity") +  
+  labs(
+    title = "Overall Transactions by Quarter",
+    x = "Quarter",
+    y = "No. of Transactions"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), plot.title = element_text(hjust = 0.5, size = 10), axis.title.y = element_text(size = rel(0.8)))
+
+p <- (p2/p1) 
+p
+```
+:::
+
