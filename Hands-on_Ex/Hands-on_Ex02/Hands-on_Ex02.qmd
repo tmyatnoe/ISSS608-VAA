@@ -417,13 +417,13 @@ We can plot more complex composite by using appropriate operators. For example, 
 ## Plot
 
 ```{r,echo=FALSE}
-(p1 / p2) | p3
+((p1 / p2) | p3) & theme(plot.title = element_text(size=9))
 ```
 
 ## Code
 
 ```{r, fig.show = 'hide' }
-(p1 / p2) | p3
+((p1 / p2) | p3) & theme(plot.title = element_text(size=9))
 ```
 :::
 
@@ -484,14 +484,14 @@ Figure below is created by combining patchwork and theme_economist() of ggthemes
 
 ```{r,echo=FALSE}
 patchwork <- (p1 / p2) | p3
-patchwork & theme_economist()
+patchwork & theme_economist() & theme(plot.title = element_text(size=8))
 ```
 
 ## Code
 
 ```{r, fig.show = 'hide' }
 patchwork <- (p1 / p2) | p3
-patchwork & theme_economist()
+patchwork & theme_economist() & theme(plot.title = element_text(size=8))
 ```
 :::
 

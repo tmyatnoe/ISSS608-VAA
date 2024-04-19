@@ -25,7 +25,7 @@
     "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#installing-and-loading-the-required-libraries",
     "title": "Take-home Exercise 1",
     "section": "Installing and loading the required libraries",
-    "text": "Installing and loading the required libraries\n\npacman::p_load(tidyverse,dplyr,lubridate,patchwork)"
+    "text": "Installing and loading the required libraries\n\npacman::p_load(tidyverse,dplyr,lubridate,patchwork,ggthemes,hrbrthemes)"
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#importing-data",
@@ -235,7 +235,7 @@
     "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#combining-three-ggplot2-graphs",
     "title": "Hands-on Exercise 2",
     "section": "2.5.3 Combining three ggplot2 graphs",
-    "text": "2.5.3 Combining three ggplot2 graphs\nWe can plot more complex composite by using appropriate operators. For example, the composite figure below is plotted by using:\n\n“|” operator to stack two ggplot2 graphs,\n“/” operator to place the plots beside each other,\n“()” operator the define the sequence of the plotting.\n\n\nPlotCode\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n(p1 / p2) | p3\n\n\n\n\nTo learn more about, refer to Plot Assembly."
+    "text": "2.5.3 Combining three ggplot2 graphs\nWe can plot more complex composite by using appropriate operators. For example, the composite figure below is plotted by using:\n\n“|” operator to stack two ggplot2 graphs,\n“/” operator to place the plots beside each other,\n“()” operator the define the sequence of the plotting.\n\n\nPlotCode\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n((p1 / p2) | p3) & theme(plot.title = element_text(size=9))\n\n\n\n\nTo learn more about, refer to Plot Assembly."
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-a-composite-figure-with-tag",
@@ -256,7 +256,7 @@
     "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-a-composite-figure-by-using-patchwork-and-ggtheme",
     "title": "Hands-on Exercise 2",
     "section": "2.5.6 Creating a composite figure by using patchwork and ggtheme",
-    "text": "2.5.6 Creating a composite figure by using patchwork and ggtheme\nFigure below is created by combining patchwork and theme_economist() of ggthemes package discussed earlier.\n\nPlotCode\n\n\n\n\n\n\n\n\n\n\n\n\n\n\npatchwork &lt;- (p1 / p2) | p3\npatchwork & theme_economist()"
+    "text": "2.5.6 Creating a composite figure by using patchwork and ggtheme\nFigure below is created by combining patchwork and theme_economist() of ggthemes package discussed earlier.\n\nPlotCode\n\n\n\n\n\n\n\n\n\n\n\n\n\n\npatchwork &lt;- (p1 / p2) | p3\npatchwork & theme_economist() & theme(plot.title = element_text(size=8))"
   },
   {
     "objectID": "index.html",
