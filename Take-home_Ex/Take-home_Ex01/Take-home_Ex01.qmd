@@ -26,7 +26,7 @@ This exercise aims to analyse [REALIS](https://www.ura.gov.sg/reis/index) (Real 
 ### 2.1 Installing and loading the required libraries
 
 | Package                                                                     | Description                                                                                                                                                                                            |
-|------------------------|-----------------------------------------------|
+|--------------------------|----------------------------------------------|
 | [tidyverse](https://www.tidyverse.org/)                                     | Used data import, tidying, manipulation, and data visualization. Packages like readr, dplyr, lubridate are part of tidyverse.                                                                          |
 | [patchwork](https://patchwork.data-imaginist.com/)                          | Used to combine individual ggplot into one graphic.                                                                                                                                                    |
 | [ggthemes](https://cran.r-project.org/web/packages/ggthemes/index.html)     | Provides 'ggplot2' themes and scales that replicate the look of plots by Edward Tufte, Stephen Few, 'Fivethirtyeight', 'The Economist', 'Stata', 'Excel', and 'The Wall Street Journal', among others. |
@@ -89,13 +89,13 @@ Now, we can see that column names are renamed accordingly with underscore in pla
 ::: panel-tabset
 ## Code
 
-```{r }
+```{r, results='hide'}
 glimpse(realis_merge)
 ```
 
 ## Data Glimpse
 
-```{r}
+```{r,echo=FALSE}
 glimpse(realis_merge)
 ```
 :::
@@ -123,7 +123,13 @@ glimpse(realis_merge)
 
 ### 3.1 Data Visualization 1
 
-Use **ggplot2** to chart transaction count by Planning Region and Property Type breakdown by quarter. Use ggplot2 extension called **patchwork** to combine separate ggplot2 graphs into a single figure. Use **ggtheme** to set Wall Street Journal theme.
+Use ggplot() and geom_bar() from **ggplot2** to plot:
+
+-   Overall Number of Units Sold by Quarter
+
+-   Number of Units Sold by Property Type and Quarter
+
+More functions from ggplot2 are used: ylim() and labs() functions from ggplot2 are used to set axis limit and chart title accordingly. Use theme() to set text size of chart title, axis text, legend text and legend title. scale_x_discrete() and guide_axis() are used to avoid overlapping labels. scale_fill_brewer() is used to color the bars. Use ggplot2 extension called **patchwork** to combine separate ggplot2 graphs into a single figure. Use theme_wsj() from **ggtheme** to set Wall Street Journal theme.
 
 ::: panel-tabset
 ## Plot
@@ -228,7 +234,7 @@ p
 :::
 
 ::: callout-tip
-## Insights from Data Visualization 1
+## Insights from Data Visualization 1:
 
 1.  Number of units sold per quarter shows an upward trend from 2023 Q1 to 2023 Q3 but it has since been on downward trend.
 
@@ -240,6 +246,14 @@ p
 :::
 
 ### 3.2 Data Visualization 2
+
+Use ggplot() and geom_bar() from **ggplot2** to plot:
+
+-   Number of Units Sold by Planning Region and Quarter
+
+-   Number of Units Sold by Type of Sale and Quarter
+
+More functions from ggplot2 are used: ylim() and labs() functions from ggplot2 are used to set axis limit and chart title accordingly. Use theme() to set text size of chart title, axis text, legend text and legend title. scale_fill_brewer() is used to color the bars. Use ggplot2 extension called **patchwork** to combine separate ggplot2 graphs into a single figure. Use theme_wsj() from **ggtheme** to set Wall Street Journal theme.
 
 ::: panel-tabset
 ## Plot
@@ -341,7 +355,14 @@ pp
 
 ### 3.3 Data Visualization 3
 
-In this visualization, let's take a look at price trend of the 2 proporty types with mostn umber of units sold, Apartments and Condominiums.
+In this visualization, let's take a look at price trend of the 2 property types with most number of units sold, Apartments and Condominiums.
+Use ggplot() and geom_bar() from **ggplot2** to plot boxplot for
+
+-   Condominium
+
+-   Apartment
+
+More functions from ggplot2 are used: labs() function is used to set axis limit and chart title accordingly. Use theme() to set text size of chart title, axis text, legend text and legend title. geom_text() to add median label to box plot. Use theme_wsj() from **ggtheme** to set Wall Street Journal theme.
 
 ::: panel-tabset
 ## Condominiums
