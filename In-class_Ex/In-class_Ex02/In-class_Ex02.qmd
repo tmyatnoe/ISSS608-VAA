@@ -1,0 +1,41 @@
+---
+title: "In-class Exercise 2"
+author: "Thet Myat Noe"
+date: "April 20, 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+---
+
+## Loading R Packages
+
+In the code chunk below, [`p_load()`](https://www.rdocumentation.org/packages/pacman/versions/0.5.1/topics/p_load) of [`pacman`](https://trinker.github.io/pacman/vignettes/Introduction_to_pacman.html) package is used to load tidyverse, ggdist, ggthemes family of packages.
+
+```{r}
+pacman::p_load(tidyverse, ggdist, ggthemes, ggridges, colorspace)
+```
+
+## Importing the data
+```{r}
+Exam_data <- read_csv("data/Exam_data.csv")
+```
+
+## Density Plot
+```{r}
+ggplot(data=Exam_data, 
+       aes(x = ENGLISH)) +
+  geom_density(
+    color = "#1696d2",
+    adjust = .65,
+    alpha = .6
+    )  
+```
+
+## Compare the density plots
+```{r}
+
+
+```

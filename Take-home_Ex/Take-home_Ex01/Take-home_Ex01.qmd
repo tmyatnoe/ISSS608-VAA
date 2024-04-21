@@ -11,27 +11,36 @@ execute:
   freeze: true
 ---
 
-# Overview
+# 1. Overview
 
-## Setting the scene
+### 1.1 Setting the scene
 
 There are two major residential property market in Singapore, namely public and private housing. Public housing aims to meet the basic need of the general public with monthly household income less than or equal to S\$14,000. For families with monthly household income more than S\$14,000, they need to turn to the private residential market.
 
-## Task
+### 1.2 Task
 
-Analyse realis property data to reveal the private residential market and sub-markets of Singapore for the 1st quarter of 2024.
+This exercise aims to analyse [REALIS](https://www.ura.gov.sg/reis/index) (Real Estate Information System) property data to reveal the private residential market and sub-markets of Singapore for the 1st quarter of 2024.
 
-# Getting Started
+# 2. Getting Started
 
-## Installing and loading the required libraries
+### 2.1 Installing and loading the required libraries
+
+| Package                                                                     | Description                                                                                                                                                                                            |
+|------------------------|-----------------------------------------------|
+| [tidyverse](https://www.tidyverse.org/)                                     | Used data import, tidying, manipulation, and data visualization. Packages like readr, dplyr, lubridate are part of tidyverse.                                                                          |
+| [patchwork](https://patchwork.data-imaginist.com/)                          | Used to combine individual ggplot into one graphic.                                                                                                                                                    |
+| [ggthemes](https://cran.r-project.org/web/packages/ggthemes/index.html)     | Provides 'ggplot2' themes and scales that replicate the look of plots by Edward Tufte, Stephen Few, 'Fivethirtyeight', 'The Economist', 'Stata', 'Excel', and 'The Wall Street Journal', among others. |
+| [hrbrthemes](https://cran.r-project.org/web/packages/hrbrthemes/index.html) | A compilation of extra 'ggplot2' themes, scales and utilities, including a spell check function for plot label fields and an overall emphasis on typography.                                           |
+
+The code chunk below uses `p_load()` function from **pacman** package to check if packages listed are already installed in the computer. The packages are loaded if they are found to be installed. If they are not installed, the function will proceed to install and load them into R environment.
 
 ```{r}
-pacman::p_load(tidyverse,dplyr,lubridate,patchwork,ggthemes,hrbrthemes)
+pacman::p_load(tidyverse,patchwork,ggthemes,hrbrthemes)
 ```
 
-## Importing Data
+### 2.2 Importing Data
 
-Below code imports 5 .csv data from realis into R environment by utilizing [*`read_csv()`*](https://readr.tidyverse.org/reference/read_delim.html) function of [**readr**](https://readr.tidyverse.org/) package. **readr** is part of tidyverse packages.
+Below code imports 5 .csv data from REALIS into R environment by utilizing `read_csv()` function of **readr** package. readr is part of **tidyverse** packages.
 
 ```{r}
 realis1 <- read_csv("data/ResidentialTransaction20240308160536.csv")
@@ -42,45 +51,58 @@ realis5 <- read_csv("data/ResidentialTransaction20240414220633.csv")
 
 ```
 
-## Data Pre-processing
+### 2.3 Data Pre-processing
 
-### Combining all quarter data into one file
+#### 2.3.1 Combining all quarter data into one file
 
-All residential property market data from realis by different quarters are merged into one file.
+All residential property market data from REALIS by different quarters are merged into one file using `rbind()`.
 
 ```{r}
 realis_merge <- rbind(realis1, realis2, realis3, realis4, realis5)
 ```
 
-### Checking for duplicates
+#### 2.3.2 Checking for duplicates
 
 ```{r}
 realis_merge[duplicated(realis_merge),]
 ```
 
-No duplicated rows are present in the data based on duplicate check above.
+No duplicated rows are present in the data based on duplicate check above using `duplicated()` function.
 
-### Rename columns for further data visualization
+#### 2.3.3 Rename columns for further data visualization
+
 Below glimpse of data set shows the current column name. We can see there are spaces in column name.
+
 ```{r }
 glimpse(realis_merge)
 ```
 
-Space in column names will create error when used as it is in R code. Hence, replacing them with underscore is necessary.
-Use gsub() to replace space with underscores and use rename_with() function from 'dplyr' to rename all the columns with new column names.
+Space in column names will create error when used as it is in R code. Hence, replacing them with underscore is necessary. Use `gsub()` to replace space with underscores and use `rename_with()` function from **dplyr** to rename all the columns with new column names.
+
 ```{r }
 realis_merge <- realis_merge %>%
   rename_with(~ gsub(" ", "_", .), everything())
 ```
 
 Now, we can see that column names are renamed accordingly with underscore in place of space.
+
+::: panel-tabset
+## Code
+
 ```{r }
 glimpse(realis_merge)
 ```
 
-### Create Quarter Column
-Use as.Date() function to put Sale_Date column into date object, specify format to ensure as.Date() recognize the content accurately as date.
-Use year() and quarter() functions from 'lubridate' package to extract year and use paste() to concatenate the strings.
+## Data Glimpse
+
+```{r}
+glimpse(realis_merge)
+```
+:::
+
+#### 2.3.4 Create Quarter Column
+
+Use `as.Date()` function to put Sale_Date column into date object, specify format to ensure `as.Date()` recognize the content accurately as date. Use `year()` and `quarter()` functions from **lubridate** package to extract year and use `paste()` to concatenate the strings.
 
 ::: panel-tabset
 ## Code
@@ -95,27 +117,27 @@ realis_merge$Quarter <- paste(year(realis_merge$Sale_Date), "Q", quarter(realis_
 ```{r}
 glimpse(realis_merge)
 ```
-
 :::
 
-# Data Visualization [1]
-Use ggplot2 to chart transaction count by Planning Region and Property Type breakdown by quarter.
-Use ggplot2 extension called [**patchwork**](https://patchwork.data-imaginist.com/) to combine separate ggplot2 graphs into a single figure.
-use ggtheme to set Wall street journal theme.
+# 3. Data Visualization
+
+### 3.1 Data Visualization 1
+
+Use **ggplot2** to chart transaction count by Planning Region and Property Type breakdown by quarter. Use ggplot2 extension called **patchwork** to combine separate ggplot2 graphs into a single figure. Use **ggtheme** to set Wall Street Journal theme.
 
 ::: panel-tabset
 ## Plot
 
 ```{r,echo=FALSE}
-# Get number of transactions for each combination of Property_Type and Quarter
+# Get number of units sold for each combination of Property_Type and Quarter
 trans_per_prop_quarter <- realis_merge %>%
   group_by(Property_Type, Quarter) %>%
-  summarise(Number_of_Transactions = n(), .groups = 'drop')
+  summarise(Total_Number_of_Units = sum(Number_of_Units, na.rm = TRUE), .groups = 'drop')
 
-# Plot the bar chart with a breakdown by quarter
-p1 <- ggplot(trans_per_prop_quarter, aes(x = Property_Type, y = Number_of_Transactions, fill = Quarter)) +
+# Plot the bar chart for Number of Units Sold by Property Type and Quarter
+p1 <- ggplot(trans_per_prop_quarter, aes(x = Property_Type, y = Total_Number_of_Units, fill = Quarter)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(x = "Property Type", y = "No. of Transactions", title = "No. of Transactions by Property Type and Quarter")+
+  labs(x = "Property Type", y = "No. of Units Sold", title = "Number of Units Sold by Property Type and Quarter")+
   ylim(0,3200) +
   theme_wsj()+
   theme(plot.title = element_text(size = rel(0.4)),  
@@ -123,22 +145,24 @@ p1 <- ggplot(trans_per_prop_quarter, aes(x = Property_Type, y = Number_of_Transa
         axis.text.y = element_text(size = rel(0.7)),
         legend.text = element_text(size = rel(0.7)),
         legend.title = element_text(size = rel(0.4)))  +
-  scale_x_discrete(guide = guide_axis(n.dodge = 2)) 
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  scale_fill_brewer(palette = "Blues")
 
-# Get overall transaction count per quarter
-transactions_by_quarter <- realis_merge %>%
-  count(Quarter) 
+# Get overall Number of units sold per quarter
+units_by_quarter <- realis_merge %>%
+  group_by(Quarter) %>%
+  summarise(Total_Units = sum(Number_of_Units, na.rm = TRUE), .groups = 'drop')
 
-# Plot overall transaction trend
-p2 <- ggplot(transactions_by_quarter, aes(x = Quarter, y = n)) +
-  geom_bar(stat = "identity", fill = "burlywood") +  
+# Plot overall Number of units sold trend
+p2 <- ggplot(units_by_quarter, aes(x = Quarter, y = Total_Units)) +
+  geom_bar(stat = "identity", fill = "gainsboro") +  
   labs(
-    title = "Overall Transactions by Quarter",
+    title = "Overall Number of Units Sold by Quarter",
     x = "Quarter",
-    y = "No. of Transactions"
+    y = "No. of Units Sold"
   ) +
   ylim(0,8000) +
-  geom_text(aes(label = n),  
+  geom_text(aes(label = Total_Units),  
             vjust = -0.3,
             size = rel(3),
             color = "black") +
@@ -155,15 +179,15 @@ p
 ## Code
 
 ```{r, fig.show = 'hide' }
-# Get number of transactions for each combination of Property_Type and Quarter
+# Get number of units sold for each combination of Property_Type and Quarter
 trans_per_prop_quarter <- realis_merge %>%
   group_by(Property_Type, Quarter) %>%
-  summarise(Number_of_Transactions = n(), .groups = 'drop')
+  summarise(Total_Number_of_Units = sum(Number_of_Units, na.rm = TRUE), .groups = 'drop')
 
-# Plot the bar chart with a breakdown by quarter
-p1 <- ggplot(trans_per_prop_quarter, aes(x = Property_Type, y = Number_of_Transactions, fill = Quarter)) +
+# Plot the bar chart for Number of Units Sold by Property Type and Quarter
+p1 <- ggplot(trans_per_prop_quarter, aes(x = Property_Type, y = Total_Number_of_Units, fill = Quarter)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(x = "Property Type", y = "No. of Transactions", title = "No. of Transactions by Property Type and Quarter")+
+  labs(x = "Property Type", y = "No. of Units Sold", title = "Number of Units Sold by Property Type and Quarter")+
   ylim(0,3200) +
   theme_wsj()+
   theme(plot.title = element_text(size = rel(0.4)),  
@@ -171,22 +195,24 @@ p1 <- ggplot(trans_per_prop_quarter, aes(x = Property_Type, y = Number_of_Transa
         axis.text.y = element_text(size = rel(0.7)),
         legend.text = element_text(size = rel(0.7)),
         legend.title = element_text(size = rel(0.4)))  +
-  scale_x_discrete(guide = guide_axis(n.dodge = 2)) 
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  scale_fill_brewer(palette = "Blues")
 
-# Get overall transaction count per quarter
-transactions_by_quarter <- realis_merge %>%
-  count(Quarter) 
+# Get overall Number of units sold per quarter
+units_by_quarter <- realis_merge %>%
+  group_by(Quarter) %>%
+  summarise(Total_Units = sum(Number_of_Units, na.rm = TRUE), .groups = 'drop')
 
-# Plot overall transaction trend
-p2 <- ggplot(transactions_by_quarter, aes(x = Quarter, y = n)) +
-  geom_bar(stat = "identity", fill = "burlywood") +  
+# Plot overall Number of units sold trend
+p2 <- ggplot(units_by_quarter, aes(x = Quarter, y = Total_Units)) +
+  geom_bar(stat = "identity", fill = "gainsboro") +  
   labs(
-    title = "Overall Transactions by Quarter",
+    title = "Overall Number of Units Sold by Quarter",
     x = "Quarter",
-    y = "No. of Transactions"
+    y = "No. of Units Sold"
   ) +
   ylim(0,8000) +
-  geom_text(aes(label = n),  
+  geom_text(aes(label = Total_Units),  
             vjust = -0.3,
             size = rel(3),
             color = "black") +
@@ -201,14 +227,121 @@ p
 ```
 :::
 
-
 ::: callout-tip
-## Insights from data visualization [1]
+## Insights from Data Visualization 1
 
+1.  Number of units sold per quarter shows an upward trend from 2023 Q1 to 2023 Q3 but it has since been on downward trend.
 
+2.  There is slight uptick seen in Q1 2024 in number of units sold compared to Q4 2023.
+
+3.  Based on further breakdown by property type and quarter, apartment, condominium and executive condominium make up majority of sales volume followed by terrace house, semi-detached house and detached house.
+
+4.  In Q1 2024, there is a decline in number of apartment and condo units sold while there is a growth in executive condo units sold compared to Q4 2023.
 :::
 
-# Data Visualization [2]
+### 3.2 Data Visualization 2
+
+::: panel-tabset
+## Plot
+
+```{r,echo=FALSE}
+# Get number of units sold for each combination of Planning Region and Quarter
+trans_per_reg_quarter <- realis_merge %>%
+  group_by(Planning_Region, Quarter) %>%
+  summarise(Total_Number_of_Units = sum(Number_of_Units, na.rm = TRUE), .groups = 'drop')
+
+# Plot the bar chart for Number of Units Sold by Planning Region and Quarter
+p3 <- ggplot(trans_per_reg_quarter, aes(x = Planning_Region, y = Total_Number_of_Units, fill = Quarter)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "Planning Region", y = "No. of Units Sold", title = "Number of Units Sold by Planning Region and Quarter")+
+  ylim(0,3200) +
+  theme_wsj()+
+  theme(plot.title = element_text(size = rel(0.4)),  
+        axis.text.x = element_text(size = rel(0.7)),  
+        axis.text.y = element_text(size = rel(0.7)),
+        legend.text = element_text(size = rel(0.7)),
+        legend.title = element_text(size = rel(0.4)))  +
+    scale_fill_brewer(palette = "Blues")
+
+# Get number of units sold for each combination of Type of Sale and Quarter
+trans_per_sale_quarter <- realis_merge %>%
+  group_by(Type_of_Sale, Quarter) %>%
+  summarise(Total_Number_of_Units = sum(Number_of_Units, na.rm = TRUE), .groups = 'drop')
+
+# Plot the bar chart for Number of Units Sold by Type of Sale and Quarter
+p4 <- ggplot(trans_per_sale_quarter, aes(x = Type_of_Sale, y = Total_Number_of_Units, fill = Quarter)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "Type of Sale", y = "No. of Units Sold", title = "Number of Units Sold by Type of Sale and Quarter")+
+  ylim(0,4200) +
+  theme_wsj()+
+  theme(plot.title = element_text(size = rel(0.4)),  
+        axis.text.x = element_text(size = rel(0.7)),  
+        axis.text.y = element_text(size = rel(0.7)),
+        legend.text = element_text(size = rel(0.7)),
+        legend.title = element_text(size = rel(0.4)))  +
+   scale_fill_brewer(palette = "Blues")
+
+# Combine the plots into one
+pp <- (p3/p4) 
+pp
+```
+
+## Code
+
+```{r, fig.show = 'hide' }
+# Get number of units sold for each combination of Planning Region and Quarter
+trans_per_reg_quarter <- realis_merge %>%
+  group_by(Planning_Region, Quarter) %>%
+  summarise(Total_Number_of_Units = sum(Number_of_Units, na.rm = TRUE), .groups = 'drop')
+
+# Plot the bar chart for Number of Units Sold by Planning Region and Quarter
+p3 <- ggplot(trans_per_reg_quarter, aes(x = Planning_Region, y = Total_Number_of_Units, fill = Quarter)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "Planning Region", y = "No. of Units Sold", title = "Number of Units Sold by Planning Region and Quarter")+
+  ylim(0,4200) +
+  theme_wsj()+
+  theme(plot.title = element_text(size = rel(0.4)),  
+        axis.text.x = element_text(size = rel(0.7)),  
+        axis.text.y = element_text(size = rel(0.7)),
+        legend.text = element_text(size = rel(0.7)),
+        legend.title = element_text(size = rel(0.4)))  +
+    scale_fill_brewer(palette = "Blues")
+
+# Get number of units sold for each combination of Type of Sale and Quarter
+trans_per_sale_quarter <- realis_merge %>%
+  group_by(Type_of_Sale, Quarter) %>%
+  summarise(Total_Number_of_Units = sum(Number_of_Units, na.rm = TRUE), .groups = 'drop')
+
+# Plot the bar chart for Number of Units Sold by Type of Sale and Quarter
+p4 <- ggplot(trans_per_sale_quarter, aes(x = Type_of_Sale, y = Total_Number_of_Units, fill = Quarter)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "Type of Sale", y = "No. of Units Sold", title = "Number of Units Sold by Type of Sale and Quarter")+
+  ylim(0,4200) +
+  theme_wsj()+
+  theme(plot.title = element_text(size = rel(0.4)),  
+        axis.text.x = element_text(size = rel(0.7)),  
+        axis.text.y = element_text(size = rel(0.7)),
+        legend.text = element_text(size = rel(0.7)),
+        legend.title = element_text(size = rel(0.4)))  +
+   scale_fill_brewer(palette = "Blues")
+
+# Combine the plots into one
+pp <- (p3/p4) 
+pp
+```
+:::
+
+::: callout-tip
+## Insights from Data Visualization 2
+
+1.  In 2024 Q1, there is decrease in number of unit sold in Central, East and North Regions while an uptick is seen in North East and West Regions.
+
+2.  In terms of type of sale trend, 2024 Q1 Resale and Sub Sale are decreasing while only New sale showed an increasing trend.
+:::
+
+### 3.3 Data Visualization 3
+
+In this visualization, let's take a look at price trend of the 2 proporty types with mostn umber of units sold, Apartments and Condominiums.
 
 ::: panel-tabset
 ## Condominiums
@@ -218,9 +351,16 @@ p
 condo_data <- realis_merge %>%
   filter(Property_Type == "Condominium") 
 
+# Calculate median for each Quarter
+condo_median <- condo_data %>%
+  group_by(Quarter) %>%
+  summarise(median = median(`Unit_Price_($_PSM)`, na.rm = TRUE))
+
 # Create boxplot
 ggplot(condo_data, aes(x = Quarter, y = `Unit_Price_($_PSM)`)) + 
-  geom_boxplot(fill = "burlywood") +
+  geom_boxplot(fill = "lightskyblue2") +
+  geom_text(data = condo_median, aes(x = Quarter, y = median, label = median), 
+            vjust = -0.5, size = 3) +
   labs(
     title = "Boxplot of Unit Price ($ PSM) by Quarter for Condominiums",
     x = "Quarter",
@@ -231,6 +371,7 @@ ggplot(condo_data, aes(x = Quarter, y = `Unit_Price_($_PSM)`)) +
         axis.text.x = element_text(size = rel(0.7)), 
         axis.text.y = element_text(size = rel(0.7))) 
 ```
+
 ## Apartments
 
 ```{r,echo=FALSE}
@@ -238,9 +379,16 @@ ggplot(condo_data, aes(x = Quarter, y = `Unit_Price_($_PSM)`)) +
 aprt_data <- realis_merge %>%
   filter(Property_Type == "Apartment") 
 
+# Calculate median for each Quarter
+aprt_median <- aprt_data %>%
+  group_by(Quarter) %>%
+  summarise(median = median(`Unit_Price_($_PSM)`, na.rm = TRUE))
+
 # Create boxplot
 ggplot(aprt_data, aes(x = Quarter, y = `Unit_Price_($_PSM)`)) + 
-  geom_boxplot(fill = "burlywood") +
+  geom_boxplot(fill = "lightskyblue3") +
+  geom_text(data = aprt_median, aes(x = Quarter, y = median, label = median), 
+            vjust = -0.5, size = 3) +
   labs(
     title = "Boxplot of Unit Price ($ PSM) by Quarter for Apartments",
     x = "Quarter",
@@ -251,6 +399,7 @@ ggplot(aprt_data, aes(x = Quarter, y = `Unit_Price_($_PSM)`)) +
         axis.text.x = element_text(size = rel(0.7)), 
         axis.text.y = element_text(size = rel(0.7))) 
 ```
+
 ## Code
 
 ```{r, fig.show = 'hide' }
@@ -259,9 +408,16 @@ ggplot(aprt_data, aes(x = Quarter, y = `Unit_Price_($_PSM)`)) +
 condo_data <- realis_merge %>%
   filter(Property_Type == "Condominium") 
 
+# Calculate median for each Quarter
+condo_median <- condo_data %>%
+  group_by(Quarter) %>%
+  summarise(median = median(`Unit_Price_($_PSM)`, na.rm = TRUE))
+
 # Create boxplot
 ggplot(condo_data, aes(x = Quarter, y = `Unit_Price_($_PSM)`)) + 
-  geom_boxplot(fill = "burlywood") +
+  geom_boxplot(fill = "lightskyblue2") +
+  geom_text(data = condo_median, aes(x = Quarter, y = median, label = median), 
+            vjust = -0.5, size = 3) +
   labs(
     title = "Boxplot of Unit Price ($ PSM) by Quarter for Condominiums",
     x = "Quarter",
@@ -273,13 +429,19 @@ ggplot(condo_data, aes(x = Quarter, y = `Unit_Price_($_PSM)`)) +
         axis.text.y = element_text(size = rel(0.7))) 
 
 ### Code for Apartment
-# Filter for 'Apartment' in the 'Property_Type' column
 aprt_data <- realis_merge %>%
   filter(Property_Type == "Apartment") 
 
+# Calculate median for each Quarter
+aprt_median <- aprt_data %>%
+  group_by(Quarter) %>%
+  summarise(median = median(`Unit_Price_($_PSM)`, na.rm = TRUE))
+
 # Create boxplot
 ggplot(aprt_data, aes(x = Quarter, y = `Unit_Price_($_PSM)`)) + 
-  geom_boxplot(fill = "burlywood") +
+  geom_boxplot(fill = "lightskyblue3") +
+  geom_text(data = aprt_median, aes(x = Quarter, y = median, label = median), 
+            vjust = -0.5, size = 3) +
   labs(
     title = "Boxplot of Unit Price ($ PSM) by Quarter for Apartments",
     x = "Quarter",
@@ -293,9 +455,19 @@ ggplot(aprt_data, aes(x = Quarter, y = `Unit_Price_($_PSM)`)) +
 :::
 
 ::: callout-tip
-## Insights from data visualization [2]
+## Insights from Data Visualization 3
 
+1.  Condominium price (Price per squared meter) trend from 2023 Q1 to 2024 Q1 remains relatively flat within the range of S\$18125.5 to S\$18750.
 
+2.  Condominium prices in 2024 Q1 has increased slightly compared to 2023 Q4 from S\$18125.5 to S\$18311.
+
+3.  Apartment price (Price per squared meter) trend has shown a downward trend starting from 2023 Q2 to 2023 Q4 although there was an uptrend from 2023 Q1 to 2023 Q2.
+
+4.  Apartment prices in 2024 Q1 has increased slightly compared to 2023 Q4 from S\$21916.5 to S\$22768.
+
+5.  Slight increase in Condominium and Apartment prices observed here are in line with what is reported in media for Q1 2024 in [CNA article](https://www.channelnewsasia.com/singapore/hdb-resale-private-home-prices-rise-waiting-period-property-analysts-4233876).
 :::
 
-# Data Visualization [3]
+# 4. Summary and Conclusion
+
+# 5. References
