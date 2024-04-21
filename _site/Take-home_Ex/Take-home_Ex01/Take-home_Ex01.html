@@ -462,12 +462,13 @@ $ Quarter                     &lt;chr&gt; "2023Q1", "2023Q1", "2023Q1", "2023Q1"
 <h1>3. Data Visualization</h1>
 <section id="data-visualization-1" class="level3">
 <h3 class="anchored" data-anchor-id="data-visualization-1">3.1 Data Visualization 1</h3>
-<p>Use ggplot() and geom_bar() from <strong>ggplot2</strong> to plot:</p>
+<p>Data manipulation is done by <strong>dplyr</strong> functions. To get Number of Units Sold by Property Type and Quarter, use <code>group_by()</code> to group merged REALIS data into by Property Type and Quarter, then use <code>summarise()</code> to calculate the total number of units sold for each group. To get Overall Number of Units Sold by Quarter, use <code>group_by()</code> to group merged REALIS data into by Quarter, then use <code>summarise()</code> to calculate the total number of units sold for each quarter.</p>
+<p>Use <code>ggplot()</code> and <code>geom_bar()</code> from <strong>ggplot2</strong> to plot:</p>
 <ul>
-<li><p>Overall Number of Units Sold by Quarter</p></li>
-<li><p>Number of Units Sold by Property Type and Quarter</p></li>
+<li><p><em>Overall Number of Units Sold by Quarter</em></p></li>
+<li><p><em>Number of Units Sold by Property Type and Quarter</em></p></li>
 </ul>
-<p>More functions from ggplot2 are used: ylim() and labs() functions from ggplot2 are used to set axis limit and chart title accordingly. Use theme() to set text size of chart title, axis text, legend text and legend title. scale_x_discrete() and guide_axis() are used to avoid overlapping labels. scale_fill_brewer() is used to color the bars. Use ggplot2 extension called <strong>patchwork</strong> to combine separate ggplot2 graphs into a single figure. Use theme_wsj() from <strong>ggtheme</strong> to set Wall Street Journal theme.</p>
+<p>More functions from ggplot2 are used: <code>ylim()</code> and <code>labs()</code> functions from ggplot2 are used to set axis limit and chart title accordingly. Use <code>theme()</code> to set text size of chart title, axis text, legend text and legend title. <code>scale_x_discrete()</code> and <code>guide_axis()</code> are used to avoid overlapping labels. <code>scale_fill_brewer()</code> is used to color the bars. Use ggplot2 extension called <strong>patchwork</strong> to combine separate ggplot2 graphs into a single figure. Use <code>theme_wsj()</code> from <strong>ggtheme</strong> to set Wall Street Journal theme.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Code</a></li></ul>
 <div class="tab-content">
@@ -554,12 +555,13 @@ Insights from Data Visualization 1:
 </section>
 <section id="data-visualization-2" class="level3">
 <h3 class="anchored" data-anchor-id="data-visualization-2">3.2 Data Visualization 2</h3>
-<p>Use ggplot() and geom_bar() from <strong>ggplot2</strong> to plot:</p>
+<p>To get Number of Units Sold by Planning Region and Quarter, use <code>group_by()</code> to group merged REALIS data into by Planning Region and Quarter, then use <code>summarise()</code> to calculate the total number of units sold for each group. To get Number of Units Sold by Planning Region and Quarter, use <code>group_by()</code> to group merged REALIS data into by Type of Sale and Quarter, then use <code>summarise()</code> to calculate the total number of units sold for each group.</p>
+<p>Use <code>ggplot()</code> and <code>geom_bar()</code> from <strong>ggplot2</strong> to plot:</p>
 <ul>
-<li><p>Number of Units Sold by Planning Region and Quarter</p></li>
-<li><p>Number of Units Sold by Type of Sale and Quarter</p></li>
+<li><p><em>Number of Units Sold by Planning Region and Quarter</em></p></li>
+<li><p><em>Number of Units Sold by Type of Sale and Quarter</em></p></li>
 </ul>
-<p>More functions from ggplot2 are used: ylim() and labs() functions from ggplot2 are used to set axis limit and chart title accordingly. Use theme() to set text size of chart title, axis text, legend text and legend title. scale_fill_brewer() is used to color the bars. Use ggplot2 extension called <strong>patchwork</strong> to combine separate ggplot2 graphs into a single figure. Use theme_wsj() from <strong>ggtheme</strong> to set Wall Street Journal theme.</p>
+<p>More functions from ggplot2 are used: <code>ylim()</code> and <code>labs()</code> functions from ggplot2 are used to set axis limit and chart title accordingly. Use <code>theme()</code> to set text size of chart title, axis text, legend text and legend title. <code>scale_fill_brewer()</code> is used to color the bars. Use ggplot2 extension called <strong>patchwork</strong> to combine separate ggplot2 graphs into a single figure. Use <code>theme_wsj()</code> from <strong>ggtheme</strong> to set Wall Street Journal theme.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">Code</a></li></ul>
 <div class="tab-content">
@@ -631,19 +633,20 @@ Insights from Data Visualization 2
 <div class="callout-body-container callout-body">
 <ol type="1">
 <li><p>In 2024 Q1, there is decrease in number of unit sold in Central, East and North Regions while an uptick is seen in North East and West Regions.</p></li>
-<li><p>In terms of type of sale trend, 2024 Q1 Resale and Sub Sale are decreasing while only New sale showed an increasing trend.</p></li>
+<li><p>In terms of type of sale trend, 2024 Q1 Resale and Sub Sale are decreasing while only New sale showed an increasing trend compared to Q4 2023.</p></li>
 </ol>
 </div>
 </div>
 </section>
 <section id="data-visualization-3" class="level3">
 <h3 class="anchored" data-anchor-id="data-visualization-3">3.3 Data Visualization 3</h3>
-<p>In this visualization, let’s take a look at price trend of the 2 property types with most number of units sold, Apartments and Condominiums. Use ggplot() and geom_bar() from <strong>ggplot2</strong> to plot boxplot for</p>
+<p>In this visualization, let’s take a look at price trend of the 2 property types with most number of units sold, Apartments and Condominiums. To get condominium and apartment data only, use <code>filter()</code> function from <strong>dplyr</strong> to filter from realis_merge data. Median data for each quarter is calculated by grouping data into each quarter using <code>group_by(),</code> followed by using <code>median()</code> to compute the median value.</p>
+<p>Use <code>ggplot()</code> and <code>geom_boxplot()</code> from <strong>ggplot2</strong> to plot boxplot for</p>
 <ul>
-<li><p>Condominium</p></li>
-<li><p>Apartment</p></li>
+<li><p><em>Condominium</em></p></li>
+<li><p><em>Apartment</em></p></li>
 </ul>
-<p>More functions from ggplot2 are used: labs() function is used to set axis limit and chart title accordingly. Use theme() to set text size of chart title, axis text, legend text and legend title. geom_text() to add median label to box plot. Use theme_wsj() from <strong>ggtheme</strong> to set Wall Street Journal theme.</p>
+<p>More functions from ggplot2 are used: <code>labs()</code> function is used to set axis limit and chart title accordingly. Use <code>theme()</code> to set text size of chart title, axis text, legend text and legend title. <code>geom_text()</code> to add median label to box plot. Use <code>theme_wsj()</code> from <strong>ggtheme</strong> to set Wall Street Journal theme.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Condominiums</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Apartments</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-3" role="tab" aria-controls="tabset-5-3" aria-selected="false">Code</a></li></ul>
 <div class="tab-content">
@@ -745,9 +748,16 @@ Insights from Data Visualization 3
 </section>
 <section id="summary-and-conclusion" class="level1">
 <h1>4. Summary and Conclusion</h1>
+<p>Number of units sold per quarter shows an upward trend from 2023 Q1 to 2023 Q3 but it has since been on downward trend until slight uptick seen in Q1 2023. Apartment, condominium and executive condominium make up majority of sales volume. Decline in number of apartment and condo (two highest transacted private property types in Singapore) units sale observed for Q1 2024.</p>
+<p>In 2024 Q1, there is decrease in number of unit sold in Central, East and North Regions while an uptick is seen in North East and West Regions. 2024 Q1 Resale and Sub Sale are decreasing while only New sale showed an increasing trend compared to Q4 2023.</p>
+<p>In comparison to Q4 2023, slight increase in Condominium and Apartment prices are observed which aligns with what is reported in media for Q1 2024.</p>
 </section>
 <section id="references" class="level1">
 <h1>5. References</h1>
+<p><a href="https://www.channelnewsasia.com/singapore/hdb-resale-private-home-prices-rise-waiting-period-property-analysts-4233876">HDB resale prices rise 1.7%; private home prices up 1.5% in first quarter: Flash estimates</a></p>
+<p><a href="https://www.propertyasiadirect.com/blog/guide-different-types-properties-singapore/#:~:text=Private%20properties%20don't%20have,%2C%20Non%2DLanded%20and%20Landed.">Guide to Different Types of Properties in Singapore</a></p>
+<p><a href="http://www.sthda.com/english/wiki/ggplot2-legend-easy-steps-to-change-the-position-and-the-appearance-of-a-graph-legend-in-r-software#change-the-legend-title-and-text-font-styles">ggplot2 legend : Easy steps to change the position and the appearance of a graph legend in R software</a></p>
+<p><a href="https://stackoverflow.com/questions/50399838/how-to-alternate-a-new-line-for-overlapping-x-axis-labels">How to alternate a new line for overlapping x axis labels?</a></p>
 
 
 </section>
