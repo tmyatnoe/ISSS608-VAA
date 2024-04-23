@@ -274,7 +274,7 @@ ggplot(exam,
 ```
 :::
 
-## 5. isualising Distribution with Raincloud Plot
+## 5. Visualising Distribution with Raincloud Plot
 
 aincloud Plot is a data visualisation techniques that produces a half-density to a distribution plot. It gets the name because the density plot is in the shape of a “raincloud”. The raincloud (half-density) plot enhances the traditional box-plot by highlighting multiple modalities (an indicator that groups may exist). The boxplot does not show where densities are clustered, but the raincloud plot does!
 
