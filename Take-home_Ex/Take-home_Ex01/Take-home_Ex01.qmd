@@ -30,7 +30,7 @@ This exercise aims to analyse [REALIS](https://www.ura.gov.sg/reis/index) (Real 
 ### 2.1 Installing and loading the required libraries
 
 | Package                                                                     | Description                                                                                                                                                                                            |
-|-----------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|-----------------------|-------------------------------------------------|
 | [tidyverse](https://www.tidyverse.org/)                                     | Used data import, tidying, manipulation, and data visualization. Packages like readr, dplyr, lubridate are part of tidyverse.                                                                          |
 | [patchwork](https://patchwork.data-imaginist.com/)                          | Used to combine individual ggplot into one graphic.                                                                                                                                                    |
 | [ggthemes](https://cran.r-project.org/web/packages/ggthemes/index.html)     | Provides 'ggplot2' themes and scales that replicate the look of plots by Edward Tufte, Stephen Few, 'Fivethirtyeight', 'The Economist', 'Stata', 'Excel', and 'The Wall Street Journal', among others. |
