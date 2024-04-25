@@ -1,6 +1,6 @@
 ---
 title: "Take-home Exercise 1"
-subtitle: "Creating data visualisation beyond default"
+subtitle: "Creating Data Visualisation Beyond Default"
 author: "Thet Myat Noe"
 date: "April 16, 2024"
 date-modified: "last-modified"
@@ -127,7 +127,7 @@ glimpse(realis_merge)
 
 ### 3.1 Data Visualization 1
 
-Data manipulation is done by **dplyr** functions. To get Number of Units Sold by Property Type and Quarter, use `group_by()` to group merged REALIS data into by Property Type and Quarter, then use `summarise()` to get data frame containing total number of units sold for each group. `sum()` is used to calculate total number of units sold for each group. To get Overall Number of Units Sold by Quarter, use `group_by()` to group merged REALIS data into by Quarter, then use `summarise()` to calculate the total number of units sold for each quarter.
+Data manipulation is done by **dplyr** functions. To get Number of Units Sold by Property Type and Quarter, use `group_by()` to group merged REALIS data into by Property Type and Quarter, then use `summarise()` to get data frame containing total number of units sold for each group. `sum()` is used to calculate total number of units sold for each group. To get Overall Number of Units Sold by Quarter, use `group_by()` to group merged REALIS data into by Quarter, then use `summarise()` to get data frame containing total number of units sold for each quarter. `sum()` is used to calculate total number of units sold for each quarter.
 
 Use `ggplot()` and `geom_bar()` from **ggplot2** to plot:
 
