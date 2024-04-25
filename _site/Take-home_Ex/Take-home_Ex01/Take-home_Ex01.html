@@ -378,7 +378,7 @@ $ `Planning Region`             &lt;chr&gt; "Central Region", "East Region", "No
 $ `Planning Area`               &lt;chr&gt; "Bukit Merah", "Bedok", "Yishun", "Yishu…</code></pre>
 </div>
 </div>
-<p>Space in column names will create error when used as it is in R code. Hence, replacing them with underscore is necessary. Use <code>gsub()</code> to replace space with underscores and use <code>rename_with()</code> function from <strong>dplyr</strong> <img src="dplyr.png" class="img-fluid" width="53">to rename all the columns with new column names.</p>
+<p>Space in column names will create error when used as it is in R code. Hence, replacing them with underscore is necessary. Use <code>gsub()</code> to replace space with underscores and use <code>rename_with()</code> function from <strong>dplyr</strong> <img src="dplyr.png" class="img-fluid" width="53"> to rename all the columns with new column names.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>realis_merge <span class="ot">&lt;-</span> realis_merge <span class="sc">%&gt;%</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span> <span class="fu">gsub</span>(<span class="st">" "</span>, <span class="st">"_"</span>, .), <span class="fu">everything</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -426,7 +426,7 @@ $ Planning_Area               &lt;chr&gt; "Bukit Merah", "Bedok", "Yishun", "Yis
 </section>
 <section id="create-quarter-column" class="level4">
 <h4 class="anchored" data-anchor-id="create-quarter-column">2.3.4 Create Quarter Column</h4>
-<p>Use <code>as.Date()</code> function to put Sale_Date column into date object, specify format to ensure <code>as.Date()</code> recognize the content accurately as date. Use <code>year()</code> and <code>quarter()</code> functions from <strong>lubridate</strong> package to extract year and use <code>paste()</code> to concatenate the strings.</p>
+<p>Use <code>as.Date()</code> function to put Sale_Date column into date object, specify format to ensure <code>as.Date()</code> recognize the content accurately as date. Use <code>year()</code> and <code>quarter()</code> functions from <strong>lubridate</strong> package to extract year &amp; quarter and use <code>paste()</code> to concatenate the strings.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Code</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Data Glimpse</a></li></ul>
 <div class="tab-content">
@@ -768,7 +768,7 @@ Insights from Data Visualization 3
 </section>
 <section id="summary-and-conclusion" class="level1">
 <h1>4. Summary and Conclusion</h1>
-<p>Number of units sold per quarter shows an upward trend from 2023 Q1 to 2023 Q3 but it has since been on downward trend until slight uptick seen in Q1 2023. Apartment, condominium and executive condominium make up majority of sales volume. Decline in number of apartment and condo (two highest transacted private property types in Singapore) units sale observed for Q1 2024.</p>
+<p>Number of units sold per quarter shows an upward trend from 2023 Q1 to 2023 Q3 but it has since been on downward trend until slight uptick seen in Q1 2024. Apartment, condominium and executive condominium make up majority of sales volume. Decline in number of apartment and condo (two highest transacted private property types in Singapore) units sale observed for Q1 2024.</p>
 <p>In 2024 Q1, there is decrease in number of unit sold in Central, East and North Regions while an uptick is seen in North East and West Regions. 2024 Q1 Resale and Sub Sale are decreasing while only New sale showed an increasing trend compared to Q4 2023.</p>
 <p>In comparison to Q4 2023, slight increase in Condominium and Apartment prices are observed which aligns with what is reported in media for Q1 2024.</p>
 </section>

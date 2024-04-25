@@ -81,7 +81,7 @@ Below glimpse of data set shows the current column name. We can see there are sp
 glimpse(realis_merge)
 ```
 
-Space in column names will create error when used as it is in R code. Hence, replacing them with underscore is necessary. Use `gsub()` to replace space with underscores and use `rename_with()` function from **dplyr** ![](dplyr.png){width="53"}to rename all the columns with new column names.
+Space in column names will create error when used as it is in R code. Hence, replacing them with underscore is necessary. Use `gsub()` to replace space with underscores and use `rename_with()` function from **dplyr** ![](dplyr.png){width="53"} to rename all the columns with new column names.
 
 ```{r }
 realis_merge <- realis_merge %>%
@@ -106,7 +106,7 @@ glimpse(realis_merge)
 
 #### 2.3.4 Create Quarter Column
 
-Use `as.Date()` function to put Sale_Date column into date object, specify format to ensure `as.Date()` recognize the content accurately as date. Use `year()` and `quarter()` functions from **lubridate** package to extract year and use `paste()` to concatenate the strings.
+Use `as.Date()` function to put Sale_Date column into date object, specify format to ensure `as.Date()` recognize the content accurately as date. Use `year()` and `quarter()` functions from **lubridate** package to extract year & quarter and use `paste()` to concatenate the strings.
 
 ::: panel-tabset
 ## Code
@@ -512,7 +512,7 @@ ggplot(aprt_data, aes(x = Quarter, y = `Unit_Price_($_PSM)`)) +
 
 # 4. Summary and Conclusion
 
-Number of units sold per quarter shows an upward trend from 2023 Q1 to 2023 Q3 but it has since been on downward trend until slight uptick seen in Q1 2023. Apartment, condominium and executive condominium make up majority of sales volume. Decline in number of apartment and condo (two highest transacted private property types in Singapore) units sale observed for Q1 2024.
+Number of units sold per quarter shows an upward trend from 2023 Q1 to 2023 Q3 but it has since been on downward trend until slight uptick seen in Q1 2024. Apartment, condominium and executive condominium make up majority of sales volume. Decline in number of apartment and condo (two highest transacted private property types in Singapore) units sale observed for Q1 2024.
 
 In 2024 Q1, there is decrease in number of unit sold in Central, East and North Regions while an uptick is seen in North East and West Regions. 2024 Q1 Resale and Sub Sale are decreasing while only New sale showed an increasing trend compared to Q4 2023.
 
