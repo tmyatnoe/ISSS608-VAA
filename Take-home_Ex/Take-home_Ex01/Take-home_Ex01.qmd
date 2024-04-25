@@ -11,6 +11,10 @@ execute:
   freeze: true
 ---
 
+![](Corals-at-Keppel-Bay-1024x576.avif)
+
+Photo: Corals at Keppel Bay
+
 # 1. Overview
 
 ### 1.1 Setting the scene
@@ -26,7 +30,7 @@ This exercise aims to analyse [REALIS](https://www.ura.gov.sg/reis/index) (Real 
 ### 2.1 Installing and loading the required libraries
 
 | Package                                                                     | Description                                                                                                                                                                                            |
-|------------------|------------------------------------------------------|
+|-----------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [tidyverse](https://www.tidyverse.org/)                                     | Used data import, tidying, manipulation, and data visualization. Packages like readr, dplyr, lubridate are part of tidyverse.                                                                          |
 | [patchwork](https://patchwork.data-imaginist.com/)                          | Used to combine individual ggplot into one graphic.                                                                                                                                                    |
 | [ggthemes](https://cran.r-project.org/web/packages/ggthemes/index.html)     | Provides 'ggplot2' themes and scales that replicate the look of plots by Edward Tufte, Stephen Few, 'Fivethirtyeight', 'The Economist', 'Stata', 'Excel', and 'The Wall Street Journal', among others. |
@@ -43,11 +47,11 @@ pacman::p_load(tidyverse,patchwork,ggthemes,hrbrthemes)
 Below code imports 5 .csv data from REALIS into R environment by utilizing `read_csv()` function of **readr** package. readr is part of **tidyverse** packages.
 
 ```{r}
-realis1 <- read_csv("data/ResidentialTransaction20240308160536.csv")
-realis2 <- read_csv("data/ResidentialTransaction20240308160736.csv")
-realis3 <- read_csv("data/ResidentialTransaction20240308161009.csv")
-realis4 <- read_csv("data/ResidentialTransaction20240308161109.csv")
-realis5 <- read_csv("data/ResidentialTransaction20240414220633.csv")
+realis1 <- read_csv("data/ResidentialTransaction20240308160536.csv") #2023 Q1
+realis2 <- read_csv("data/ResidentialTransaction20240308160736.csv") #2023 Q2
+realis3 <- read_csv("data/ResidentialTransaction20240308161009.csv") #2023 Q3
+realis4 <- read_csv("data/ResidentialTransaction20240308161109.csv") #2023 Q4
+realis5 <- read_csv("data/ResidentialTransaction20240414220633.csv") #2024 Q1
 
 ```
 
@@ -77,7 +81,7 @@ Below glimpse of data set shows the current column name. We can see there are sp
 glimpse(realis_merge)
 ```
 
-Space in column names will create error when used as it is in R code. Hence, replacing them with underscore is necessary. Use `gsub()` to replace space with underscores and use `rename_with()` function from **dplyr** to rename all the columns with new column names.
+Space in column names will create error when used as it is in R code. Hence, replacing them with underscore is necessary. Use `gsub()` to replace space with underscores and use `rename_with()` function from **dplyr** ![](dplyr.png){width="53"}to rename all the columns with new column names.
 
 ```{r }
 realis_merge <- realis_merge %>%
@@ -123,7 +127,7 @@ glimpse(realis_merge)
 
 ### 3.1 Data Visualization 1
 
-Data manipulation is done by **dplyr** functions. To get Number of Units Sold by Property Type and Quarter, use `group_by()` to group merged REALIS data into by Property Type and Quarter, then use `summarise()` to calculate the total number of units sold for each group. To get Overall Number of Units Sold by Quarter, use `group_by()` to group merged REALIS data into by Quarter, then use `summarise()` to calculate the total number of units sold for each quarter.
+Data manipulation is done by **dplyr** functions. To get Number of Units Sold by Property Type and Quarter, use `group_by()` to group merged REALIS data into by Property Type and Quarter, then use `summarise()` to get data frame containing total number of units sold for each group. `sum()` is used to calculate total number of units sold for each group. To get Overall Number of Units Sold by Quarter, use `group_by()` to group merged REALIS data into by Quarter, then use `summarise()` to calculate the total number of units sold for each quarter.
 
 Use `ggplot()` and `geom_bar()` from **ggplot2** to plot:
 
@@ -131,7 +135,7 @@ Use `ggplot()` and `geom_bar()` from **ggplot2** to plot:
 
 -   *Number of Units Sold by Property Type and Quarter*
 
-More functions from ggplot2 are used: `ylim()` and `labs()` functions from ggplot2 are used to set axis limit and chart title accordingly. Use `theme()` to set text size of chart title, axis text, legend text and legend title. `scale_x_discrete()` and `guide_axis()` are used to avoid overlapping labels. `scale_fill_brewer()` is used to color the bars. Use ggplot2 extension called **patchwork** to combine separate ggplot2 graphs into a single figure. Use `theme_wsj()` from **ggtheme** to set Wall Street Journal theme.
+More functions from ggplot2 are used: `ylim()` and `labs()` functions from ggplot2 are used to set axis limit and chart title accordingly. Use `theme()` to set text size of chart title, axis text, legend text and legend title. `scale_x_discrete()` and `guide_axis()` are used to avoid overlapping X axis texts. `scale_fill_brewer()` is used to color the bars. Use ggplot2 extension called **patchwork** to combine separate ggplot2 graphs into a single figure. Use `theme_wsj()` from **ggtheme** to set Wall Street Journal theme.
 
 ::: panel-tabset
 ## Plot
@@ -145,7 +149,9 @@ trans_per_prop_quarter <- realis_merge %>%
 # Plot the bar chart for Number of Units Sold by Property Type and Quarter
 p1 <- ggplot(trans_per_prop_quarter, aes(x = Property_Type, y = Total_Number_of_Units, fill = Quarter)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(x = "Property Type", y = "No. of Units Sold", title = "Number of Units Sold by Property Type and Quarter")+
+  labs(x = "Property Type", #excluded from display for simplicity
+       y = "No. of Units Sold", #excluded from display for simplicity
+       title = "Number of Units Sold by Property Type and Quarter")+
   ylim(0,3200) +
   theme_wsj()+
   theme(plot.title = element_text(size = rel(0.4)),  
@@ -166,8 +172,8 @@ p2 <- ggplot(units_by_quarter, aes(x = Quarter, y = Total_Units)) +
   geom_bar(stat = "identity", fill = "gainsboro") +  
   labs(
     title = "Overall Number of Units Sold by Quarter",
-    x = "Quarter",
-    y = "No. of Units Sold"
+    x = "Quarter", #excluded from display for simplicity
+    y = "No. of Units Sold" #excluded from display for simplicity
   ) +
   ylim(0,8000) +
   geom_text(aes(label = Total_Units),  
@@ -195,7 +201,9 @@ trans_per_prop_quarter <- realis_merge %>%
 # Plot the bar chart for Number of Units Sold by Property Type and Quarter
 p1 <- ggplot(trans_per_prop_quarter, aes(x = Property_Type, y = Total_Number_of_Units, fill = Quarter)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(x = "Property Type", y = "No. of Units Sold", title = "Number of Units Sold by Property Type and Quarter")+
+  labs(x = "Property Type", #excluded from display for simplicity
+       y = "No. of Units Sold", #excluded from display for simplicity
+       title = "Number of Units Sold by Property Type and Quarter")+
   ylim(0,3200) +
   theme_wsj()+
   theme(plot.title = element_text(size = rel(0.4)),  
@@ -216,8 +224,8 @@ p2 <- ggplot(units_by_quarter, aes(x = Quarter, y = Total_Units)) +
   geom_bar(stat = "identity", fill = "gainsboro") +  
   labs(
     title = "Overall Number of Units Sold by Quarter",
-    x = "Quarter",
-    y = "No. of Units Sold"
+    x = "Quarter", #excluded from display for simplicity
+    y = "No. of Units Sold" #excluded from display for simplicity
   ) +
   ylim(0,8000) +
   geom_text(aes(label = Total_Units),  
@@ -249,7 +257,7 @@ p
 
 ### 3.2 Data Visualization 2
 
-To get Number of Units Sold by Planning Region and Quarter, use `group_by()` to group merged REALIS data into by Planning Region and Quarter, then use `summarise()` to calculate the total number of units sold for each group. To get Number of Units Sold by Planning Region and Quarter, use `group_by()` to group merged REALIS data into by Type of Sale and Quarter, then use `summarise()` to calculate the total number of units sold for each group.
+To get Number of Units Sold by Planning Region and Quarter, use `group_by()` to group merged REALIS data into by Planning Region and Quarter, then use `summarise()` to get data frame containing total number of units sold for each group. `sum()` is used to calculate total number of units sold for each group. To get Number of Units Sold by Type of Sale and Quarter, use `group_by()` to group merged REALIS data into by Type of Sale and Quarter, then use `summarise()` to get data frame containing total number of units sold for each group. `sum()` is used to calculate total number of units sold for each group.
 
 Use `ggplot()` and `geom_bar()` from **ggplot2** to plot:
 
@@ -271,7 +279,9 @@ trans_per_reg_quarter <- realis_merge %>%
 # Plot the bar chart for Number of Units Sold by Planning Region and Quarter
 p3 <- ggplot(trans_per_reg_quarter, aes(x = Planning_Region, y = Total_Number_of_Units, fill = Quarter)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(x = "Planning Region", y = "No. of Units Sold", title = "Number of Units Sold by Planning Region and Quarter")+
+  labs(x = "Planning Region", #excluded from display for simplicity
+       y = "No. of Units Sold", #excluded from display for simplicity
+       title = "Number of Units Sold by Planning Region and Quarter")+
   ylim(0,3200) +
   theme_wsj()+
   theme(plot.title = element_text(size = rel(0.4)),  
@@ -289,7 +299,9 @@ trans_per_sale_quarter <- realis_merge %>%
 # Plot the bar chart for Number of Units Sold by Type of Sale and Quarter
 p4 <- ggplot(trans_per_sale_quarter, aes(x = Type_of_Sale, y = Total_Number_of_Units, fill = Quarter)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(x = "Type of Sale", y = "No. of Units Sold", title = "Number of Units Sold by Type of Sale and Quarter")+
+  labs(x = "Type of Sale", #excluded from display for simplicity
+       y = "No. of Units Sold", #excluded from display for simplicity
+       title = "Number of Units Sold by Type of Sale and Quarter")+
   ylim(0,4200) +
   theme_wsj()+
   theme(plot.title = element_text(size = rel(0.4)),  
@@ -315,7 +327,9 @@ trans_per_reg_quarter <- realis_merge %>%
 # Plot the bar chart for Number of Units Sold by Planning Region and Quarter
 p3 <- ggplot(trans_per_reg_quarter, aes(x = Planning_Region, y = Total_Number_of_Units, fill = Quarter)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(x = "Planning Region", y = "No. of Units Sold", title = "Number of Units Sold by Planning Region and Quarter")+
+  labs(x = "Planning Region", #excluded from display for simplicity
+       y = "No. of Units Sold", #excluded from display for simplicity
+       title = "Number of Units Sold by Planning Region and Quarter")+
   ylim(0,4200) +
   theme_wsj()+
   theme(plot.title = element_text(size = rel(0.4)),  
@@ -333,7 +347,9 @@ trans_per_sale_quarter <- realis_merge %>%
 # Plot the bar chart for Number of Units Sold by Type of Sale and Quarter
 p4 <- ggplot(trans_per_sale_quarter, aes(x = Type_of_Sale, y = Total_Number_of_Units, fill = Quarter)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(x = "Type of Sale", y = "No. of Units Sold", title = "Number of Units Sold by Type of Sale and Quarter")+
+  labs(x = "Type of Sale", #excluded from display for simplicity
+       y = "No. of Units Sold", #excluded from display for simplicity
+       title = "Number of Units Sold by Type of Sale and Quarter")+
   ylim(0,4200) +
   theme_wsj()+
   theme(plot.title = element_text(size = rel(0.4)),  
@@ -367,7 +383,7 @@ Use `ggplot()` and `geom_boxplot()` from **ggplot2** to plot boxplot for
 
 -   *Apartment*
 
-More functions from ggplot2 are used: `labs()` function is used to set axis limit and chart title accordingly. Use `theme()` to set text size of chart title, axis text, legend text and legend title. `geom_text()` to add median label to box plot. Use `theme_wsj()` from **ggtheme** to set Wall Street Journal theme.
+More functions from ggplot2 are used: `labs()` function is used to set axis limit and chart title accordingly. Use `theme()` to set text size of chart title and axis text. `geom_text()` to add median label to box plot. Use `theme_wsj()` from **ggtheme** to set Wall Street Journal theme.
 
 ::: panel-tabset
 ## Condominiums
@@ -389,8 +405,8 @@ ggplot(condo_data, aes(x = Quarter, y = `Unit_Price_($_PSM)`)) +
             vjust = -0.5, size = 3) +
   labs(
     title = "Boxplot of Unit Price ($ PSM) by Quarter for Condominiums",
-    x = "Quarter",
-    y = "Unit Price ($ PSM)"
+    x = "Quarter", #excluded from display for simplicity
+    y = "Unit Price ($ PSM)" #excluded from display for simplicity
   ) +
   theme_wsj() +
   theme(plot.title = element_text(size = rel(0.4)),  
@@ -417,8 +433,8 @@ ggplot(aprt_data, aes(x = Quarter, y = `Unit_Price_($_PSM)`)) +
             vjust = -0.5, size = 3) +
   labs(
     title = "Boxplot of Unit Price ($ PSM) by Quarter for Apartments",
-    x = "Quarter",
-    y = "Unit Price ($ PSM)"
+    x = "Quarter", #excluded from display for simplicity
+    y = "Unit Price ($ PSM)" #excluded from display for simplicity
   ) +
   theme_wsj() +
   theme(plot.title = element_text(size = rel(0.4)),  
@@ -446,8 +462,8 @@ ggplot(condo_data, aes(x = Quarter, y = `Unit_Price_($_PSM)`)) +
             vjust = -0.5, size = 3) +
   labs(
     title = "Boxplot of Unit Price ($ PSM) by Quarter for Condominiums",
-    x = "Quarter",
-    y = "Unit Price ($ PSM)"
+    x = "Quarter", #excluded from display for simplicity
+    y = "Unit Price ($ PSM)" #excluded from display for simplicity
   ) +
   theme_wsj() +
   theme(plot.title = element_text(size = rel(0.4)),  
@@ -470,8 +486,8 @@ ggplot(aprt_data, aes(x = Quarter, y = `Unit_Price_($_PSM)`)) +
             vjust = -0.5, size = 3) +
   labs(
     title = "Boxplot of Unit Price ($ PSM) by Quarter for Apartments",
-    x = "Quarter",
-    y = "Unit Price ($ PSM)"
+    x = "Quarter", #excluded from display for simplicity
+    y = "Unit Price ($ PSM)" #excluded from display for simplicity
   ) +
   theme_wsj() +
   theme(plot.title = element_text(size = rel(0.4)),  

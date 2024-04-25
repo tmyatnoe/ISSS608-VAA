@@ -251,7 +251,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">April 21, 2024</p>
+      <p class="date-modified">April 25, 2024</p>
     </div>
   </div>
     
@@ -262,6 +262,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<p><img src="Corals-at-Keppel-Bay-1024x576.avif" class="img-fluid"></p>
+<p>Photo: Corals at Keppel Bay</p>
 <section id="overview" class="level1">
 <h1>1. Overview</h1>
 <section id="setting-the-scene" class="level3">
@@ -312,11 +314,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="importing-data">2.2 Importing Data</h3>
 <p>Below code imports 5 .csv data from REALIS into R environment by utilizing <code>read_csv()</code> function of <strong>readr</strong> package. readr is part of <strong>tidyverse</strong> packages.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>realis1 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ResidentialTransaction20240308160536.csv"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>realis2 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ResidentialTransaction20240308160736.csv"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>realis3 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ResidentialTransaction20240308161009.csv"</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>realis4 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ResidentialTransaction20240308161109.csv"</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>realis5 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ResidentialTransaction20240414220633.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>realis1 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ResidentialTransaction20240308160536.csv"</span>) <span class="co">#2023 Q1</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>realis2 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ResidentialTransaction20240308160736.csv"</span>) <span class="co">#2023 Q2</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>realis3 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ResidentialTransaction20240308161009.csv"</span>) <span class="co">#2023 Q3</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>realis4 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ResidentialTransaction20240308161109.csv"</span>) <span class="co">#2023 Q4</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>realis5 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/ResidentialTransaction20240414220633.csv"</span>) <span class="co">#2024 Q1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="data-pre-processing" class="level3">
@@ -474,13 +476,13 @@ $ Quarter                     &lt;chr&gt; "2023Q1", "2023Q1", "2023Q1", "2023Q1"
 <h1>3. Data Visualization</h1>
 <section id="data-visualization-1" class="level3">
 <h3 class="anchored" data-anchor-id="data-visualization-1">3.1 Data Visualization 1</h3>
-<p>Data manipulation is done by <strong>dplyr</strong> functions. To get Number of Units Sold by Property Type and Quarter, use <code>group_by()</code> to group merged REALIS data into by Property Type and Quarter, then use <code>summarise()</code> to calculate the total number of units sold for each group. To get Overall Number of Units Sold by Quarter, use <code>group_by()</code> to group merged REALIS data into by Quarter, then use <code>summarise()</code> to calculate the total number of units sold for each quarter.</p>
+<p>Data manipulation is done by <strong>dplyr</strong> functions. To get Number of Units Sold by Property Type and Quarter, use <code>group_by()</code> to group merged REALIS data into by Property Type and Quarter, then use <code>summarise()</code> to get data frame containing total number of units sold for each group. <code>sum()</code> is used to calculate total number of units sold for each group. To get Overall Number of Units Sold by Quarter, use <code>group_by()</code> to group merged REALIS data into by Quarter, then use <code>summarise()</code> to calculate the total number of units sold for each quarter.</p>
 <p>Use <code>ggplot()</code> and <code>geom_bar()</code> from <strong>ggplot2</strong> to plot:</p>
 <ul>
 <li><p><em>Overall Number of Units Sold by Quarter</em></p></li>
 <li><p><em>Number of Units Sold by Property Type and Quarter</em></p></li>
 </ul>
-<p>More functions from ggplot2 are used: <code>ylim()</code> and <code>labs()</code> functions from ggplot2 are used to set axis limit and chart title accordingly. Use <code>theme()</code> to set text size of chart title, axis text, legend text and legend title. <code>scale_x_discrete()</code> and <code>guide_axis()</code> are used to avoid overlapping labels. <code>scale_fill_brewer()</code> is used to color the bars. Use ggplot2 extension called <strong>patchwork</strong> to combine separate ggplot2 graphs into a single figure. Use <code>theme_wsj()</code> from <strong>ggtheme</strong> to set Wall Street Journal theme.</p>
+<p>More functions from ggplot2 are used: <code>ylim()</code> and <code>labs()</code> functions from ggplot2 are used to set axis limit and chart title accordingly. Use <code>theme()</code> to set text size of chart title, axis text, legend text and legend title. <code>scale_x_discrete()</code> and <code>guide_axis()</code> are used to avoid overlapping X axis texts. <code>scale_fill_brewer()</code> is used to color the bars. Use ggplot2 extension called <strong>patchwork</strong> to combine separate ggplot2 graphs into a single figure. Use <code>theme_wsj()</code> from <strong>ggtheme</strong> to set Wall Street Journal theme.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Code</a></li></ul>
 <div class="tab-content">
@@ -567,7 +569,7 @@ Insights from Data Visualization 1:
 </section>
 <section id="data-visualization-2" class="level3">
 <h3 class="anchored" data-anchor-id="data-visualization-2">3.2 Data Visualization 2</h3>
-<p>To get Number of Units Sold by Planning Region and Quarter, use <code>group_by()</code> to group merged REALIS data into by Planning Region and Quarter, then use <code>summarise()</code> to calculate the total number of units sold for each group. To get Number of Units Sold by Planning Region and Quarter, use <code>group_by()</code> to group merged REALIS data into by Type of Sale and Quarter, then use <code>summarise()</code> to calculate the total number of units sold for each group.</p>
+<p>To get Number of Units Sold by Planning Region and Quarter, use <code>group_by()</code> to group merged REALIS data into by Planning Region and Quarter, then use <code>summarise()</code> to get data frame containing total number of units sold for each group. <code>sum()</code> is used to calculate total number of units sold for each group. To get Number of Units Sold by Type of Sale and Quarter, use <code>group_by()</code> to group merged REALIS data into by Type of Sale and Quarter, then use <code>summarise()</code> to get data frame containing total number of units sold for each group. <code>sum()</code> is used to calculate total number of units sold for each group.</p>
 <p>Use <code>ggplot()</code> and <code>geom_bar()</code> from <strong>ggplot2</strong> to plot:</p>
 <ul>
 <li><p><em>Number of Units Sold by Planning Region and Quarter</em></p></li>
@@ -658,7 +660,7 @@ Insights from Data Visualization 2
 <li><p><em>Condominium</em></p></li>
 <li><p><em>Apartment</em></p></li>
 </ul>
-<p>More functions from ggplot2 are used: <code>labs()</code> function is used to set axis limit and chart title accordingly. Use <code>theme()</code> to set text size of chart title, axis text, legend text and legend title. <code>geom_text()</code> to add median label to box plot. Use <code>theme_wsj()</code> from <strong>ggtheme</strong> to set Wall Street Journal theme.</p>
+<p>More functions from ggplot2 are used: <code>labs()</code> function is used to set axis limit and chart title accordingly. Use <code>theme()</code> to set text size of chart title and axis text. <code>geom_text()</code> to add median label to box plot. Use <code>theme_wsj()</code> from <strong>ggtheme</strong> to set Wall Street Journal theme.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Condominiums</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Apartments</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-3" role="tab" aria-controls="tabset-5-3" aria-selected="false">Code</a></li></ul>
 <div class="tab-content">

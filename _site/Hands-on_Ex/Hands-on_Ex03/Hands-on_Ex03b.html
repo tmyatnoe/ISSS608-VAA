@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Thet Myat Noe">
-<meta name="dcterms.date" content="2024-04-24">
+<meta name="dcterms.date" content="2024-04-25">
 
 <title>ISSS608-VAA - Hands-on Exercise 3b</title>
 <style>
@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -171,6 +205,15 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#basic-concepts-of-animation" id="toc-basic-concepts-of-animation" class="nav-link" data-scroll-target="#basic-concepts-of-animation">4.1.1 Basic concepts of animation</a></li>
   <li><a href="#terminology" id="toc-terminology" class="nav-link" data-scroll-target="#terminology">4.1.2 Terminology</a></li>
   </ul></li>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started">4.2 Getting Started</a>
+  <ul class="collapse">
+  <li><a href="#loading-the-r-packages" id="toc-loading-the-r-packages" class="nav-link" data-scroll-target="#loading-the-r-packages">4.2.1 Loading the R packages</a></li>
+  <li><a href="#importing-the-data" id="toc-importing-the-data" class="nav-link" data-scroll-target="#importing-the-data">4.2.2 Importing the data</a></li>
+  </ul></li>
+  <li><a href="#animated-data-visualisation-gganimate-methods" id="toc-animated-data-visualisation-gganimate-methods" class="nav-link" data-scroll-target="#animated-data-visualisation-gganimate-methods">4.3 Animated Data Visualisation: gganimate methods</a>
+  <ul class="collapse">
+  <li><a href="#building-a-static-population-bubble-plot" id="toc-building-a-static-population-bubble-plot" class="nav-link" data-scroll-target="#building-a-static-population-bubble-plot">4.3.1 Building a static population bubble plot</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -196,7 +239,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">April 24, 2024</p>
+      <p class="date">April 25, 2024</p>
     </div>
   </div>
   
@@ -243,6 +286,93 @@ Tip
 </div>
 <div class="callout-body-container callout-body">
 <p>Before you start making animated graphs, you should first ask yourself: Does it makes sense to go through the effort? If you are conducting an exploratory data analysis, a animated graphic may not be worth the time investment. However, if you are giving a presentation, a few well-placed animated graphics can help an audience connect with your topic remarkably better than static counterparts.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="getting-started" class="level1">
+<h1>4.2 Getting Started</h1>
+<section id="loading-the-r-packages" class="level2">
+<h2 class="anchored" data-anchor-id="loading-the-r-packages">4.2.1 Loading the R packages</h2>
+<p>First, write a code chunk to check, install and load the following R packages:</p>
+<ul>
+<li><p><a href="https://plotly.com/r/">plotly</a>, R library for plotting interactive statistical graphs.</p></li>
+<li><p><a href="https://gganimate.com/">gganimate</a>, an ggplot extension for creating animated statistical graphs.</p></li>
+<li><p><a href="https://cran.r-project.org/web/packages/gifski/">gifski</a> converts video frames to GIF animations using pngquant’s fancy features for efficient cross-frame palettes and temporal dithering. It produces animated GIFs that use thousands of colors per frame.</p></li>
+<li><p><a href="https://cran.r-project.org/web/packages/gapminder/">gapminder</a>: An excerpt of the data available at Gapminder.org. We just want to use its country_colors scheme.</p></li>
+<li><p><a href="https://www.tidyverse.org/">tidyverse</a>, a family of modern R packages specially designed to support data science, analysis and communication task including creating static statistical graphs.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(readxl, gifski, gapminder,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               plotly, gganimate, tidyverse) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="importing-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="importing-the-data">4.2.2 Importing the data</h2>
+<p>In this hands-on exercise, the Data worksheet from GlobalPopulation Excel workbook will be used.</p>
+<p>Write a code chunk to import Data worksheet from GlobalPopulation Excel workbook by using appropriate R package from tidyverse family.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>col <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Country"</span>, <span class="st">"Continent"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>globalPop <span class="ot">&lt;-</span> <span class="fu">read_xls</span>(<span class="st">"data/GlobalPopulation.xls"</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">sheet=</span><span class="st">"Data"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_each_</span>(<span class="fu">funs</span>(<span class="fu">factor</span>(.)), col) <span class="sc">%&gt;%</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="fu">as.integer</span>(Year))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Things to learn from the code chunk above
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>read_xls() of readxl package is used to import the Excel worksheet. mutate_each_() of dplyr package is used to convert all character data type into factor. mutate of dplyr package is used to convert data values of Year field into integer.</p>
+</div>
+</div>
+<p>Unfortunately, mutate_each_() was deprecated in dplyr 0.7.0. and funs() was deprecated in dplyr 0.8.0. In view of this, we will re-write the code by using mutate_at() as shown in the code chunk below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>col <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Country"</span>, <span class="st">"Continent"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>globalPop <span class="ot">&lt;-</span> <span class="fu">read_xls</span>(<span class="st">"data/GlobalPopulation.xls"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">sheet=</span><span class="st">"Data"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(col, as.factor) <span class="sc">%&gt;%</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="fu">as.integer</span>(Year))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Instead of using mutate_at(), across() can be used to derive the same outputs.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>col <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Country"</span>, <span class="st">"Continent"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>globalPop <span class="ot">&lt;-</span> <span class="fu">read_xls</span>(<span class="st">"data/GlobalPopulation.xls"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">sheet=</span><span class="st">"Data"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(col, as.factor)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="fu">as.integer</span>(Year))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="animated-data-visualisation-gganimate-methods" class="level1">
+<h1>4.3 Animated Data Visualisation: gganimate methods</h1>
+<p>gganimate extends the grammar of graphics as implemented by ggplot2 to include the description of animation. It does this by providing a range of new grammar classes that can be added to the plot object in order to customise how it should change with time.</p>
+<p>transition_<em>() defines how the data should be spread out and how it relates to itself across time. view_</em>() defines how the positional scales should change along the animation. shadow_<em>() defines how data from other points in time should be presented in the given point in time. enter_</em>()/exit_*() defines how new data should appear and how old data should disappear during the course of the animation. ease_aes() defines how different aesthetics should be eased during transitions.</p>
+<section id="building-a-static-population-bubble-plot" class="level2">
+<h2 class="anchored" data-anchor-id="building-a-static-population-bubble-plot">4.3.1 Building a static population bubble plot</h2>
+<p>In the code chunk below, the basic ggplot2 functions are used to create a static bubble plot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(globalPop, <span class="fu">aes</span>(<span class="at">x =</span> Old, <span class="at">y =</span> Young, </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">size =</span> Population, </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">colour =</span> Country)) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values =</span> country_colors) <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">12</span>)) <span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'Year: {frame_time}'</span>, </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">'% Aged'</span>, </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">'% Young'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex03b_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 
