@@ -61,7 +61,8 @@ If it used within a shiny application, elements associated with an id (data_id) 
 
 Below shows a typical code chunk to plot an interactive statistical graph by using **ggiraph** package. Notice that the code chunk consists of two parts. First, an ggplot object will be created. Next, [`girafe()`](https://davidgohel.github.io/ggiraph/reference/girafe.html) of **ggiraph** will be used to create an interactive svg object.
 
-```{r,fig.show = 'hide'}
+```{r}
+#| eval: false
 p <- ggplot(data=exam_data, 
        aes(x = MATHS)) +
   geom_dotplot_interactive(
@@ -105,7 +106,8 @@ girafe(
 
 The content of the tooltip can be customised by including a list object as shown in the code chunk below.
 
-```{r, fig.show = 'hide' }
+```{r}
+#| eval: false
 exam_data$tooltip <- c(paste0(     
   "Name = ", exam_data$ID,         
   "\n Class = ", exam_data$CLASS)) 
@@ -157,7 +159,8 @@ girafe(
 
 Code chunk below uses opts_tooltip() of ggiraph to customize tooltip rendering by add css declarations.
 
-```{r, fig.show = 'hide' }
+```{r }
+#| eval: false
 tooltip_css <- "background-color:white; #<<
 font-style:bold; color:black;" #<<
 
@@ -238,9 +241,10 @@ girafe(ggobj = gg_point,
        height_svg = 8*0.618)
 ```
 
-# 3.6.3 Hover effect with data_id aesthetic Code chunk below shows the second interactive feature of ggiraph, namely `data_id`.
+## 3.6.3 Hover effect with data_id aesthetic Code chunk below shows the second interactive feature of ggiraph, namely `data_id`.
 
-```{r, fig.show = 'hide'}
+```{r}
+#| eval: false
 p <- ggplot(data=exam_data, 
        aes(x = MATHS)) +
   geom_dotplot_interactive(           
@@ -282,7 +286,8 @@ Note that the default value of the hover css is *hover_css = “fill:orange;”*
 
 In the code chunk below, css codes are used to change the highlighting effect.
 
-```{r, fig.show = 'hide'}
+```{r}
+#| eval: false
 p <- ggplot(data=exam_data, 
        aes(x = MATHS)) +
   geom_dotplot_interactive(              
@@ -330,7 +335,8 @@ girafe(
 
 There are time that we want to combine tooltip and hover effect on the interactive statistical graph as shown in the code chunk below.
 
-```{r, fig.show = 'hide' }
+```{r }
+#| eval: false
 p <- ggplot(data=exam_data, 
        aes(x = MATHS)) +
   geom_dotplot_interactive(              
@@ -382,7 +388,8 @@ girafe(
 
 The code chunk below shown an example of `onclick`.
 
-```{r, fig.show = 'hide' }
+```{r }
+#| eval: false
 exam_data$onclick <- sprintf("window.open(\"%s%s\")",
 "https://www.moe.gov.sg/schoolfinder?journey=Primary%20school",
 as.character(exam_data$ID))
@@ -471,7 +478,8 @@ In order to build a coordinated multiple views as shown in the example above, th
 
 Appropriate interactive functions of **ggiraph** will be used to create the multiple views. patchwork function of [`patchwork`](https://patchwork.data-imaginist.com/) package will be used inside girafe function to create the interactive coordinated multiple views.
 
-```{r, fig.show = 'hide' }
+```{r }
+#| eval: false
 p1 <- ggplot(data=exam_data, 
        aes(x = MATHS)) +
   geom_dotplot_interactive(              
@@ -554,6 +562,10 @@ plot_ly(data = exam_data,
         color = ~RACE)
 ```
 
+Interactive:
+
+-   Click on the colour symbol at the legend.
+
 ## Code
 
 ```{r, fig.show = 'hide' }
@@ -625,6 +637,8 @@ p2 <- ggplot(data=d,
 subplot(ggplotly(p1),
         ggplotly(p2))
 ```
+
+Click on a data point of one of the scatterplot and see how the corresponding point on the other scatterplot is selected.
 
 ## Code
 

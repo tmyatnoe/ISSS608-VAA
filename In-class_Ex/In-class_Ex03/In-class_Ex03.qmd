@@ -1,0 +1,11 @@
+---
+title: "In-class Exercise 3"
+author: "Thet Myat Noe"
+date: "April 27, 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+---
