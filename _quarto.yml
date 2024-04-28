@@ -5,7 +5,7 @@ website:
   title: "ISSS608-VAA"
   navbar:
     left:
-    - text: "Hands-on Exercise"
+    - text: "✍ Hands-on Exercise"
       menu:
         - text: "Hands-on Exercise 1"
           href: "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html"
@@ -15,13 +15,19 @@ website:
           href: "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03a.html"
         - text: "Hands-on Exercise 3b"
           href: "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03b.html"
-    - text: "In-class Exercise"
+        - text: "Hands-on Exercise 4a"
+          href: "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04a.html"
+        - text: "Hands-on Exercise 4b"
+          href: "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html"
+        - text: "Hands-on Exercise 4c"
+          href: "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html"
+    - text: "💻 In-class Exercise"
       menu:
         - text: "In-class Exercise 1"
           href: "In-class_Ex/In-class_Ex01/In-class_Ex01.html"
         - text: "In-class Exercise 2"
           href: "In-class_Ex/In-class_Ex02/In-class_Ex02.html"
-    - text: "Take-home Exercise"
+    - text: "🏡 Take-home Exercise"
       menu:
         - text: "Take-home Exercise 1"
           href: "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html"      
