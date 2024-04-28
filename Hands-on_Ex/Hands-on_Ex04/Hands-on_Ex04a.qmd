@@ -176,12 +176,13 @@ In this section, you will learn how to visualise model diagnostic and model para
 
 ## 10.5 Getting Started
 
-## 10.6 Installing and loading the required libraries
+### 10.5.1 Installing and loading the required libraries
 
 ```{r}
 pacman::p_load(readxl, performance, parameters, see)
 ```
 
+## 10.6 Vistualising
 ### 10.6.1 Importing Excel file: readxl methods
 
 In the code chunk below, [*read_xls()*](https://readxl.tidyverse.org/reference/read_excel.html) of [**readxl**](https://readxl.tidyverse.org/) package is used to import the data worksheet of `ToyotaCorolla.xls` workbook into R.
