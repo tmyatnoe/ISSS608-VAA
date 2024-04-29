@@ -276,7 +276,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">April 28, 2024</p>
+      <p class="date-modified">April 29, 2024</p>
     </div>
   </div>
     
@@ -486,9 +486,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="importing-excel-file-readxl-methods">10.6.1 Importing Excel file: readxl methods</h3>
 <p>In the code chunk below, <a href="https://readxl.tidyverse.org/reference/read_excel.html"><em>read_xls()</em></a> of <a href="https://readxl.tidyverse.org/"><strong>readxl</strong></a> package is used to import the data worksheet of <code>ToyotaCorolla.xls</code> workbook into R.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#car_resale &lt;- read_xls("data/ToyotaCorolla.xls", </span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                      <span class="co"># "data")</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#car_resale</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>car_resale <span class="ot">&lt;-</span> <span class="fu">read_xls</span>(<span class="st">"data/ToyotaCorolla.xls"</span>, </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"data"</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>car_resale</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,436 × 38
+      Id Model    Price Age_08_04 Mfg_Month Mfg_Year     KM Quarterly_Tax Weight
+   &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;         &lt;dbl&gt;  &lt;dbl&gt;
+ 1    81 TOYOTA … 18950        25         8     2002  20019           100   1180
+ 2     1 TOYOTA … 13500        23        10     2002  46986           210   1165
+ 3     2 TOYOTA … 13750        23        10     2002  72937           210   1165
+ 4     3 &nbsp;TOYOTA… 13950        24         9     2002  41711           210   1165
+ 5     4 TOYOTA … 14950        26         7     2002  48000           210   1165
+ 6     5 TOYOTA … 13750        30         3     2002  38500           210   1170
+ 7     6 TOYOTA … 12950        32         1     2002  61000           210   1170
+ 8     7 &nbsp;TOYOTA… 16900        27         6     2002  94612           210   1245
+ 9     8 TOYOTA … 18600        30         3     2002  75889           210   1245
+10    44 TOYOTA … 16950        27         6     2002 110404           234   1255
+# ℹ 1,426 more rows
+# ℹ 29 more variables: Guarantee_Period &lt;dbl&gt;, HP_Bin &lt;chr&gt;, CC_bin &lt;chr&gt;,
+#   Doors &lt;dbl&gt;, Gears &lt;dbl&gt;, Cylinders &lt;dbl&gt;, Fuel_Type &lt;chr&gt;, Color &lt;chr&gt;,
+#   Met_Color &lt;dbl&gt;, Automatic &lt;dbl&gt;, Mfr_Guarantee &lt;dbl&gt;,
+#   BOVAG_Guarantee &lt;dbl&gt;, ABS &lt;dbl&gt;, Airbag_1 &lt;dbl&gt;, Airbag_2 &lt;dbl&gt;,
+#   Airco &lt;dbl&gt;, Automatic_airco &lt;dbl&gt;, Boardcomputer &lt;dbl&gt;, CD_Player &lt;dbl&gt;,
+#   Central_Lock &lt;dbl&gt;, Powered_Windows &lt;dbl&gt;, Power_Steering &lt;dbl&gt;, …</code></pre>
+</div>
 </div>
 <p>Notice that the output object <code>car_resale</code> is a tibble data frame.</p>
 </section>
@@ -496,66 +518,136 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="multiple-regression-model-using-lm">10.6.2 Multiple Regression Model using lm()</h3>
 <p>The code chunk below is used to calibrate a multiple linear regression model by using <em>lm()</em> of Base Stats of R.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#model &lt;- lm(Price ~ Age_08_04 + Mfg_Year + KM + </span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>            <span class="co">#  Weight + Guarantee_Period, data = car_resale)</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#model</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Price <span class="sc">~</span> Age_08_04 <span class="sc">+</span> Mfg_Year <span class="sc">+</span> KM <span class="sc">+</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>              Weight <span class="sc">+</span> Guarantee_Period, <span class="at">data =</span> car_resale)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Price ~ Age_08_04 + Mfg_Year + KM + Weight + Guarantee_Period, 
+    data = car_resale)
+
+Coefficients:
+     (Intercept)         Age_08_04          Mfg_Year                KM  
+      -2.637e+06        -1.409e+01         1.315e+03        -2.323e-02  
+          Weight  Guarantee_Period  
+       1.903e+01         2.770e+01  </code></pre>
+</div>
 </div>
 </section>
 <section id="model-diagnostic-checking-for-multicolinearity" class="level3">
 <h3 class="anchored" data-anchor-id="model-diagnostic-checking-for-multicolinearity">10.6.3 Model Diagnostic: checking for multicolinearity:</h3>
 <p>In the code chunk, <a href="https://easystats.github.io/performance/reference/check_collinearity.html"><em>check_collinearity()</em></a> of <a href="https://easystats.github.io/performance/"><strong>performance</strong></a> package.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#check_collinearity(model)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_collinearity</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Check for Multicollinearity
+
+Low Correlation
+
+             Term  VIF     VIF 95% CI Increased SE Tolerance Tolerance 95% CI
+               KM 1.46 [ 1.37,  1.57]         1.21      0.68     [0.64, 0.73]
+           Weight 1.41 [ 1.32,  1.51]         1.19      0.71     [0.66, 0.76]
+ Guarantee_Period 1.04 [ 1.01,  1.17]         1.02      0.97     [0.86, 0.99]
+
+High Correlation
+
+      Term   VIF     VIF 95% CI Increased SE Tolerance Tolerance 95% CI
+ Age_08_04 31.07 [28.08, 34.38]         5.57      0.03     [0.03, 0.04]
+  Mfg_Year 31.16 [28.16, 34.48]         5.58      0.03     [0.03, 0.04]</code></pre>
+</div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#check_c &lt;- check_collinearity(model)</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(check_c)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>check_c <span class="ot">&lt;-</span> <span class="fu">check_collinearity</span>(model)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(check_c)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex04a_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 </section>
 <section id="model-diagnostic-checking-normality-assumption" class="level3">
 <h3 class="anchored" data-anchor-id="model-diagnostic-checking-normality-assumption">10.6.4 Model Diagnostic: checking normality assumption</h3>
 <p>In the code chunk, <a href="https://easystats.github.io/performance/reference/check_normality.html"><em>check_normality()</em></a> of <a href="https://easystats.github.io/performance/"><strong>performance</strong></a> package.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#model1 &lt;- lm(Price ~ Age_08_04 + KM + </span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>             <span class="co"># Weight + Guarantee_Period, data = car_resale)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Price <span class="sc">~</span> Age_08_04 <span class="sc">+</span> KM <span class="sc">+</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>              Weight <span class="sc">+</span> Guarantee_Period, <span class="at">data =</span> car_resale)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#check_n &lt;- check_normality(model1)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>check_n <span class="ot">&lt;-</span> <span class="fu">check_normality</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(check_n)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(check_n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex04a_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 </section>
 <section id="model-diagnostic-check-model-for-homogeneity-of-variances" class="level3">
 <h3 class="anchored" data-anchor-id="model-diagnostic-check-model-for-homogeneity-of-variances">10.6.5 Model Diagnostic: Check model for homogeneity of variances</h3>
 <p>In the code chunk, <a href="https://easystats.github.io/performance/reference/check_heteroscedasticity.html"><em>check_heteroscedasticity()</em></a> of <a href="https://easystats.github.io/performance/"><strong>performance</strong></a> package.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#check_h &lt;- check_heteroscedasticity(model1)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>check_h <span class="ot">&lt;-</span> <span class="fu">check_heteroscedasticity</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(check_h)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(check_h)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex04a_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 </section>
 <section id="model-diagnostic-complete-check" class="level3">
 <h3 class="anchored" data-anchor-id="model-diagnostic-complete-check">10.6.6 Model Diagnostic: Complete check</h3>
 <p>We can also perform the complete by using <a href="https://easystats.github.io/performance/reference/check_model.html"><em>check_model()</em></a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">#check_model(model1)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_model</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex04a_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 </section>
 <section id="visualising-regression-parameters-see-methods" class="level3">
 <h3 class="anchored" data-anchor-id="visualising-regression-parameters-see-methods">10.6.7 Visualising Regression Parameters: see methods</h3>
 <p>In the code below, plot() of see package and parameters() of parameters package is used to visualise the parameters of a regression model.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(parameters(model1))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">parameters</span>(model1))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex04a_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 </section>
 <section id="visualising-regression-parameters-ggcoefstats-methods" class="level3">
 <h3 class="anchored" data-anchor-id="visualising-regression-parameters-ggcoefstats-methods">10.6.8 Visualising Regression Parameters: ggcoefstats() methods</h3>
 <p>In the code below, ggcoefstats() of ggstatsplot package to visualise the parameters of a regression model.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#ggcoefstats(model1, </span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>          <span class="co">#  output = "plot")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggcoefstats</span>(model1, </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">output =</span> <span class="st">"plot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex04a_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 
 
