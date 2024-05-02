@@ -328,14 +328,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>A compilation of extra ‘ggplot2’ themes, scales and utilities, including a spell check function for plot label fields and an overall emphasis on typography.</td>
 </tr>
 <tr class="odd">
-<td><a href="https://r-graph-gallery.com/38-rcolorbrewers-palettes.html">rcolorbrewer</a></td>
-<td>The RColorBrewer package offers several color palette for R.&nbsp;</td>
+<td><a href="https://r-graph-gallery.com/38-rcolorbrewers-palettes.html">RColorBrewer</a></td>
+<td>The RColorBrewer package offers several color palette for R.</td>
 </tr>
 </tbody>
 </table>
 <p>The code chunk below uses <code>p_load()</code> function from <strong>pacman</strong> package to check if packages listed are already installed in the computer. The packages are loaded if they are found to be installed. If they are not installed, the function will proceed to install and load them into R environment.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse,patchwork,ggthemes,hrbrthemes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse,patchwork,ggthemes,hrbrthemes,RColorBrewer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="importing-data" class="level2">
@@ -592,7 +592,7 @@ Insights
 <p><u>Aesthetics</u></p>
 <ol type="1">
 <li><p>X axis, Y axis and chart labels (such as 200-300,2024-01-01) are on smaller font size and may be hard to read.</p></li>
-<li><p>Boxplot colors help to distinguish each area category clearly. However, using too many colors on boxplot may be distracting to readers. Suggest using a color palette which does not produce too man contrasting colors.</p></li>
+<li><p>Boxplot colors help to distinguish each area category clearly. However, using too many colors on boxplot may be distracting to readers. Suggest using a color palette which does not produce too many contrasting colors.</p></li>
 <li><p>5 line charts for Quarterly Average Unit Price ($PSM) by Area Category for Resale can be plotted on same Y axis as one chart. This would give a more compact and clean look.</p></li>
 </ol>
 </section>

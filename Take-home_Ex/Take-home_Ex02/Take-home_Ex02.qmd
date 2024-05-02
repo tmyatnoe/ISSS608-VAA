@@ -33,12 +33,12 @@ This exercise aims to critic Data Visualization of Singapore Private Property ma
 | [patchwork](https://patchwork.data-imaginist.com/)                          | Used to combine individual ggplot into one graphic.                                                                                                                                                    |
 | [ggthemes](https://cran.r-project.org/web/packages/ggthemes/index.html)     | Provides 'ggplot2' themes and scales that replicate the look of plots by Edward Tufte, Stephen Few, 'Fivethirtyeight', 'The Economist', 'Stata', 'Excel', and 'The Wall Street Journal', among others. |
 | [hrbrthemes](https://cran.r-project.org/web/packages/hrbrthemes/index.html) | A compilation of extra 'ggplot2' themes, scales and utilities, including a spell check function for plot label fields and an overall emphasis on typography.                                           |
-| [rcolorbrewer](https://r-graph-gallery.com/38-rcolorbrewers-palettes.html)  | The RColorBrewer package offers several color palette for R.                                                                                                                                           |
+| [RColorBrewer](https://r-graph-gallery.com/38-rcolorbrewers-palettes.html)  | The RColorBrewer package offers several color palette for R.                                                                                                                                           |
 
 The code chunk below uses `p_load()` function from **pacman** package to check if packages listed are already installed in the computer. The packages are loaded if they are found to be installed. If they are not installed, the function will proceed to install and load them into R environment.
 
 ```{r}
-pacman::p_load(tidyverse,patchwork,ggthemes,hrbrthemes)
+pacman::p_load(tidyverse,patchwork,ggthemes,hrbrthemes,RColorBrewer)
 ```
 
 ## 2.2 Importing Data
@@ -181,7 +181,7 @@ In the resale housing market, the quarterly average unit price per square meter 
 
 1.  X axis, Y axis and chart labels (such as 200-300,2024-01-01) are on smaller font size and may be hard to read.
 
-2.  Boxplot colors help to distinguish each area category clearly. However, using too many colors on boxplot may be distracting to readers. Suggest using a color palette which does not produce too man contrasting colors.
+2.  Boxplot colors help to distinguish each area category clearly. However, using too many colors on boxplot may be distracting to readers. Suggest using a color palette which does not produce too many contrasting colors.
 
 3.  5 line charts for Quarterly Average Unit Price (\$PSM) by Area Category for Resale can be plotted on same Y axis as one chart. This would give a more compact and clean look.
 
