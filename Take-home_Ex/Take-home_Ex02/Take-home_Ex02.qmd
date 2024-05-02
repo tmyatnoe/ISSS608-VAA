@@ -1,0 +1,192 @@
+---
+title: "Take-home Exercise 2"
+subtitle: "DataVis Makeover"
+author: "Thet Myat Noe"
+date: "April 16, 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+---
+
+# 1. Overview
+
+## 1.1 Setting the scene
+
+There are two major residential property market in Singapore, namely public and private housing. Public housing aims to meet the basic need of the general public with monthly household income less than or equal to S\$14,000. For families with monthly household income more than S\$14,000, they need to turn to the private residential market.
+
+## 1.2 Task
+
+This exercise aims to critic Data Visualization of Singapore Private Property market in terms of clarity and aesthetics. Prepare a sketch for the alternative design by using the data visualisation design principles and best practices. Finally, remake the original design by using ggplot2, ggplot2 extensions and tidyverse packages.
+
+# 2. Getting Started
+
+## 2.1 Installing and loading the required libraries
+
+| Package                                                                     | Description                                                                                                                                                                                            |
+|------------------------|-----------------------------------------------|
+| [tidyverse](https://www.tidyverse.org/)                                     | Used data import, tidying, manipulation, and data visualization. Packages like readr, dplyr, lubridate are part of tidyverse.                                                                          |
+| [patchwork](https://patchwork.data-imaginist.com/)                          | Used to combine individual ggplot into one graphic.                                                                                                                                                    |
+| [ggthemes](https://cran.r-project.org/web/packages/ggthemes/index.html)     | Provides 'ggplot2' themes and scales that replicate the look of plots by Edward Tufte, Stephen Few, 'Fivethirtyeight', 'The Economist', 'Stata', 'Excel', and 'The Wall Street Journal', among others. |
+| [hrbrthemes](https://cran.r-project.org/web/packages/hrbrthemes/index.html) | A compilation of extra 'ggplot2' themes, scales and utilities, including a spell check function for plot label fields and an overall emphasis on typography.                                           |
+
+The code chunk below uses `p_load()` function from **pacman** package to check if packages listed are already installed in the computer. The packages are loaded if they are found to be installed. If they are not installed, the function will proceed to install and load them into R environment.
+
+```{r}
+pacman::p_load(tidyverse,patchwork,ggthemes,hrbrthemes)
+```
+
+## 2.2 Importing Data
+
+Below code imports 5 .csv data from REALIS into R environment by utilizing `read_csv()` function of **readr** package. readr is part of **tidyverse** packages.
+
+```{r}
+realis1 <- read_csv("data/ResidentialTransaction20240308160536.csv") #2023 Q1
+realis2 <- read_csv("data/ResidentialTransaction20240308160736.csv") #2023 Q2
+realis3 <- read_csv("data/ResidentialTransaction20240308161009.csv") #2023 Q3
+realis4 <- read_csv("data/ResidentialTransaction20240308161109.csv") #2023 Q4
+realis5 <- read_csv("data/ResidentialTransaction20240414220633.csv") #2024 Q1
+
+```
+
+## 2.3 Data Pre-processing
+
+### 2.3.1 Combining all quarter data into one file
+
+All residential property market data from REALIS by different quarters are merged into one file using `rbind()`.
+
+```{r}
+realis_merge <- rbind(realis1, realis2, realis3, realis4, realis5)
+```
+
+### 2.3.2 Checking for duplicates
+
+```{r}
+realis_merge[duplicated(realis_merge),]
+```
+
+No duplicated rows are present in the data based on duplicate check above using `duplicated()` function.
+
+#### 2.3.3 Rename columns for further data visualization
+
+Below glimpse of data set shows the current column name. We can see there are spaces in column name.
+
+```{r }
+glimpse(realis_merge)
+```
+
+Space in column names will create error when used as it is in R code. Hence, replacing them with underscore is necessary. Use `gsub()` to replace space with underscores and use `rename_with()` function from **dplyr** ![](dplyr.png){width="53"} to rename all the columns with new column names.
+
+```{r }
+realis_merge <- realis_merge %>%
+  rename_with(~ gsub(" ", "_", .), everything())
+```
+
+Now, we can see that column names are renamed accordingly with underscore in place of space.
+
+::: panel-tabset
+## Code
+
+```{r, results='hide'}
+glimpse(realis_merge)
+```
+
+## Data Glimpse
+
+```{r,echo=FALSE}
+glimpse(realis_merge)
+```
+:::
+
+### 2.3.4 Create Quarter Column
+
+Use `as.Date()` function to put Sale_Date column into date object, specify format to ensure `as.Date()` recognize the content accurately as date. Use `year()` and `quarter()` functions from **lubridate** package to extract year & quarter and use `paste()` to concatenate the strings.
+
+::: panel-tabset
+## Code
+
+```{r}
+realis_merge$Sale_Date <- as.Date(realis_merge$Sale_Date, format = "%d %b %Y")
+realis_merge$Quarter <- paste(year(realis_merge$Sale_Date), "Q", quarter(realis_merge$Sale_Date), sep="")
+```
+
+## Data Glimpse
+
+```{r}
+glimpse(realis_merge)
+```
+:::
+
+### 2.3.4 Create Area Category Column
+
+::: panel-tabset
+## Code
+
+```{r}
+realis_merge <- realis_merge %>%
+  mutate(
+    `Area_(SQM)` = ifelse(is.na(`Area_(SQM)`), 0, `Area_(SQM)`)  # Dealing with NA values
+  )
+realis_merge <- realis_merge %>%
+  mutate(
+    Area_Category = cut(
+      `Area_(SQM)`,
+      breaks = c(0, 100, 200, 300, 400, Inf),  
+      labels = c("<100", "100-200", "200-300", "300-400", ">400"),
+      include.lowest = TRUE  
+    )
+  )
+```
+
+## Data Glimpse
+
+```{r}
+glimpse(realis_merge)
+```
+:::
+
+# 3. Data Visualization Critique
+
+## 3.1 Original
+
+For Data Visualisation makeover, below [submission](https://iss608-1.netlify.app/take-home_ex/take-home_ex01/take-home%20exercise%201) by a fellow student will be used.
+
+![](original.png)
+
+## 3.2 Critique : Clarity and Aesthetics
+
+[Clarity]{.underline}
+
+[Aesthetics]{.underline}
+
+# 4. DataVis Makeover
+
+## 4.1 Makeover Sketch
+
+## 4.2 Makeover Visualisation
+
+```{r}
+resale_data <- realis_merge %>%
+  filter(`Type_of_Sale` == "Resale") 
+
+avg_price_by_quarter_resale <- resale_data %>%
+  group_by(Area_Category, Quarter) %>%
+  summarise(Avg_Unit_Price_PSM = mean(`Unit_Price_($_PSM)`, na.rm = TRUE), .groups = "drop")
+
+p_line_resale <- avg_price_by_quarter_resale %>%
+  ggplot(aes(x = Quarter, y = Avg_Unit_Price_PSM, group = Area_Category, color = Area_Category)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Quarterly Average Unit Price ($ PSM) by Area Category for Resale",
+       x = "Quarter",
+       y = "Average Price ($ PSM)") +
+  theme_wsj() +
+  theme(plot.title = element_text(size = rel(0.4)),  
+        axis.text.x = element_text(size = rel(0.7)),  
+        axis.text.y = element_text(size = rel(0.7)),
+        legend.text = element_text(size = rel(0.7)),
+        legend.title = element_text(size = rel(0.4)))
+p_line_resale
+```
