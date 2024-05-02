@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Thet Myat Noe">
-<meta name="dcterms.date" content="2024-04-16">
+<meta name="dcterms.date" content="2024-05-02">
 
 <title>ISSS608-VAA - Take-home Exercise 2</title>
 <style>
@@ -228,7 +228,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#combining-all-quarter-data-into-one-file" id="toc-combining-all-quarter-data-into-one-file" class="nav-link" data-scroll-target="#combining-all-quarter-data-into-one-file">2.3.1 Combining all quarter data into one file</a></li>
   <li><a href="#checking-for-duplicates" id="toc-checking-for-duplicates" class="nav-link" data-scroll-target="#checking-for-duplicates">2.3.2 Checking for duplicates</a></li>
-  <li><a href="#create-quarter-column" id="toc-create-quarter-column" class="nav-link" data-scroll-target="#create-quarter-column">2.3.4 Create Quarter Column</a></li>
+  <li><a href="#create-quarter-and-month-column" id="toc-create-quarter-and-month-column" class="nav-link" data-scroll-target="#create-quarter-and-month-column">2.3.4 Create Quarter and Month Column</a></li>
   <li><a href="#create-area-category-column" id="toc-create-area-category-column" class="nav-link" data-scroll-target="#create-area-category-column">2.3.4 Create Area Category Column</a></li>
   </ul></li>
   </ul></li>
@@ -242,6 +242,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#makeover-sketch" id="toc-makeover-sketch" class="nav-link" data-scroll-target="#makeover-sketch">4.1 Makeover Sketch</a></li>
   <li><a href="#makeover-visualisation" id="toc-makeover-visualisation" class="nav-link" data-scroll-target="#makeover-visualisation">4.2 Makeover Visualisation</a></li>
   </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">5. Conclusion</a></li>
   </ul>
 </nav>
     </div>
@@ -268,7 +269,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">April 16, 2024</p>
+      <p class="date">May 2, 2024</p>
     </div>
   </div>
   
@@ -286,6 +287,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<p><img src="pasir-ris-8.webp" class="img-fluid"> Photo: https://www.propertyguru.com.sg/</p>
 <section id="overview" class="level1">
 <h1>1. Overview</h1>
 <section id="setting-the-scene" class="level2">
@@ -324,6 +326,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="even">
 <td><a href="https://cran.r-project.org/web/packages/hrbrthemes/index.html">hrbrthemes</a></td>
 <td>A compilation of extra ‘ggplot2’ themes, scales and utilities, including a spell check function for plot label fields and an overall emphasis on typography.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://r-graph-gallery.com/38-rcolorbrewers-palettes.html">rcolorbrewer</a></td>
+<td>The RColorBrewer package offers several color palette for R.&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -446,77 +452,22 @@ $ Planning_Area               &lt;chr&gt; "Bukit Merah", "Bedok", "Yishun", "Yis
 </div>
 </section>
 </section>
-<section id="create-quarter-column" class="level3">
-<h3 class="anchored" data-anchor-id="create-quarter-column">2.3.4 Create Quarter Column</h3>
-<p>Use <code>as.Date()</code> function to put Sale_Date column into date object, specify format to ensure <code>as.Date()</code> recognize the content accurately as date. Use <code>year()</code> and <code>quarter()</code> functions from <strong>lubridate</strong> package to extract year &amp; quarter and use <code>paste()</code> to concatenate the strings.</p>
+<section id="create-quarter-and-month-column" class="level3">
+<h3 class="anchored" data-anchor-id="create-quarter-and-month-column">2.3.4 Create Quarter and Month Column</h3>
+<p>Use <code>as.Date()</code> function to put Sale_Date column into date object, specify format to ensure <code>as.Date()</code> recognize the content accurately as date. Use <code>year()</code>, <code>quarter()</code> and <code>month()</code> functions from <strong>lubridate</strong> package to extract year, quarter &amp; month and use <code>paste()</code> to concatenate the strings.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Code</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Data Glimpse</a></li></ul>
 <div class="tab-content">
 <div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>realis_merge<span class="sc">$</span>Sale_Date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(realis_merge<span class="sc">$</span>Sale_Date, <span class="at">format =</span> <span class="st">"%d %b %Y"</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>realis_merge<span class="sc">$</span>Quarter <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">year</span>(realis_merge<span class="sc">$</span>Sale_Date), <span class="st">"Q"</span>, <span class="fu">quarter</span>(realis_merge<span class="sc">$</span>Sale_Date), <span class="at">sep=</span><span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>realis_merge<span class="sc">$</span>Quarter <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">year</span>(realis_merge<span class="sc">$</span>Sale_Date), <span class="st">"Q"</span>, <span class="fu">quarter</span>(realis_merge<span class="sc">$</span>Sale_Date), <span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>realis_merge<span class="sc">$</span>Month <span class="ot">&lt;-</span> <span class="fu">month</span>(realis_merge<span class="sc">$</span>Sale_Date, <span class="at">label =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(realis_merge)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Rows: 26,806
-Columns: 22
-$ Project_Name                &lt;chr&gt; "THE REEF AT KING'S DOCK", "URBAN TREASURE…
-$ `Transacted_Price_($)`      &lt;dbl&gt; 2317000, 1823500, 1421112, 1258112, 128000…
-$ `Area_(SQFT)`               &lt;dbl&gt; 882.65, 882.65, 1076.40, 1033.34, 871.88, …
-$ `Unit_Price_($_PSF)`        &lt;dbl&gt; 2625, 2066, 1320, 1218, 1468, 1767, 1095, …
-$ Sale_Date                   &lt;date&gt; 2023-01-01, 2023-01-02, 2023-01-02, 2023-…
-$ Address                     &lt;chr&gt; "12 HARBOURFRONT AVENUE #05-32", "205 JALA…
-$ Type_of_Sale                &lt;chr&gt; "New Sale", "New Sale", "New Sale", "New S…
-$ Type_of_Area                &lt;chr&gt; "Strata", "Strata", "Strata", "Strata", "S…
-$ `Area_(SQM)`                &lt;dbl&gt; 82.0, 82.0, 100.0, 96.0, 81.0, 308.7, 420.…
-$ `Unit_Price_($_PSM)`        &lt;dbl&gt; 28256, 22238, 14211, 13105, 15802, 19015, …
-$ `Nett_Price($)`             &lt;chr&gt; "-", "-", "-", "-", "-", "-", "-", "-", "-…
-$ Property_Type               &lt;chr&gt; "Condominium", "Condominium", "Executive C…
-$ Number_of_Units             &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
-$ Tenure                      &lt;chr&gt; "99 yrs from 12/01/2021", "Freehold", "99 …
-$ Completion_Date             &lt;chr&gt; "Uncompleted", "Uncompleted", "Uncompleted…
-$ Purchaser_Address_Indicator &lt;chr&gt; "HDB", "Private", "HDB", "HDB", "HDB", "Pr…
-$ Postal_Code                 &lt;chr&gt; "097996", "419535", "269343", "269294", "7…
-$ Postal_District             &lt;chr&gt; "04", "14", "27", "27", "28", "19", "10", …
-$ Postal_Sector               &lt;chr&gt; "09", "41", "26", "26", "79", "54", "27", …
-$ Planning_Region             &lt;chr&gt; "Central Region", "East Region", "North Re…
-$ Planning_Area               &lt;chr&gt; "Bukit Merah", "Bedok", "Yishun", "Yishun"…
-$ Quarter                     &lt;chr&gt; "2023Q1", "2023Q1", "2023Q1", "2023Q1", "2…</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="create-area-category-column" class="level3">
-<h3 class="anchored" data-anchor-id="create-area-category-column">2.3.4 Create Area Category Column</h3>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Code</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Data Glimpse</a></li></ul>
-<div class="tab-content">
-<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>realis_merge <span class="ot">&lt;-</span> realis_merge <span class="sc">%&gt;%</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Area_(SQM)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(<span class="st">`</span><span class="at">Area_(SQM)</span><span class="st">`</span>), <span class="dv">0</span>, <span class="st">`</span><span class="at">Area_(SQM)</span><span class="st">`</span>)  <span class="co"># Dealing with NA values</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>realis_merge <span class="ot">&lt;-</span> realis_merge <span class="sc">%&gt;%</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Area_Category =</span> <span class="fu">cut</span>(</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Area_(SQM)</span><span class="st">`</span>,</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="dv">200</span>, <span class="dv">300</span>, <span class="dv">400</span>, <span class="cn">Inf</span>),  </span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"&lt;100"</span>, <span class="st">"100-200"</span>, <span class="st">"200-300"</span>, <span class="st">"300-400"</span>, <span class="st">"&gt;400"</span>),</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">include.lowest =</span> <span class="cn">TRUE</span>  </span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(realis_merge)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 26,806
 Columns: 23
@@ -542,7 +493,66 @@ $ Postal_Sector               &lt;chr&gt; "09", "41", "26", "26", "79", "54", "2
 $ Planning_Region             &lt;chr&gt; "Central Region", "East Region", "North Re…
 $ Planning_Area               &lt;chr&gt; "Bukit Merah", "Bedok", "Yishun", "Yishun"…
 $ Quarter                     &lt;chr&gt; "2023Q1", "2023Q1", "2023Q1", "2023Q1", "2…
-$ Area_Category               &lt;fct&gt; &lt;100, &lt;100, &lt;100, &lt;100, &lt;100, 300-400, &gt;40…</code></pre>
+$ Month                       &lt;ord&gt; Jan, Jan, Jan, Jan, Jan, Jan, Jan, Jan, Ja…</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="create-area-category-column" class="level3">
+<h3 class="anchored" data-anchor-id="create-area-category-column">2.3.4 Create Area Category Column</h3>
+<p>Use <code>mutate()</code>, <code>ifelse()</code> and <code>is.na()</code> to replace NA (missing values) with 0. Next, use <code>mutate()</code> and <code>cut()</code> functions to create area Catergory column (“&lt;100”, “100-200”, “200-300”, “300-400”, “&gt;400”).</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Code</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Data Glimpse</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>realis_merge <span class="ot">&lt;-</span> realis_merge <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Area_(SQM)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(<span class="st">`</span><span class="at">Area_(SQM)</span><span class="st">`</span>), <span class="dv">0</span>, <span class="st">`</span><span class="at">Area_(SQM)</span><span class="st">`</span>)  <span class="co"># Dealing with NA values</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>realis_merge <span class="ot">&lt;-</span> realis_merge <span class="sc">%&gt;%</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Area_Category_SQM =</span> <span class="fu">cut</span>(</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Area_(SQM)</span><span class="st">`</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="dv">200</span>, <span class="dv">300</span>, <span class="dv">400</span>, <span class="cn">Inf</span>),  </span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"&lt;100"</span>, <span class="st">"100-200"</span>, <span class="st">"200-300"</span>, <span class="st">"300-400"</span>, <span class="st">"&gt;400"</span>),</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">include.lowest =</span> <span class="cn">TRUE</span>  </span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(realis_merge)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 26,806
+Columns: 24
+$ Project_Name                &lt;chr&gt; "THE REEF AT KING'S DOCK", "URBAN TREASURE…
+$ `Transacted_Price_($)`      &lt;dbl&gt; 2317000, 1823500, 1421112, 1258112, 128000…
+$ `Area_(SQFT)`               &lt;dbl&gt; 882.65, 882.65, 1076.40, 1033.34, 871.88, …
+$ `Unit_Price_($_PSF)`        &lt;dbl&gt; 2625, 2066, 1320, 1218, 1468, 1767, 1095, …
+$ Sale_Date                   &lt;date&gt; 2023-01-01, 2023-01-02, 2023-01-02, 2023-…
+$ Address                     &lt;chr&gt; "12 HARBOURFRONT AVENUE #05-32", "205 JALA…
+$ Type_of_Sale                &lt;chr&gt; "New Sale", "New Sale", "New Sale", "New S…
+$ Type_of_Area                &lt;chr&gt; "Strata", "Strata", "Strata", "Strata", "S…
+$ `Area_(SQM)`                &lt;dbl&gt; 82.0, 82.0, 100.0, 96.0, 81.0, 308.7, 420.…
+$ `Unit_Price_($_PSM)`        &lt;dbl&gt; 28256, 22238, 14211, 13105, 15802, 19015, …
+$ `Nett_Price($)`             &lt;chr&gt; "-", "-", "-", "-", "-", "-", "-", "-", "-…
+$ Property_Type               &lt;chr&gt; "Condominium", "Condominium", "Executive C…
+$ Number_of_Units             &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+$ Tenure                      &lt;chr&gt; "99 yrs from 12/01/2021", "Freehold", "99 …
+$ Completion_Date             &lt;chr&gt; "Uncompleted", "Uncompleted", "Uncompleted…
+$ Purchaser_Address_Indicator &lt;chr&gt; "HDB", "Private", "HDB", "HDB", "HDB", "Pr…
+$ Postal_Code                 &lt;chr&gt; "097996", "419535", "269343", "269294", "7…
+$ Postal_District             &lt;chr&gt; "04", "14", "27", "27", "28", "19", "10", …
+$ Postal_Sector               &lt;chr&gt; "09", "41", "26", "26", "79", "54", "27", …
+$ Planning_Region             &lt;chr&gt; "Central Region", "East Region", "North Re…
+$ Planning_Area               &lt;chr&gt; "Bukit Merah", "Bedok", "Yishun", "Yishun"…
+$ Quarter                     &lt;chr&gt; "2023Q1", "2023Q1", "2023Q1", "2023Q1", "2…
+$ Month                       &lt;ord&gt; Jan, Jan, Jan, Jan, Jan, Jan, Jan, Jan, Ja…
+$ Area_Category_SQM           &lt;fct&gt; &lt;100, &lt;100, &lt;100, &lt;100, &lt;100, 300-400, &gt;40…</code></pre>
 </div>
 </div>
 </div>
@@ -557,11 +567,34 @@ $ Area_Category               &lt;fct&gt; &lt;100, &lt;100, &lt;100, &lt;100, &l
 <h2 class="anchored" data-anchor-id="original">3.1 Original</h2>
 <p>For Data Visualisation makeover, below <a href="https://iss608-1.netlify.app/take-home_ex/take-home_ex01/take-home%20exercise%201">submission</a> by a fellow student will be used.</p>
 <p><img src="original.png" class="img-fluid"></p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Insights
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In the resale housing market, the quarterly average unit price per square meter (PSM) exhibits contrasting trends: smaller properties (&lt;200 SQM) are gaining value, while larger ones (≥300 SQM) show price declines, indicating a shift in consumer preferences toward more compact living spaces. The Q1 2024 box plots reveal a broad price range within each area category, especially in the largest homes, suggesting that factors like location and amenities significantly influence pricing.</p>
+</div>
+</div>
 </section>
 <section id="critique-clarity-and-aesthetics" class="level2">
 <h2 class="anchored" data-anchor-id="critique-clarity-and-aesthetics">3.2 Critique : Clarity and Aesthetics</h2>
 <p><u>Clarity</u></p>
+<ol type="1">
+<li><p>Boxplot for Jan, Feb and Mar are not on same Y axis scale which may be hard to compare the ranges.</p></li>
+<li><p>Boxplot for 3 months in 2024Q1 are labelled as 2024-01-01, 2024-02-01, 2024-03-01 which does not represent the whole month.</p></li>
+<li><p>Line charts are labelled &lt;100, 100-200, 200-300, 300-400, &gt;400 but at first glance it is not clear what these values means. The clarity could be improved by adding a legend or updating labels, for example, from &lt;100 to &lt;100 SQM.</p></li>
+</ol>
 <p><u>Aesthetics</u></p>
+<ol type="1">
+<li><p>X axis, Y axis and chart labels (such as 200-300,2024-01-01) are on smaller font size and may be hard to read.</p></li>
+<li><p>Boxplot colors help to distinguish each area category clearly. However, using too many colors on boxplot may be distracting to readers. Suggest using a color palette which does not produce too man contrasting colors.</p></li>
+<li><p>5 line charts for Quarterly Average Unit Price ($PSM) by Area Category for Resale can be plotted on same Y axis as one chart. This would give a more compact and clean look.</p></li>
+</ol>
 </section>
 </section>
 <section id="datavis-makeover" class="level1">
@@ -571,16 +604,31 @@ $ Area_Category               &lt;fct&gt; &lt;100, &lt;100, &lt;100, &lt;100, &l
 </section>
 <section id="makeover-visualisation" class="level2">
 <h2 class="anchored" data-anchor-id="makeover-visualisation">4.2 Makeover Visualisation</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">Code</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>resale_data <span class="ot">&lt;-</span> realis_merge <span class="sc">%&gt;%</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">Type_of_Sale</span><span class="st">`</span> <span class="sc">==</span> <span class="st">"Resale"</span>) </span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>avg_price_by_quarter_resale <span class="ot">&lt;-</span> resale_data <span class="sc">%&gt;%</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Area_Category, Quarter) <span class="sc">%&gt;%</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Area_Category_SQM, Quarter) <span class="sc">%&gt;%</span></span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Avg_Unit_Price_PSM =</span> <span class="fu">mean</span>(<span class="st">`</span><span class="at">Unit_Price_($_PSM)</span><span class="st">`</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>p_line_resale <span class="ot">&lt;-</span> avg_price_by_quarter_resale <span class="sc">%&gt;%</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Quarter, <span class="at">y =</span> Avg_Unit_Price_PSM, <span class="at">group =</span> Area_Category, <span class="at">color =</span> Area_Category)) <span class="sc">+</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Quarter, <span class="at">y =</span> Avg_Unit_Price_PSM, <span class="at">group =</span> Area_Category_SQM, <span class="at">color =</span> Area_Category_SQM)) <span class="sc">+</span></span>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
 <span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Quarterly Average Unit Price ($ PSM) by Area Category for Resale"</span>,</span>
@@ -592,18 +640,56 @@ $ Area_Category               &lt;fct&gt; &lt;100, &lt;100, &lt;100, &lt;100, &l
 <span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.7</span>)),</span>
 <span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.7</span>)),</span>
 <span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.4</span>)))</span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>p_line_resale</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>p_line_resale</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Code</a></li></ul>
+<div class="tab-content">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-
-
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>data_q1_resale <span class="ot">&lt;-</span> resale_data <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Quarter <span class="sc">==</span> <span class="st">"2024Q1"</span>) </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>p_box_resale <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data_q1_resale, <span class="fu">aes</span>(<span class="at">x =</span> Area_Category_SQM, <span class="at">y =</span> <span class="st">`</span><span class="at">Unit_Price_($_PSM)</span><span class="st">`</span>, <span class="at">fill =</span> Area_Category_SQM)) <span class="sc">+</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">alpha =</span> <span class="fl">0.001</span>) <span class="sc">+</span>  <span class="co"># Adjusting alpha for visibility</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Month, <span class="at">scales =</span> <span class="st">"fixed"</span>) <span class="sc">+</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Monthly Unit Price ($ PSM) by Area Category for Resale (Q1 2024)"</span>,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Area Category"</span>,</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Price ($ PSM)"</span>) <span class="sc">+</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_wsj</span>() <span class="sc">+</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.4</span>)),  </span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.7</span>)),  </span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.7</span>)),</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.7</span>)),</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.4</span>)))<span class="sc">+</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"RdPu"</span>)</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>p_box_resale</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
 </section>
+</section>
+<section id="conclusion" class="level1">
+<h1>5. Conclusion</h1>
+
+
 </section>
 
 </main> <!-- /main -->

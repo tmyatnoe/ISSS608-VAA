@@ -2,7 +2,7 @@
 title: "Take-home Exercise 2"
 subtitle: "DataVis Makeover"
 author: "Thet Myat Noe"
-date: "April 16, 2024"
+date: "May 2, 2024"
 date-modified: "last-modified"
 execute:
   eval: true
@@ -10,6 +10,8 @@ execute:
   warning: false
   freeze: true
 ---
+
+![](pasir-ris-8.webp) Photo: https://www.propertyguru.com.sg/
 
 # 1. Overview
 
@@ -26,11 +28,12 @@ This exercise aims to critic Data Visualization of Singapore Private Property ma
 ## 2.1 Installing and loading the required libraries
 
 | Package                                                                     | Description                                                                                                                                                                                            |
-|------------------------|-----------------------------------------------|
+|--------------------------|----------------------------------------------|
 | [tidyverse](https://www.tidyverse.org/)                                     | Used data import, tidying, manipulation, and data visualization. Packages like readr, dplyr, lubridate are part of tidyverse.                                                                          |
 | [patchwork](https://patchwork.data-imaginist.com/)                          | Used to combine individual ggplot into one graphic.                                                                                                                                                    |
 | [ggthemes](https://cran.r-project.org/web/packages/ggthemes/index.html)     | Provides 'ggplot2' themes and scales that replicate the look of plots by Edward Tufte, Stephen Few, 'Fivethirtyeight', 'The Economist', 'Stata', 'Excel', and 'The Wall Street Journal', among others. |
 | [hrbrthemes](https://cran.r-project.org/web/packages/hrbrthemes/index.html) | A compilation of extra 'ggplot2' themes, scales and utilities, including a spell check function for plot label fields and an overall emphasis on typography.                                           |
+| [rcolorbrewer](https://r-graph-gallery.com/38-rcolorbrewers-palettes.html)  | The RColorBrewer package offers several color palette for R.                                                                                                                                           |
 
 The code chunk below uses `p_load()` function from **pacman** package to check if packages listed are already installed in the computer. The packages are loaded if they are found to be installed. If they are not installed, the function will proceed to install and load them into R environment.
 
@@ -100,9 +103,9 @@ glimpse(realis_merge)
 ```
 :::
 
-### 2.3.4 Create Quarter Column
+### 2.3.4 Create Quarter and Month Column
 
-Use `as.Date()` function to put Sale_Date column into date object, specify format to ensure `as.Date()` recognize the content accurately as date. Use `year()` and `quarter()` functions from **lubridate** package to extract year & quarter and use `paste()` to concatenate the strings.
+Use `as.Date()` function to put Sale_Date column into date object, specify format to ensure `as.Date()` recognize the content accurately as date. Use `year()`, `quarter()` and `month()` functions from **lubridate** package to extract year, quarter & month and use `paste()` to concatenate the strings.
 
 ::: panel-tabset
 ## Code
@@ -110,6 +113,7 @@ Use `as.Date()` function to put Sale_Date column into date object, specify forma
 ```{r}
 realis_merge$Sale_Date <- as.Date(realis_merge$Sale_Date, format = "%d %b %Y")
 realis_merge$Quarter <- paste(year(realis_merge$Sale_Date), "Q", quarter(realis_merge$Sale_Date), sep="")
+realis_merge$Month <- month(realis_merge$Sale_Date, label = TRUE)
 ```
 
 ## Data Glimpse
@@ -121,6 +125,8 @@ glimpse(realis_merge)
 
 ### 2.3.4 Create Area Category Column
 
+Use `mutate()`, `ifelse()` and `is.na()` to replace NA (missing values) with 0. Next, use `mutate()` and `cut()` functions to create area Catergory column ("\<100", "100-200", "200-300", "300-400", "\>400").
+
 ::: panel-tabset
 ## Code
 
@@ -131,7 +137,7 @@ realis_merge <- realis_merge %>%
   )
 realis_merge <- realis_merge %>%
   mutate(
-    Area_Category = cut(
+    Area_Category_SQM = cut(
       `Area_(SQM)`,
       breaks = c(0, 100, 200, 300, 400, Inf),  
       labels = c("<100", "100-200", "200-300", "300-400", ">400"),
@@ -155,11 +161,29 @@ For Data Visualisation makeover, below [submission](https://iss608-1.netlify.app
 
 ![](original.png)
 
+::: callout-tip
+## Insights
+
+In the resale housing market, the quarterly average unit price per square meter (PSM) exhibits contrasting trends: smaller properties (\<200 SQM) are gaining value, while larger ones (≥300 SQM) show price declines, indicating a shift in consumer preferences toward more compact living spaces. The Q1 2024 box plots reveal a broad price range within each area category, especially in the largest homes, suggesting that factors like location and amenities significantly influence pricing.
+:::
+
 ## 3.2 Critique : Clarity and Aesthetics
 
 [Clarity]{.underline}
 
+1.  Boxplot for Jan, Feb and Mar are not on same Y axis scale which may be hard to compare the ranges.
+
+2.  Boxplot for 3 months in 2024Q1 are labelled as 2024-01-01, 2024-02-01, 2024-03-01 which does not represent the whole month.
+
+3.  Line charts are labelled \<100, 100-200, 200-300, 300-400, \>400 but at first glance it is not clear what these values means. The clarity could be improved by adding a legend or updating labels, for example, from \<100 to \<100 SQM.
+
 [Aesthetics]{.underline}
+
+1.  X axis, Y axis and chart labels (such as 200-300,2024-01-01) are on smaller font size and may be hard to read.
+
+2.  Boxplot colors help to distinguish each area category clearly. However, using too many colors on boxplot may be distracting to readers. Suggest using a color palette which does not produce too man contrasting colors.
+
+3.  5 line charts for Quarterly Average Unit Price (\$PSM) by Area Category for Resale can be plotted on same Y axis as one chart. This would give a more compact and clean look.
 
 # 4. DataVis Makeover
 
@@ -167,16 +191,19 @@ For Data Visualisation makeover, below [submission](https://iss608-1.netlify.app
 
 ## 4.2 Makeover Visualisation
 
-```{r}
+::: panel-tabset
+## Plot
+
+```{r,echo=FALSE}
 resale_data <- realis_merge %>%
   filter(`Type_of_Sale` == "Resale") 
 
 avg_price_by_quarter_resale <- resale_data %>%
-  group_by(Area_Category, Quarter) %>%
+  group_by(Area_Category_SQM, Quarter) %>%
   summarise(Avg_Unit_Price_PSM = mean(`Unit_Price_($_PSM)`, na.rm = TRUE), .groups = "drop")
 
 p_line_resale <- avg_price_by_quarter_resale %>%
-  ggplot(aes(x = Quarter, y = Avg_Unit_Price_PSM, group = Area_Category, color = Area_Category)) +
+  ggplot(aes(x = Quarter, y = Avg_Unit_Price_PSM, group = Area_Category_SQM, color = Area_Category_SQM)) +
   geom_line() +
   geom_point() +
   labs(title = "Quarterly Average Unit Price ($ PSM) by Area Category for Resale",
@@ -188,5 +215,84 @@ p_line_resale <- avg_price_by_quarter_resale %>%
         axis.text.y = element_text(size = rel(0.7)),
         legend.text = element_text(size = rel(0.7)),
         legend.title = element_text(size = rel(0.4)))
+
 p_line_resale
 ```
+
+## Code
+
+```{r,fig.show = 'hide'}
+resale_data <- realis_merge %>%
+  filter(`Type_of_Sale` == "Resale") 
+
+avg_price_by_quarter_resale <- resale_data %>%
+  group_by(Area_Category_SQM, Quarter) %>%
+  summarise(Avg_Unit_Price_PSM = mean(`Unit_Price_($_PSM)`, na.rm = TRUE), .groups = "drop")
+
+p_line_resale <- avg_price_by_quarter_resale %>%
+  ggplot(aes(x = Quarter, y = Avg_Unit_Price_PSM, group = Area_Category_SQM, color = Area_Category_SQM)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Quarterly Average Unit Price ($ PSM) by Area Category for Resale",
+       x = "Quarter",
+       y = "Average Price ($ PSM)") +
+  theme_wsj() +
+  theme(plot.title = element_text(size = rel(0.4)),  
+        axis.text.x = element_text(size = rel(0.7)),  
+        axis.text.y = element_text(size = rel(0.7)),
+        legend.text = element_text(size = rel(0.7)),
+        legend.title = element_text(size = rel(0.4)))
+
+p_line_resale
+```
+:::
+
+::: panel-tabset
+## Plot
+
+```{r,echo=FALSE}
+data_q1_resale <- resale_data %>%
+  filter(Quarter == "2024Q1") 
+
+p_box_resale <- ggplot(data_q1_resale, aes(x = Area_Category_SQM, y = `Unit_Price_($_PSM)`, fill = Area_Category_SQM)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.001) +  # Adjusting alpha for visibility
+  facet_wrap(~Month, scales = "fixed") +
+  labs(title = "Monthly Unit Price ($ PSM) by Area Category for Resale (Q1 2024)",
+       x = "Area Category",
+       y = "Price ($ PSM)") +
+  theme_wsj() +
+  theme(plot.title = element_text(size = rel(0.4)),  
+        axis.text.x = element_text(angle = 45, hjust = 1, size = rel(0.7)),  
+        axis.text.y = element_text(size = rel(0.7)),
+        legend.text = element_text(size = rel(0.7)),
+        legend.title = element_text(size = rel(0.4)))+
+  scale_fill_brewer(palette = "RdPu")
+p_box_resale
+```
+
+## Code
+
+```{r,fig.show = 'hide'}
+data_q1_resale <- resale_data %>%
+  filter(Quarter == "2024Q1") 
+
+p_box_resale <- ggplot(data_q1_resale, aes(x = Area_Category_SQM, y = `Unit_Price_($_PSM)`, fill = Area_Category_SQM)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.001) +  # Adjusting alpha for visibility
+  facet_wrap(~Month, scales = "fixed") +
+  labs(title = "Monthly Unit Price ($ PSM) by Area Category for Resale (Q1 2024)",
+       x = "Area Category",
+       y = "Price ($ PSM)") +
+  theme_wsj() +
+  theme(plot.title = element_text(size = rel(0.4)),  
+        axis.text.x = element_text(angle = 45, hjust = 1, size = rel(0.7)),  
+        axis.text.y = element_text(size = rel(0.7)),
+        legend.text = element_text(size = rel(0.7)),
+        legend.title = element_text(size = rel(0.4)))+
+  scale_fill_brewer(palette = "RdPu")
+p_box_resale
+```
+:::
+
+# 5. Conclusion
