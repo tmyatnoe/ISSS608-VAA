@@ -24,7 +24,7 @@ car_resale <- read_xls("data/ToyotaCorolla.xls",
                        "data")
 ```
 
-#3 Visualisation 
+# 3 Visualisation 
 
 ## 3.1 One-sample test: gghistostats() method (Parametric)
 ```{r}
