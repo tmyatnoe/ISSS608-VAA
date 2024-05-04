@@ -80,7 +80,7 @@ Below glimpse of data set shows the current column name. We can see there are sp
 glimpse(realis_merge)
 ```
 
-Space in column names will create error when used as it is in R code. Hence, replacing them with underscore is necessary. Use `gsub()` to replace space with underscores and use `rename_with()` function from **dplyr** ![](dplyr.png){width="53"} to rename all the columns with new column names.
+Replacing space in colume name with underscore. Use `gsub()` to replace space with underscores and use `rename_with()` function from **dplyr** ![](dplyr.png){width="53"} to rename all the columns with new column names.
 
 ```{r }
 realis_merge <- realis_merge %>%
@@ -125,7 +125,7 @@ glimpse(realis_merge)
 
 ### 2.3.4 Create Area Category Column
 
-Use `mutate()`, `ifelse()` and `is.na()` to replace NA (missing values) with 0. Next, use `mutate()` and `cut()` functions to create area Catergory column ("\<100", "100-200", "200-300", "300-400", "\>400").
+Use `mutate()`, `ifelse()` and `is.na()` to replace NA (missing values) with 0. Next, use `mutate()` and `cut()` functions to create area Category column ("\<100", "100-200", "200-300", "300-400", "\>400").
 
 ::: panel-tabset
 ## Code
@@ -162,7 +162,7 @@ For Data Visualisation makeover, below [submission](https://iss608-1.netlify.app
 ![](original.png)
 
 ::: callout-tip
-## Insights
+## Insights (Extracted from Original Visualisation Submission)
 
 In the resale housing market, the quarterly average unit price per square meter (PSM) exhibits contrasting trends: smaller properties (\<200 SQM) are gaining value, while larger ones (≥300 SQM) show price declines, indicating a shift in consumer preferences toward more compact living spaces. The Q1 2024 box plots reveal a broad price range within each area category, especially in the largest homes, suggesting that factors like location and amenities significantly influence pricing.
 :::
@@ -175,13 +175,15 @@ In the resale housing market, the quarterly average unit price per square meter 
 
 2.  Boxplot for 3 months in 2024Q1 are labelled as 2024-01-01, 2024-02-01, 2024-03-01 which does not represent the whole month.
 
-3.  Line charts are labelled \<100, 100-200, 200-300, 300-400, \>400 but at first glance it is not clear what these values means. The clarity could be improved by adding a legend or updating labels, for example, from \<100 to \<100 SQM.
+3.  Line graphs are labelled \<100, 100-200, 200-300, 300-400, \>400 but at first glance it is not clear what these values means. The clarity could be improved by adding a legend or updating labels, for example, from \<100 to \<100 SQM.
+
+4.  For line graph, it is not immediately clear at first glance how many quarters the line passes through without looking at x-axis since there is no indicator on the line at each quarter.
 
 [Aesthetics]{.underline}
 
 1.  X axis, Y axis and chart labels (such as 200-300,2024-01-01) are on smaller font size and may be hard to read.
 
-2.  Boxplot colors help to distinguish each area category clearly. However, using too many colors on boxplot may be distracting to readers. Suggest using a color palette which does not produce too many contrasting colors.
+2.  Boxplot colors help to distinguish each area category clearly. However, using too many colors on boxplot may be distracting to readers. Suggest using a color palette which does not produce too many vivid contrasting colors.
 
 3.  5 line charts for Quarterly Average Unit Price (\$PSM) by Area Category for Resale can be plotted on same Y axis as one chart. This would give a more compact and clean look.
 
@@ -191,12 +193,14 @@ In the resale housing market, the quarterly average unit price per square meter 
 
 ## 4.2 Makeover Visualisation
 
+For [Quarterly Average Unit Price (\$ PSM) by Area Category for Resale]{.underline} plot, Singapore Privare Property Reslae data is need to be prepared first. To get **Resale data** only, use `filter()` function from **dplyr** to filter from realis_merge data. Use `ggplot()`, `geom_bar()` and `geom_point()` from **ggplot2** ![](logo.png){width="46"} to plot the chart. More functions from ggplot2 are used: `labs()` functions from ggplot2 are used to set chart title. Use `guides()` and `guide_legend()` to update legend title. Use `theme()` to set text size of chart title, axis text, legend text and legend title. Use `theme_wsj()` from **ggthemes** to set Wall Street Journal theme.
+
 ::: panel-tabset
 ## Plot
 
 ```{r,echo=FALSE}
 resale_data <- realis_merge %>%
-  filter(`Type_of_Sale` == "Resale") 
+  filter(Type_of_Sale == "Resale") 
 
 avg_price_by_quarter_resale <- resale_data %>%
   group_by(Area_Category_SQM, Quarter) %>%
@@ -209,10 +213,13 @@ p_line_resale <- avg_price_by_quarter_resale %>%
   labs(title = "Quarterly Average Unit Price ($ PSM) by Area Category for Resale",
        x = "Quarter",
        y = "Average Price ($ PSM)") +
+  guides(color = guide_legend(title = "Area Category (SQM)"))+
   theme_wsj() +
   theme(plot.title = element_text(size = rel(0.4)),  
         axis.text.x = element_text(size = rel(0.7)),  
         axis.text.y = element_text(size = rel(0.7)),
+        axis.title.x = element_text(size = rel(0.4)),
+        axis.title.y = element_text(size = rel(0.4)),
         legend.text = element_text(size = rel(0.7)),
         legend.title = element_text(size = rel(0.4)))
 
@@ -223,7 +230,7 @@ p_line_resale
 
 ```{r,fig.show = 'hide'}
 resale_data <- realis_merge %>%
-  filter(`Type_of_Sale` == "Resale") 
+  filter(Type_of_Sale == "Resale") 
 
 avg_price_by_quarter_resale <- resale_data %>%
   group_by(Area_Category_SQM, Quarter) %>%
@@ -236,16 +243,21 @@ p_line_resale <- avg_price_by_quarter_resale %>%
   labs(title = "Quarterly Average Unit Price ($ PSM) by Area Category for Resale",
        x = "Quarter",
        y = "Average Price ($ PSM)") +
+  guides(color = guide_legend(title = "Area Category (SQM)"))+
   theme_wsj() +
   theme(plot.title = element_text(size = rel(0.4)),  
         axis.text.x = element_text(size = rel(0.7)),  
         axis.text.y = element_text(size = rel(0.7)),
+        axis.title.x = element_text(size = rel(0.4)),
+        axis.title.y = element_text(size = rel(0.4)),
         legend.text = element_text(size = rel(0.7)),
         legend.title = element_text(size = rel(0.4)))
 
 p_line_resale
 ```
 :::
+
+Next, [Monthly Unit Price (\$ PSM) by Area Category for Resale (Q1 2024)]{.underline} plot will be remake and we need to prepare Resale data for first quarter of 2024. To get **2024 Quarter 1** data only, use `filter()` function from **dplyr** to filter from resale_data. Use `ggplot()`, `geom_boxplot()` and `geom_jitter()` from ggplot2 to plot the chart. `facet_wrap()` is used to chart 3 months data side by side: Jan and Feb followed by Mar. More functions from ggplot2 are used: `labs()` functions from ggplot2 are used to set chart title. Use `guides()` and `guide_legend()` to update legend title. Use `theme()` to set text size of chart title, axis text, legend text and legend title. Use `theme_wsj()` from **ggthemes** to set Wall Street Journal theme. `scale_fill_brewer()` is used to color the boxplots.
 
 ::: panel-tabset
 ## Plot
@@ -261,13 +273,16 @@ p_box_resale <- ggplot(data_q1_resale, aes(x = Area_Category_SQM, y = `Unit_Pric
   labs(title = "Monthly Unit Price ($ PSM) by Area Category for Resale (Q1 2024)",
        x = "Area Category",
        y = "Price ($ PSM)") +
+  guides(fill = guide_legend(title = "Area Category (SQM)"))+
   theme_wsj() +
   theme(plot.title = element_text(size = rel(0.4)),  
         axis.text.x = element_text(angle = 45, hjust = 1, size = rel(0.7)),  
         axis.text.y = element_text(size = rel(0.7)),
+        axis.title.x = element_text(size = rel(0.4)),
+        axis.title.y = element_text(size = rel(0.4)),
         legend.text = element_text(size = rel(0.7)),
         legend.title = element_text(size = rel(0.4)))+
-  scale_fill_brewer(palette = "RdPu")
+  scale_fill_brewer(palette = "Greys")
 p_box_resale
 ```
 
@@ -284,15 +299,22 @@ p_box_resale <- ggplot(data_q1_resale, aes(x = Area_Category_SQM, y = `Unit_Pric
   labs(title = "Monthly Unit Price ($ PSM) by Area Category for Resale (Q1 2024)",
        x = "Area Category",
        y = "Price ($ PSM)") +
+  guides(fill = guide_legend(title = "Area Category (SQM)"))+
   theme_wsj() +
   theme(plot.title = element_text(size = rel(0.4)),  
         axis.text.x = element_text(angle = 45, hjust = 1, size = rel(0.7)),  
         axis.text.y = element_text(size = rel(0.7)),
+        axis.title.x = element_text(size = rel(0.4)),
+        axis.title.y = element_text(size = rel(0.4)),
         legend.text = element_text(size = rel(0.7)),
         legend.title = element_text(size = rel(0.4)))+
-  scale_fill_brewer(palette = "RdPu")
+  scale_fill_brewer(palette = "Greys")
 p_box_resale
 ```
 :::
 
 # 5. Conclusion
+
+# 6. References
+
+[Faceting](https://ggplot2-book.org/facet.html)
