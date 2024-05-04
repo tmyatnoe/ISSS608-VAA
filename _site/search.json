@@ -642,5 +642,54 @@
     "title": "Take-home Exercise 2",
     "section": "Data Glimpse",
     "text": "Data Glimpse\n\nglimpse(realis_merge)\n\nRows: 26,806\nColumns: 24\n$ Project_Name                &lt;chr&gt; \"THE REEF AT KING'S DOCK\", \"URBAN TREASURE…\n$ `Transacted_Price_($)`      &lt;dbl&gt; 2317000, 1823500, 1421112, 1258112, 128000…\n$ `Area_(SQFT)`               &lt;dbl&gt; 882.65, 882.65, 1076.40, 1033.34, 871.88, …\n$ `Unit_Price_($_PSF)`        &lt;dbl&gt; 2625, 2066, 1320, 1218, 1468, 1767, 1095, …\n$ Sale_Date                   &lt;date&gt; 2023-01-01, 2023-01-02, 2023-01-02, 2023-…\n$ Address                     &lt;chr&gt; \"12 HARBOURFRONT AVENUE #05-32\", \"205 JALA…\n$ Type_of_Sale                &lt;chr&gt; \"New Sale\", \"New Sale\", \"New Sale\", \"New S…\n$ Type_of_Area                &lt;chr&gt; \"Strata\", \"Strata\", \"Strata\", \"Strata\", \"S…\n$ `Area_(SQM)`                &lt;dbl&gt; 82.0, 82.0, 100.0, 96.0, 81.0, 308.7, 420.…\n$ `Unit_Price_($_PSM)`        &lt;dbl&gt; 28256, 22238, 14211, 13105, 15802, 19015, …\n$ `Nett_Price($)`             &lt;chr&gt; \"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-\", \"-…\n$ Property_Type               &lt;chr&gt; \"Condominium\", \"Condominium\", \"Executive C…\n$ Number_of_Units             &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …\n$ Tenure                      &lt;chr&gt; \"99 yrs from 12/01/2021\", \"Freehold\", \"99 …\n$ Completion_Date             &lt;chr&gt; \"Uncompleted\", \"Uncompleted\", \"Uncompleted…\n$ Purchaser_Address_Indicator &lt;chr&gt; \"HDB\", \"Private\", \"HDB\", \"HDB\", \"HDB\", \"Pr…\n$ Postal_Code                 &lt;chr&gt; \"097996\", \"419535\", \"269343\", \"269294\", \"7…\n$ Postal_District             &lt;chr&gt; \"04\", \"14\", \"27\", \"27\", \"28\", \"19\", \"10\", …\n$ Postal_Sector               &lt;chr&gt; \"09\", \"41\", \"26\", \"26\", \"79\", \"54\", \"27\", …\n$ Planning_Region             &lt;chr&gt; \"Central Region\", \"East Region\", \"North Re…\n$ Planning_Area               &lt;chr&gt; \"Bukit Merah\", \"Bedok\", \"Yishun\", \"Yishun\"…\n$ Quarter                     &lt;chr&gt; \"2023Q1\", \"2023Q1\", \"2023Q1\", \"2023Q1\", \"2…\n$ Month                       &lt;ord&gt; Jan, Jan, Jan, Jan, Jan, Jan, Jan, Jan, Ja…\n$ Area_Category               &lt;fct&gt; &lt;100 (SQM), &lt;100 (SQM), &lt;100 (SQM), &lt;100 (…\n\n\n:::"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex04/In-class_Ex04.html",
+    "href": "In-class_Ex/In-class_Ex04/In-class_Ex04.html",
+    "title": "In-class Exercise 04",
+    "section": "",
+    "text": "pacman::p_load(tidyverse, ggstatsplot)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#one-sample-test-gghistostats-method-parametric",
+    "href": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#one-sample-test-gghistostats-method-parametric",
+    "title": "In-class Exercise 04",
+    "section": "3.1 One-sample test: gghistostats() method (Parametric)",
+    "text": "3.1 One-sample test: gghistostats() method (Parametric)\n\nset.seed(1234)\n\ngghistostats(\n  data = exam,\n  x = ENGLISH,\n  type = \"parametric\",\n  test.value = 60,\n  bin.args = list(color = \"black\",\n                  fill=\"grey50\",\n                  alpha=0.7),\n  normal.curve = FALSE,\n  normal.curve.args = list(linewidth=2),\n  xlab = \"English scores\"\n)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#one-sample-test-gghistostats-method-non-parametric",
+    "href": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#one-sample-test-gghistostats-method-non-parametric",
+    "title": "In-class Exercise 04",
+    "section": "3.2 One-sample test: gghistostats() method (Non-Parametric)",
+    "text": "3.2 One-sample test: gghistostats() method (Non-Parametric)\n\nset.seed(1234)\n\np &lt;- gghistostats(\n  data = exam,\n  x = ENGLISH,\n  type = \"np\",\n  test.value = 60,\n  bin.args = list(color = \"black\",\n                  fill=\"grey50\",\n                  alpha=0.7),\n  normal.curve = FALSE,\n  normal.curve.args = list(linewidth=2),\n  xlab = \"English scores\"\n) \n\n\nextract_stats(p)\n\n$subtitle_data\n# A tibble: 1 × 12\n  statistic  p.value method                    alternative effectsize       \n      &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;                     &lt;chr&gt;       &lt;chr&gt;            \n1     38743 3.43e-16 Wilcoxon signed rank test two.sided   r (rank biserial)\n  estimate conf.level conf.low conf.high conf.method n.obs expression\n     &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;       &lt;int&gt; &lt;list&gt;    \n1    0.528       0.95    0.430     0.613 normal        322 &lt;language&gt;\n\n$caption_data\nNULL\n\n$pairwise_comparisons_data\nNULL\n\n$descriptive_data\nNULL\n\n$one_sample_data\nNULL\n\n$tidy_data\nNULL\n\n$glance_data\nNULL"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#one-sample-test-gghistostats-method-robust---removed-outlier",
+    "href": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#one-sample-test-gghistostats-method-robust---removed-outlier",
+    "title": "In-class Exercise 04",
+    "section": "3.3 One-sample test: gghistostats() method (Robust - Removed outlier)",
+    "text": "3.3 One-sample test: gghistostats() method (Robust - Removed outlier)\n\nset.seed(1234)\n\ngghistostats(\n  data = exam,\n  x = ENGLISH,\n  type = \"robust\",\n  test.value = 60,\n  bin.args = list(color = \"black\",\n                  fill=\"grey50\",\n                  alpha=0.7),\n  normal.curve = FALSE,\n  normal.curve.args = list(linewidth=2),\n  xlab = \"English scores\"\n)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#one-sample-test-gghistostats-method-bayesian",
+    "href": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#one-sample-test-gghistostats-method-bayesian",
+    "title": "In-class Exercise 04",
+    "section": "3.4 One-sample test: gghistostats() method (Bayesian)",
+    "text": "3.4 One-sample test: gghistostats() method (Bayesian)\n\nset.seed(1234)\n\ngghistostats(\n  data = exam,\n  x = ENGLISH,\n  type = \"bayes\",\n  test.value = 60,\n  bin.args = list(color = \"black\",\n                  fill=\"grey50\",\n                  alpha=0.7),\n  normal.curve = TRUE,\n  normal.curve.args = list(linewidth=0.5),\n  xlab = \"English scores\"\n)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#engilish-score-vs-class-ggdotplotstats",
+    "href": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#engilish-score-vs-class-ggdotplotstats",
+    "title": "In-class Exercise 04",
+    "section": "3.5 Engilish score vs Class ggdotplotstats()",
+    "text": "3.5 Engilish score vs Class ggdotplotstats()\n\nggdotplotstats(\n  data = exam,\n  x = ENGLISH, \n  y = CLASS,\n  type = \"\",\n  xlab = \"\"\n)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#scores-vs-subject-ggwithinstats",
+    "href": "In-class_Ex/In-class_Ex04/In-class_Ex04.html#scores-vs-subject-ggwithinstats",
+    "title": "In-class Exercise 04",
+    "section": "3.6 Scores vs Subject ggwithinstats()",
+    "text": "3.6 Scores vs Subject ggwithinstats()\n\nexam_long &lt;- exam %&gt;%\n  pivot_longer(\n    cols = ENGLISH:SCIENCE,\n    names_to = \"SUBJECT\",\n    values_to = \"SCORES\") %&gt;%\n  filter(CLASS == \"3A\")\n\nggwithinstats(\n  data = filter(exam_long,\n                SUBJECT %in%\n                  c(\"MATHS\",\"SCIENCE\")),\n  x = SUBJECT, \n  y = SCORES,\n  type = \"p\",\n)"
   }
 ]

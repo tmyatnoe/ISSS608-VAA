@@ -1,0 +1,131 @@
+---
+title: "In-class Exercise 04"
+author: "Thet Myat Noe"
+date: "May 4, 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+---
+
+# 1. Loading R Packages
+
+```{r}
+pacman::p_load(tidyverse, ggstatsplot)
+```
+
+# 2. Importing the data
+
+```{r}
+exam <- read_csv("data/Exam_data.csv")
+```
+
+#3 Visualisation 
+
+## 3.1 One-sample test: gghistostats() method (Parametric)
+```{r}
+set.seed(1234)
+
+gghistostats(
+  data = exam,
+  x = ENGLISH,
+  type = "parametric",
+  test.value = 60,
+  bin.args = list(color = "black",
+                  fill="grey50",
+                  alpha=0.7),
+  normal.curve = FALSE,
+  normal.curve.args = list(linewidth=2),
+  xlab = "English scores"
+) 
+```
+
+## 3.2 One-sample test: gghistostats() method (Non-Parametric)
+```{r}
+set.seed(1234)
+
+p <- gghistostats(
+  data = exam,
+  x = ENGLISH,
+  type = "np",
+  test.value = 60,
+  bin.args = list(color = "black",
+                  fill="grey50",
+                  alpha=0.7),
+  normal.curve = FALSE,
+  normal.curve.args = list(linewidth=2),
+  xlab = "English scores"
+) 
+```
+
+```{r}
+extract_stats(p)
+```
+
+## 3.3 One-sample test: gghistostats() method (Robust - Removed outlier)
+```{r}
+set.seed(1234)
+
+gghistostats(
+  data = exam,
+  x = ENGLISH,
+  type = "robust",
+  test.value = 60,
+  bin.args = list(color = "black",
+                  fill="grey50",
+                  alpha=0.7),
+  normal.curve = FALSE,
+  normal.curve.args = list(linewidth=2),
+  xlab = "English scores"
+) 
+```
+
+## 3.4 One-sample test: gghistostats() method (Bayesian)
+```{r}
+set.seed(1234)
+
+gghistostats(
+  data = exam,
+  x = ENGLISH,
+  type = "bayes",
+  test.value = 60,
+  bin.args = list(color = "black",
+                  fill="grey50",
+                  alpha=0.7),
+  normal.curve = TRUE,
+  normal.curve.args = list(linewidth=0.5),
+  xlab = "English scores"
+) 
+```
+
+## 3.5 Engilish score vs Class ggdotplotstats()
+```{r}
+ggdotplotstats(
+  data = exam,
+  x = ENGLISH, 
+  y = CLASS,
+  type = "",
+  xlab = ""
+)
+```
+
+## 3.6 Scores vs Subject ggwithinstats()
+```{r}
+exam_long <- exam %>%
+  pivot_longer(
+    cols = ENGLISH:SCIENCE,
+    names_to = "SUBJECT",
+    values_to = "SCORES") %>%
+  filter(CLASS == "3A")
+
+ggwithinstats(
+  data = filter(exam_long,
+                SUBJECT %in%
+                  c("MATHS","SCIENCE")),
+  x = SUBJECT, 
+  y = SCORES,
+  type = "p",
+)
+```
