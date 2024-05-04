@@ -129,3 +129,15 @@ ggwithinstats(
   type = "p",
 )
 ```
+
+## 3.6 ggscatterstats()
+```{r}
+ggscatterstats(
+  data = exam,
+  x = MATHS, 
+  y = ENGLISH,
+  marginal = TRUE,
+  label.var = ID, 
+  label.expression = ENGLISH > 90 & MATHS > 90
+)
+```
