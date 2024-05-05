@@ -579,7 +579,7 @@ Insights (Extracted from Original Visualisation Submission)
 <p><u>Aesthetics</u></p>
 <ol type="1">
 <li><p>X axis, Y axis and chart labels (such as 200-300,2024-01-01) are on smaller font size and may be hard to read.</p></li>
-<li><p>Boxplot colors help to distinguish each area category clearly. However, using too many colors on boxplot may be distracting to readers. Suggest using a color palette which does not produce too many vivid contrasting colors.</p></li>
+<li><p>Boxplot colors help to distinguish each area category clearly. However, using too many bright colors especially on boxplot may be distracting to readers. Suggest using a color palette which does not produce too many vivid contrasting colors.</p></li>
 <li><p>5 line charts for Quarterly Average Unit Price ($PSM) by Area Category for Resale can be plotted on same Y axis as one chart. This would give a more compact and clean look.</p></li>
 </ol>
 </section>
@@ -595,7 +595,7 @@ Insights (Extracted from Original Visualisation Submission)
 <h2 class="anchored" data-anchor-id="makeover-visualisation">4.2 Makeover Visualisation</h2>
 <p>For <u>Quarterly Average Unit Price ($ PSM) by Area Category for Resale</u> plot, Singapore Privare Property Reslae data is need to be prepared first. To get <strong>Resale data</strong> only, use <code>filter()</code> function from <strong>dplyr</strong> to filter from realis_merge data. Use <code>ggplot()</code>, <code>geom_bar()</code> and <code>geom_point()</code> from <strong>ggplot2</strong> <img src="logo.png" class="img-fluid" width="46"> to plot the chart. More functions from ggplot2 are used: <code>labs()</code> functions from ggplot2 are used to set chart title. Use <code>theme()</code> to set text size of chart title, axis text, legend text and legend title. Use <code>theme_wsj()</code> from <strong>ggthemes</strong> to set Wall Street Journal theme.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Code</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Code</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false">Improvements Made</a></li></ul>
 <div class="tab-content">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <div class="cell">
@@ -638,11 +638,19 @@ Insights (Extracted from Original Visualisation Submission)
 <span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>p_line_resale</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
+<div id="tabset-3-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-3-tab">
+<ul>
+<li><p>Combined 5 line graphs into one for compactness and clean look</p></li>
+<li><p>Added legend for Area Category (SQM) for clarity</p></li>
+<li><p>Added “dot” indicator at points where line passes each quarter</p></li>
+<li><p>Added “Singapore Private Property Market” subtitle for clarity Bigger X axis, Y axis and chart labels</p></li>
+</ul>
+</div>
 </div>
 </div>
 <p>Next, <u>Monthly Unit Price ($ PSM) by Area Category for Resale (Q1 2024)</u> plot will be remake and we need to prepare Resale data for first quarter of 2024. To get <strong>2024 Quarter 1</strong> data only, use <code>filter()</code> function from <strong>dplyr</strong> to filter from resale_data. Use <code>ggplot()</code>, <code>geom_boxplot()</code> and <code>geom_jitter()</code> from ggplot2 to plot the chart. <code>facet_wrap()</code> is used to chart 3 months data side by side: Jan and Feb followed by Mar.&nbsp;More functions from ggplot2 are used: <code>labs()</code> functions from ggplot2 are used to set chart title. Use <code>theme()</code> to set text size of chart title, axis text, legend text and legend title. Use <code>theme_wsj()</code> from <strong>ggthemes</strong> to set Wall Street Journal theme. <code>scale_fill_brewer()</code> is used to color the boxplots.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">Code</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">Code</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-3" role="tab" aria-controls="tabset-4-3" aria-selected="false">Improvements Made</a></li></ul>
 <div class="tab-content">
 <div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
 <div class="cell">
@@ -681,12 +689,22 @@ Insights (Extracted from Original Visualisation Submission)
 <span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>p_box_resale</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
+<div id="tabset-4-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-3-tab">
+<ul>
+<li><p>Made Boxplot for Jan, Feb and Mar are not on same Y axis scale for better comparing the ranges.</p></li>
+<li><p>Boxplot for 3 months in 2024Q1 are labelled as 2024-01-01, 2024-02-01, 2024-03-01 which does not represent the whole month. Used “Jan”, “Feb”, “Mar” instead.</p></li>
+<li><p>Added “Singapore Private Property Market” subtitle for clarity.</p></li>
+<li><p>Bigger X axis, Y axis and chart labels.</p></li>
+<li><p>Boxplot colors help to distinguish each area category clearly. However, using too many bright colors on boxplot may be distracting to readers. Used grey color palette with varying tones which does not produce too many vivid distracting colors.</p></li>
+</ul>
+</div>
 </div>
 </div>
 </section>
 </section>
 <section id="conclusion" class="level1">
 <h1>5. Conclusion</h1>
+<p>In Summary, Data visualisation makeover is done via ggplot2, ggplot2 extensions and tidyverse packages. Design improvements were done to elevate the clarity and aesthetics of the original submission.</p>
 </section>
 <section id="references" class="level1">
 <h1>6. References</h1>

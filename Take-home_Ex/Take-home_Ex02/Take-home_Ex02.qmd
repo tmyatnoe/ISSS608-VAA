@@ -162,7 +162,7 @@ In the resale housing market, the quarterly average unit price per square meter 
 
 1.  X axis, Y axis and chart labels (such as 200-300,2024-01-01) are on smaller font size and may be hard to read.
 
-2.  Boxplot colors help to distinguish each area category clearly. However, using too many colors on boxplot may be distracting to readers. Suggest using a color palette which does not produce too many vivid contrasting colors.
+2.  Boxplot colors help to distinguish each area category clearly. However, using too many bright colors especially on boxplot may be distracting to readers. Suggest using a color palette which does not produce too many vivid contrasting colors.
 
 3.  5 line charts for Quarterly Average Unit Price (\$PSM) by Area Category for Resale can be plotted on same Y axis as one chart. This would give a more compact and clean look.
 
@@ -240,6 +240,16 @@ p_line_resale <- avg_price_by_quarter_resale %>%
 
 p_line_resale
 ```
+
+## Improvements Made
+
+-   Combined 5 line graphs into one for compactness and clean look
+
+-   Added legend for Area Category (SQM) for clarity
+
+-   Added "dot" indicator at points where line passes each quarter
+
+-   Added "Singapore Private Property Market" subtitle for clarity Bigger X axis, Y axis and chart labels
 :::
 
 Next, [Monthly Unit Price (\$ PSM) by Area Category for Resale (Q1 2024)]{.underline} plot will be remake and we need to prepare Resale data for first quarter of 2024. To get **2024 Quarter 1** data only, use `filter()` function from **dplyr** to filter from resale_data. Use `ggplot()`, `geom_boxplot()` and `geom_jitter()` from ggplot2 to plot the chart. `facet_wrap()` is used to chart 3 months data side by side: Jan and Feb followed by Mar. More functions from ggplot2 are used: `labs()` functions from ggplot2 are used to set chart title. Use `theme()` to set text size of chart title, axis text, legend text and legend title. Use `theme_wsj()` from **ggthemes** to set Wall Street Journal theme. `scale_fill_brewer()` is used to color the boxplots.
@@ -298,9 +308,23 @@ p_box_resale <- ggplot(data_q1_resale, aes(x = `Area Category (SQM)`, y = `Unit 
   scale_fill_brewer(palette = "Greys")
 p_box_resale
 ```
+
+## Improvements Made
+
+-   Made Boxplot for Jan, Feb and Mar are not on same Y axis scale for better comparing the ranges.
+
+-   Boxplot for 3 months in 2024Q1 are labelled as 2024-01-01, 2024-02-01, 2024-03-01 which does not represent the whole month. Used "Jan", "Feb", "Mar" instead.
+
+-   Added "Singapore Private Property Market" subtitle for clarity.
+
+-   Bigger X axis, Y axis and chart labels.
+
+-   Boxplot colors help to distinguish each area category clearly. However, using too many bright colors on boxplot may be distracting to readers. Used grey color palette with varying tones which does not produce too many vivid distracting colors.
 :::
 
 # 5. Conclusion
+
+In Summary, Data visualisation makeover is done via ggplot2, ggplot2 extensions and tidyverse packages. Design improvements were done to elevate the clarity and aesthetics of the original submission.
 
 # 6. References
 
