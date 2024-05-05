@@ -146,7 +146,10 @@ In the resale housing market, the quarterly average unit price per square meter 
 
 ## 3.2 Critique : Clarity and Aesthetics
 
-[Clarity]{.underline}
+[**Clarity**]{.underline}
+
+::: panel-tabset
+## Critique Points
 
 1.  Boxplot for Jan, Feb and Mar are not on same Y axis scale which may be hard to compare the ranges.
 
@@ -158,13 +161,26 @@ In the resale housing market, the quarterly average unit price per square meter 
 
 5.  Chart titles do not indicate which country does the charts represent. It may be good to indicate "Singapore Private Property Market" for clarity.
 
-[Aesthetics]{.underline}
+## Illustration
+
+![](Clarity.jpg)
+:::
+
+[**Aesthetics**]{.underline}
+
+::: panel-tabset
+## Critique Points
 
 1.  X axis, Y axis texts and chart labels (such as 200-300,2024-01-01) are on smaller font size and may be hard to read.
 
 2.  Boxplot colors help to distinguish each area category clearly. However, using too many bright colors especially on boxplot may be distracting to readers. Suggest using a color palette which does not produce too many vivid contrasting colors.
 
 3.  5 line charts for Quarterly Average Unit Price (\$PSM) by Area Category for Resale can be plotted on same Y axis as one chart. This would give a more compact and clean look.
+
+## Illustration
+
+![](Aesthetic.jpg)
+:::
 
 # 4. DataVis Makeover
 
