@@ -232,6 +232,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#combining-all-quarter-data-into-one-file" id="toc-combining-all-quarter-data-into-one-file" class="nav-link" data-scroll-target="#combining-all-quarter-data-into-one-file">2.3.1 Combining all quarter data into one file</a></li>
   <li><a href="#checking-for-duplicates" id="toc-checking-for-duplicates" class="nav-link" data-scroll-target="#checking-for-duplicates">2.3.2 Checking for duplicates</a></li>
+  <li><a href="#checking-for-missing-values-na" id="toc-checking-for-missing-values-na" class="nav-link" data-scroll-target="#checking-for-missing-values-na">2.3.3 Checking for missing values (NA)</a></li>
   <li><a href="#create-quarter-and-month-column" id="toc-create-quarter-and-month-column" class="nav-link" data-scroll-target="#create-quarter-and-month-column">2.3.4 Create Quarter and Month Column</a></li>
   <li><a href="#create-area-category-column" id="toc-create-area-category-column" class="nav-link" data-scroll-target="#create-area-category-column">2.3.4 Create Area Category Column</a></li>
   </ul></li>
@@ -379,8 +380,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>No duplicated rows are present in the data based on duplicate check above using <code>duplicated()</code> function.</p>
-<section id="checking-for-missing-values-na" class="level4">
-<h4 class="anchored" data-anchor-id="checking-for-missing-values-na">2.3.3 Checking for missing values (NA)</h4>
+</section>
+<section id="checking-for-missing-values-na" class="level3">
+<h3 class="anchored" data-anchor-id="checking-for-missing-values-na">2.3.3 Checking for missing values (NA)</h3>
 <p>Use <code>summary()</code> to get quick overview of data and missing values. We can see only Area (SQM) column has 6 missing values (NA). This will be further taken care in later processing of this exercise.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(realis_merge)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -435,7 +437,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
                                                          </code></pre>
 </div>
 </div>
-</section>
 </section>
 <section id="create-quarter-and-month-column" class="level3">
 <h3 class="anchored" data-anchor-id="create-quarter-and-month-column">2.3.4 Create Quarter and Month Column</h3>
@@ -578,7 +579,7 @@ Insights (Extracted from Original Visualisation Submission)
 </ol>
 <p><u>Aesthetics</u></p>
 <ol type="1">
-<li><p>X axis, Y axis and chart labels (such as 200-300,2024-01-01) are on smaller font size and may be hard to read.</p></li>
+<li><p>X axis, Y axis texts and chart labels (such as 200-300,2024-01-01) are on smaller font size and may be hard to read.</p></li>
 <li><p>Boxplot colors help to distinguish each area category clearly. However, using too many bright colors especially on boxplot may be distracting to readers. Suggest using a color palette which does not produce too many vivid contrasting colors.</p></li>
 <li><p>5 line charts for Quarterly Average Unit Price ($PSM) by Area Category for Resale can be plotted on same Y axis as one chart. This would give a more compact and clean look.</p></li>
 </ol>
@@ -640,10 +641,11 @@ Insights (Extracted from Original Visualisation Submission)
 </div>
 <div id="tabset-3-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-3-tab">
 <ul>
-<li><p>Combined 5 line graphs into one for compactness and clean look</p></li>
-<li><p>Added legend for Area Category (SQM) for clarity</p></li>
-<li><p>Added “dot” indicator at points where line passes each quarter</p></li>
-<li><p>Added “Singapore Private Property Market” subtitle for clarity Bigger X axis, Y axis and chart labels</p></li>
+<li><p>Combined 5 line graphs into one for compactness and clean look.</p></li>
+<li><p>Added legend for Area Category (SQM) for clarity.</p></li>
+<li><p>Added “dot” indicator at points where line passes each quarter.</p></li>
+<li><p>Added “Singapore Private Property Market” subtitle for clarity.</p></li>
+<li><p>Bigger X axis, Y axis texts and chart labels.</p></li>
 </ul>
 </div>
 </div>
@@ -694,7 +696,7 @@ Insights (Extracted from Original Visualisation Submission)
 <li><p>Made Boxplot for Jan, Feb and Mar are not on same Y axis scale for better comparing the ranges.</p></li>
 <li><p>Boxplot for 3 months in 2024Q1 are labelled as 2024-01-01, 2024-02-01, 2024-03-01 which does not represent the whole month. Used “Jan”, “Feb”, “Mar” instead.</p></li>
 <li><p>Added “Singapore Private Property Market” subtitle for clarity.</p></li>
-<li><p>Bigger X axis, Y axis and chart labels.</p></li>
+<li><p>Bigger X axis, Y axis texts and chart labels.</p></li>
 <li><p>Boxplot colors help to distinguish each area category clearly. However, using too many bright colors on boxplot may be distracting to readers. Used grey color palette with varying tones which does not produce too many vivid distracting colors.</p></li>
 </ul>
 </div>
@@ -704,7 +706,7 @@ Insights (Extracted from Original Visualisation Submission)
 </section>
 <section id="conclusion" class="level1">
 <h1>5. Conclusion</h1>
-<p>In Summary, Data visualisation makeover is done via ggplot2, ggplot2 extensions and tidyverse packages. Design improvements were done to elevate the clarity and aesthetics of the original submission.</p>
+<p>In summary, Data visualisation makeover is done via ggplot2, ggplot2 extensions and tidyverse packages. Design improvements were done to elevate the clarity and aesthetics of the original submission.</p>
 </section>
 <section id="references" class="level1">
 <h1>6. References</h1>
