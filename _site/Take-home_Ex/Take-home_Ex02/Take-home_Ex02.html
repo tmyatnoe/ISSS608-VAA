@@ -440,7 +440,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="create-quarter-and-month-column" class="level3">
 <h3 class="anchored" data-anchor-id="create-quarter-and-month-column">2.3.4 Create Quarter and Month Column</h3>
-<p>Use <code>as.Date()</code> function to put Sale_Date column into date object, specify format to ensure <code>as.Date()</code> recognize the content accurately as date. Use <code>year()</code>, <code>quarter()</code> and <code>month()</code> functions from <strong>lubridate</strong> package to extract year, quarter &amp; month and use <code>paste()</code> to concatenate the strings.</p>
+<p>Use <code>as.Date()</code> function to put Sale Date column into date object, specify format to ensure <code>as.Date()</code> recognize the content accurately as date. Use <code>year()</code>, <code>quarter()</code> and <code>month()</code> functions from <strong>lubridate</strong> package to extract year, quarter &amp; month and use <code>paste()</code> to concatenate the strings.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Code</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Data Glimpse</a></li></ul>
 <div class="tab-content">
@@ -713,7 +713,7 @@ Insights (Extracted from Original Visualisation Submission)
 </div>
 <div id="tabset-6-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-3-tab">
 <ul>
-<li><p>Made Boxplot for Jan, Feb and Mar are not on same Y axis scale for better comparing the ranges.</p></li>
+<li><p>Made Boxplot for Jan, Feb and Mar on same Y axis scale for better comparing the ranges.</p></li>
 <li><p>Boxplot for 3 months in 2024Q1 are labelled as 2024-01-01, 2024-02-01, 2024-03-01 which does not represent the whole month. Used “Jan”, “Feb”, “Mar” instead.</p></li>
 <li><p>Added “Singapore Private Property Market” subtitle for clarity.</p></li>
 <li><p>Bigger X axis, Y axis texts and chart labels.</p></li>

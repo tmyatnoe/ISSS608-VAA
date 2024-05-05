@@ -82,7 +82,7 @@ summary(realis_merge)
 
 ### 2.3.4 Create Quarter and Month Column
 
-Use `as.Date()` function to put Sale_Date column into date object, specify format to ensure `as.Date()` recognize the content accurately as date. Use `year()`, `quarter()` and `month()` functions from **lubridate** package to extract year, quarter & month and use `paste()` to concatenate the strings.
+Use `as.Date()` function to put Sale Date column into date object, specify format to ensure `as.Date()` recognize the content accurately as date. Use `year()`, `quarter()` and `month()` functions from **lubridate** package to extract year, quarter & month and use `paste()` to concatenate the strings.
 
 ::: panel-tabset
 ## Code
@@ -330,7 +330,7 @@ p_box_resale
 
 ## Improvements Made
 
--   Made Boxplot for Jan, Feb and Mar are not on same Y axis scale for better comparing the ranges.
+-   Made Boxplot for Jan, Feb and Mar on same Y axis scale for better comparing the ranges.
 
 -   Boxplot for 3 months in 2024Q1 are labelled as 2024-01-01, 2024-02-01, 2024-03-01 which does not represent the whole month. Used "Jan", "Feb", "Mar" instead.
 
