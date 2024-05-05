@@ -234,7 +234,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#checking-for-duplicates" id="toc-checking-for-duplicates" class="nav-link" data-scroll-target="#checking-for-duplicates">2.3.2 Checking for duplicates</a></li>
   <li><a href="#checking-for-missing-values-na" id="toc-checking-for-missing-values-na" class="nav-link" data-scroll-target="#checking-for-missing-values-na">2.3.3 Checking for missing values (NA)</a></li>
   <li><a href="#create-quarter-and-month-column" id="toc-create-quarter-and-month-column" class="nav-link" data-scroll-target="#create-quarter-and-month-column">2.3.4 Create Quarter and Month Column</a></li>
-  <li><a href="#create-area-category-column" id="toc-create-area-category-column" class="nav-link" data-scroll-target="#create-area-category-column">2.3.4 Create Area Category Column</a></li>
+  <li><a href="#create-area-category-column" id="toc-create-area-category-column" class="nav-link" data-scroll-target="#create-area-category-column">2.3.5 Create Area Category Column</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#data-visualization-critique" id="toc-data-visualization-critique" class="nav-link" data-scroll-target="#data-visualization-critique">3. Data Visualization Critique</a>
@@ -487,7 +487,7 @@ $ Month                         &lt;ord&gt; Jan, Jan, Jan, Jan, Jan, Jan, Jan, J
 </div>
 </section>
 <section id="create-area-category-column" class="level3">
-<h3 class="anchored" data-anchor-id="create-area-category-column">2.3.4 Create Area Category Column</h3>
+<h3 class="anchored" data-anchor-id="create-area-category-column">2.3.5 Create Area Category Column</h3>
 <p>Use <code>mutate()</code>, <code>ifelse()</code> and <code>is.na()</code> to replace NA (missing values) with 0. Next, use <code>mutate()</code> and <code>cut()</code> functions to create area Category column (“&lt;100”, “100-200”, “200-300”, “300-400”, “&gt;400”).</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Code</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Data Glimpse</a></li></ul>

@@ -100,7 +100,7 @@ glimpse(realis_merge)
 ```
 :::
 
-### 2.3.4 Create Area Category Column
+### 2.3.5 Create Area Category Column
 
 Use `mutate()`, `ifelse()` and `is.na()` to replace NA (missing values) with 0. Next, use `mutate()` and `cut()` functions to create area Category column ("\<100", "100-200", "200-300", "300-400", "\>400").
 
@@ -192,8 +192,7 @@ In the resale housing market, the quarterly average unit price per square meter 
 
 ## 4.2 Makeover Visualisation
 
-For [Quarterly Average Unit Price (\$ PSM) by Area Category for Resale]{.underline} plot, Singapore Privare Property Reslae data is need to be prepared first. To get **Resale data** only, use `filter()` function from **dplyr** to filter from realis_merge data. Use `group_by()` to group mdata into by Area Category and Quarter, then use `summarise()` to get data frame containing mean unit price ($ PSM) for each group. `mean()` is used to calculate mean unit price (\$ PSM) for each group. 
-Use `ggplot()`, `geom_bar()` and `geom_point()` from **ggplot2** ![](logo.png){width="46"} to plot the chart. More functions from ggplot2 are used: `labs()` functions from ggplot2 are used to set chart title, subtitle, X and Y axis labels. Use `theme()` to set text size of chart title, subtitle, axis label, axis text, legend text and legend title. Use `theme_wsj()` from **ggthemes** to set Wall Street Journal theme.
+For [Quarterly Average Unit Price (\$ PSM) by Area Category for Resale]{.underline} plot, Singapore Privare Property Reslae data is need to be prepared first. To get **Resale data** only, use `filter()` function from **dplyr** to filter from realis_merge data. Use `group_by()` to group mdata into by Area Category and Quarter, then use `summarise()` to get data frame containing mean unit price (\$ PSM) for each group. `mean()` is used to calculate mean unit price (\$ PSM) for each group. Use `ggplot()`, `geom_bar()` and `geom_point()` from **ggplot2** ![](logo.png){width="46"} to plot the chart. More functions from ggplot2 are used: `labs()` functions from ggplot2 are used to set chart title, subtitle, X and Y axis labels. Use `theme()` to set text size of chart title, subtitle, axis label, axis text, legend text and legend title. Use `theme_wsj()` from **ggthemes** to set Wall Street Journal theme.
 
 ::: panel-tabset
 ## Plot
@@ -271,7 +270,7 @@ p_line_resale
 -   Bigger X axis, Y axis texts and chart labels.
 :::
 
-Next, [Monthly Unit Price (\$ PSM) by Area Category for Resale (Q1 2024)]{.underline} plot will be remake and we need to prepare Resale data for first quarter of 2024. To get **2024 Quarter 1** data only, use `filter()` function from **dplyr** to filter from resale_data. Use `ggplot()`, `geom_boxplot()` and `geom_jitter()` from ggplot2 to plot the chart. `facet_wrap()` is used to chart 3 months data side by side: Jan and Feb followed by Mar.  More functions from ggplot2 are used: `labs()` functions from ggplot2 are used to set chart title, subtitle, X and Y axis labels. Use `theme()` to set text size of chart title, subtitle, axis label, axis text, legend text and legend title. Use `theme_wsj()` from **ggthemes** to set Wall Street Journal theme. `scale_fill_brewer()` is used to color the boxplots.
+Next, [Monthly Unit Price (\$ PSM) by Area Category for Resale (Q1 2024)]{.underline} plot will be remake and we need to prepare Resale data for first quarter of 2024. To get **2024 Quarter 1** data only, use `filter()` function from **dplyr** to filter from resale_data. Use `ggplot()`, `geom_boxplot()` and `geom_jitter()` from ggplot2 to plot the chart. `facet_wrap()` is used to chart 3 months data side by side: Jan and Feb followed by Mar. More functions from ggplot2 are used: `labs()` functions from ggplot2 are used to set chart title, subtitle, X and Y axis labels. Use `theme()` to set text size of chart title, subtitle, axis label, axis text, legend text and legend title. Use `theme_wsj()` from **ggthemes** to set Wall Street Journal theme. `scale_fill_brewer()` is used to color the boxplots.
 
 ::: panel-tabset
 ## Plot
