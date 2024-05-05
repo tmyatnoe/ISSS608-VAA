@@ -281,7 +281,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">May 4, 2024</p>
+      <p class="date-modified">May 5, 2024</p>
     </div>
   </div>
     
@@ -379,19 +379,88 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>No duplicated rows are present in the data based on duplicate check above using <code>duplicated()</code> function.</p>
-<section id="rename-columns-for-further-data-visualization" class="level4">
-<h4 class="anchored" data-anchor-id="rename-columns-for-further-data-visualization">2.3.3 Rename columns for further data visualization</h4>
-<p>Below glimpse of data set shows the current column name. We can see there are spaces in column name.</p>
+<section id="checking-for-missing-values-na" class="level4">
+<h4 class="anchored" data-anchor-id="checking-for-missing-values-na">2.3.3 Checking for missing values (NA)</h4>
+<p>Use <code>summary()</code> to get quick overview of data and missing values. We can see only Area (SQM) column has 6 missing values (NA). This will be further taken care in later processing of this exercise.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(realis_merge)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(realis_merge)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Project Name       Transacted Price ($)  Area (SQFT)       Unit Price ($ PSF)
+ Length:26806       Min.   :   440000    Min.   :   322.9   Min.   : 138      
+ Class :character   1st Qu.:  1280000    1st Qu.:   721.2   1st Qu.:1384      
+ Mode  :character   Median :  1660000    Median :   990.3   Median :1762      
+                    Mean   :  2143286    Mean   :  1191.6   Mean   :1852      
+                    3rd Qu.:  2320000    3rd Qu.:  1302.4   3rd Qu.:2260      
+                    Max.   :392180000    Max.   :144883.4   Max.   :5756      
+                                                                              
+  Sale Date           Address          Type of Sale       Type of Area      
+ Length:26806       Length:26806       Length:26806       Length:26806      
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+   Area (SQM)      Unit Price ($ PSM) Nett Price($)      Property Type     
+ Min.   :   30.0   Min.   : 1484      Length:26806       Length:26806      
+ 1st Qu.:   67.0   1st Qu.:14893      Class :character   Class :character  
+ Median :   92.0   Median :18966      Mode  :character   Mode  :character  
+ Mean   :  110.5   Mean   :19930                                           
+ 3rd Qu.:  121.0   3rd Qu.:24327                                           
+ Max.   :13460.0   Max.   :61962                                           
+ NA's   :6                                                                 
+ Number of Units     Tenure          Completion Date   
+ Min.   : 1.000   Length:26806       Length:26806      
+ 1st Qu.: 1.000   Class :character   Class :character  
+ Median : 1.000   Mode  :character   Mode  :character  
+ Mean   : 1.005                                        
+ 3rd Qu.: 1.000                                        
+ Max.   :60.000                                        
+                                                       
+ Purchaser Address Indicator Postal Code        Postal District   
+ Length:26806                Length:26806       Length:26806      
+ Class :character            Class :character   Class :character  
+ Mode  :character            Mode  :character   Mode  :character  
+                                                                  
+                                                                  
+                                                                  
+                                                                  
+ Postal Sector      Planning Region    Planning Area     
+ Length:26806       Length:26806       Length:26806      
+ Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character  
+                                                         
+                                                         
+                                                         
+                                                         </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="create-quarter-and-month-column" class="level3">
+<h3 class="anchored" data-anchor-id="create-quarter-and-month-column">2.3.4 Create Quarter and Month Column</h3>
+<p>Use <code>as.Date()</code> function to put Sale_Date column into date object, specify format to ensure <code>as.Date()</code> recognize the content accurately as date. Use <code>year()</code>, <code>quarter()</code> and <code>month()</code> functions from <strong>lubridate</strong> package to extract year, quarter &amp; month and use <code>paste()</code> to concatenate the strings.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Code</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Data Glimpse</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>realis_merge<span class="sc">$</span><span class="st">"Sale Date"</span> <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(realis_merge<span class="sc">$</span><span class="st">"Sale Date"</span>, <span class="at">format =</span> <span class="st">"%d %b %Y"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>realis_merge<span class="sc">$</span>Quarter <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">year</span>(realis_merge<span class="sc">$</span><span class="st">"Sale Date"</span>), <span class="st">"Q"</span>, <span class="fu">quarter</span>(realis_merge<span class="sc">$</span><span class="st">"Sale Date"</span>), <span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>realis_merge<span class="sc">$</span>Month <span class="ot">&lt;-</span> <span class="fu">month</span>(realis_merge<span class="sc">$</span><span class="st">"Sale Date"</span>, <span class="at">label =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(realis_merge)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 26,806
-Columns: 21
+Columns: 23
 $ `Project Name`                &lt;chr&gt; "THE REEF AT KING'S DOCK", "URBAN TREASU…
 $ `Transacted Price ($)`        &lt;dbl&gt; 2317000, 1823500, 1421112, 1258112, 1280…
 $ `Area (SQFT)`                 &lt;dbl&gt; 882.65, 882.65, 1076.40, 1033.34, 871.88…
 $ `Unit Price ($ PSF)`          &lt;dbl&gt; 2625, 2066, 1320, 1218, 1468, 1767, 1095…
-$ `Sale Date`                   &lt;chr&gt; "01 Jan 2023", "02 Jan 2023", "02 Jan 20…
+$ `Sale Date`                   &lt;date&gt; 2023-01-01, 2023-01-02, 2023-01-02, 202…
 $ Address                       &lt;chr&gt; "12 HARBOURFRONT AVENUE #05-32", "205 JA…
 $ `Type of Sale`                &lt;chr&gt; "New Sale", "New Sale", "New Sale", "New…
 $ `Type of Area`                &lt;chr&gt; "Strata", "Strata", "Strata", "Strata", …
@@ -407,98 +476,9 @@ $ `Postal Code`                 &lt;chr&gt; "097996", "419535", "269343", "26929
 $ `Postal District`             &lt;chr&gt; "04", "14", "27", "27", "28", "19", "10"…
 $ `Postal Sector`               &lt;chr&gt; "09", "41", "26", "26", "79", "54", "27"…
 $ `Planning Region`             &lt;chr&gt; "Central Region", "East Region", "North …
-$ `Planning Area`               &lt;chr&gt; "Bukit Merah", "Bedok", "Yishun", "Yishu…</code></pre>
-</div>
-</div>
-<p>Replacing space in colume name with underscore. Use <code>gsub()</code> to replace space with underscores and use <code>rename_with()</code> function from <strong>dplyr</strong> <img src="dplyr.png" class="img-fluid" width="53"> to rename all the columns with new column names.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>realis_merge <span class="ot">&lt;-</span> realis_merge <span class="sc">%&gt;%</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span> <span class="fu">gsub</span>(<span class="st">" "</span>, <span class="st">"_"</span>, .), <span class="fu">everything</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Now, we can see that column names are renamed accordingly with underscore in place of space.</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Code</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Data Glimpse</a></li></ul>
-<div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(realis_merge)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>Rows: 26,806
-Columns: 21
-$ Project_Name                &lt;chr&gt; "THE REEF AT KING'S DOCK", "URBAN TREASURE…
-$ `Transacted_Price_($)`      &lt;dbl&gt; 2317000, 1823500, 1421112, 1258112, 128000…
-$ `Area_(SQFT)`               &lt;dbl&gt; 882.65, 882.65, 1076.40, 1033.34, 871.88, …
-$ `Unit_Price_($_PSF)`        &lt;dbl&gt; 2625, 2066, 1320, 1218, 1468, 1767, 1095, …
-$ Sale_Date                   &lt;chr&gt; "01 Jan 2023", "02 Jan 2023", "02 Jan 2023…
-$ Address                     &lt;chr&gt; "12 HARBOURFRONT AVENUE #05-32", "205 JALA…
-$ Type_of_Sale                &lt;chr&gt; "New Sale", "New Sale", "New Sale", "New S…
-$ Type_of_Area                &lt;chr&gt; "Strata", "Strata", "Strata", "Strata", "S…
-$ `Area_(SQM)`                &lt;dbl&gt; 82.0, 82.0, 100.0, 96.0, 81.0, 308.7, 420.…
-$ `Unit_Price_($_PSM)`        &lt;dbl&gt; 28256, 22238, 14211, 13105, 15802, 19015, …
-$ `Nett_Price($)`             &lt;chr&gt; "-", "-", "-", "-", "-", "-", "-", "-", "-…
-$ Property_Type               &lt;chr&gt; "Condominium", "Condominium", "Executive C…
-$ Number_of_Units             &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
-$ Tenure                      &lt;chr&gt; "99 yrs from 12/01/2021", "Freehold", "99 …
-$ Completion_Date             &lt;chr&gt; "Uncompleted", "Uncompleted", "Uncompleted…
-$ Purchaser_Address_Indicator &lt;chr&gt; "HDB", "Private", "HDB", "HDB", "HDB", "Pr…
-$ Postal_Code                 &lt;chr&gt; "097996", "419535", "269343", "269294", "7…
-$ Postal_District             &lt;chr&gt; "04", "14", "27", "27", "28", "19", "10", …
-$ Postal_Sector               &lt;chr&gt; "09", "41", "26", "26", "79", "54", "27", …
-$ Planning_Region             &lt;chr&gt; "Central Region", "East Region", "North Re…
-$ Planning_Area               &lt;chr&gt; "Bukit Merah", "Bedok", "Yishun", "Yishun"…</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-</section>
-<section id="create-quarter-and-month-column" class="level3">
-<h3 class="anchored" data-anchor-id="create-quarter-and-month-column">2.3.4 Create Quarter and Month Column</h3>
-<p>Use <code>as.Date()</code> function to put Sale_Date column into date object, specify format to ensure <code>as.Date()</code> recognize the content accurately as date. Use <code>year()</code>, <code>quarter()</code> and <code>month()</code> functions from <strong>lubridate</strong> package to extract year, quarter &amp; month and use <code>paste()</code> to concatenate the strings.</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Code</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Data Glimpse</a></li></ul>
-<div class="tab-content">
-<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>realis_merge<span class="sc">$</span>Sale_Date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(realis_merge<span class="sc">$</span>Sale_Date, <span class="at">format =</span> <span class="st">"%d %b %Y"</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>realis_merge<span class="sc">$</span>Quarter <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">year</span>(realis_merge<span class="sc">$</span>Sale_Date), <span class="st">"Q"</span>, <span class="fu">quarter</span>(realis_merge<span class="sc">$</span>Sale_Date), <span class="at">sep=</span><span class="st">""</span>)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>realis_merge<span class="sc">$</span>Month <span class="ot">&lt;-</span> <span class="fu">month</span>(realis_merge<span class="sc">$</span>Sale_Date, <span class="at">label =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(realis_merge)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Rows: 26,806
-Columns: 23
-$ Project_Name                &lt;chr&gt; "THE REEF AT KING'S DOCK", "URBAN TREASURE…
-$ `Transacted_Price_($)`      &lt;dbl&gt; 2317000, 1823500, 1421112, 1258112, 128000…
-$ `Area_(SQFT)`               &lt;dbl&gt; 882.65, 882.65, 1076.40, 1033.34, 871.88, …
-$ `Unit_Price_($_PSF)`        &lt;dbl&gt; 2625, 2066, 1320, 1218, 1468, 1767, 1095, …
-$ Sale_Date                   &lt;date&gt; 2023-01-01, 2023-01-02, 2023-01-02, 2023-…
-$ Address                     &lt;chr&gt; "12 HARBOURFRONT AVENUE #05-32", "205 JALA…
-$ Type_of_Sale                &lt;chr&gt; "New Sale", "New Sale", "New Sale", "New S…
-$ Type_of_Area                &lt;chr&gt; "Strata", "Strata", "Strata", "Strata", "S…
-$ `Area_(SQM)`                &lt;dbl&gt; 82.0, 82.0, 100.0, 96.0, 81.0, 308.7, 420.…
-$ `Unit_Price_($_PSM)`        &lt;dbl&gt; 28256, 22238, 14211, 13105, 15802, 19015, …
-$ `Nett_Price($)`             &lt;chr&gt; "-", "-", "-", "-", "-", "-", "-", "-", "-…
-$ Property_Type               &lt;chr&gt; "Condominium", "Condominium", "Executive C…
-$ Number_of_Units             &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
-$ Tenure                      &lt;chr&gt; "99 yrs from 12/01/2021", "Freehold", "99 …
-$ Completion_Date             &lt;chr&gt; "Uncompleted", "Uncompleted", "Uncompleted…
-$ Purchaser_Address_Indicator &lt;chr&gt; "HDB", "Private", "HDB", "HDB", "HDB", "Pr…
-$ Postal_Code                 &lt;chr&gt; "097996", "419535", "269343", "269294", "7…
-$ Postal_District             &lt;chr&gt; "04", "14", "27", "27", "28", "19", "10", …
-$ Postal_Sector               &lt;chr&gt; "09", "41", "26", "26", "79", "54", "27", …
-$ Planning_Region             &lt;chr&gt; "Central Region", "East Region", "North Re…
-$ Planning_Area               &lt;chr&gt; "Bukit Merah", "Bedok", "Yishun", "Yishun"…
-$ Quarter                     &lt;chr&gt; "2023Q1", "2023Q1", "2023Q1", "2023Q1", "2…
-$ Month                       &lt;ord&gt; Jan, Jan, Jan, Jan, Jan, Jan, Jan, Jan, Ja…</code></pre>
+$ `Planning Area`               &lt;chr&gt; "Bukit Merah", "Bedok", "Yishun", "Yishu…
+$ Quarter                       &lt;chr&gt; "2023Q1", "2023Q1", "2023Q1", "2023Q1", …
+$ Month                         &lt;ord&gt; Jan, Jan, Jan, Jan, Jan, Jan, Jan, Jan, …</code></pre>
 </div>
 </div>
 </div>
@@ -509,55 +489,55 @@ $ Month                       &lt;ord&gt; Jan, Jan, Jan, Jan, Jan, Jan, Jan, Jan
 <h3 class="anchored" data-anchor-id="create-area-category-column">2.3.4 Create Area Category Column</h3>
 <p>Use <code>mutate()</code>, <code>ifelse()</code> and <code>is.na()</code> to replace NA (missing values) with 0. Next, use <code>mutate()</code> and <code>cut()</code> functions to create area Category column (“&lt;100”, “100-200”, “200-300”, “300-400”, “&gt;400”).</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Code</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Data Glimpse</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Code</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Data Glimpse</a></li></ul>
 <div class="tab-content">
-<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>realis_merge <span class="ot">&lt;-</span> realis_merge <span class="sc">%&gt;%</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Area_(SQM)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(<span class="st">`</span><span class="at">Area_(SQM)</span><span class="st">`</span>), <span class="dv">0</span>, <span class="st">`</span><span class="at">Area_(SQM)</span><span class="st">`</span>)  <span class="co"># Dealing with NA values</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>realis_merge <span class="ot">&lt;-</span> realis_merge <span class="sc">%&gt;%</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Area_Category_SQM =</span> <span class="fu">cut</span>(</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Area_(SQM)</span><span class="st">`</span>,</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="dv">200</span>, <span class="dv">300</span>, <span class="dv">400</span>, <span class="cn">Inf</span>),  </span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"&lt;100"</span>, <span class="st">"100-200"</span>, <span class="st">"200-300"</span>, <span class="st">"300-400"</span>, <span class="st">"&gt;400"</span>),</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">include.lowest =</span> <span class="cn">TRUE</span>  </span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>realis_merge <span class="ot">&lt;-</span> realis_merge <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Area (SQM)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(<span class="st">`</span><span class="at">Area (SQM)</span><span class="st">`</span>), <span class="dv">0</span>, <span class="st">`</span><span class="at">Area (SQM)</span><span class="st">`</span>)  <span class="co"># Dealing with NA values</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>realis_merge <span class="ot">&lt;-</span> realis_merge <span class="sc">%&gt;%</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Area Category (SQM)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">cut</span>(</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Area (SQM)</span><span class="st">`</span>,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="dv">200</span>, <span class="dv">300</span>, <span class="dv">400</span>, <span class="cn">Inf</span>),  </span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"&lt;100"</span>, <span class="st">"100-200"</span>, <span class="st">"200-300"</span>, <span class="st">"300-400"</span>, <span class="st">"&gt;400"</span>),</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">include.lowest =</span> <span class="cn">TRUE</span>  </span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
-<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(realis_merge)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(realis_merge)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 26,806
 Columns: 24
-$ Project_Name                &lt;chr&gt; "THE REEF AT KING'S DOCK", "URBAN TREASURE…
-$ `Transacted_Price_($)`      &lt;dbl&gt; 2317000, 1823500, 1421112, 1258112, 128000…
-$ `Area_(SQFT)`               &lt;dbl&gt; 882.65, 882.65, 1076.40, 1033.34, 871.88, …
-$ `Unit_Price_($_PSF)`        &lt;dbl&gt; 2625, 2066, 1320, 1218, 1468, 1767, 1095, …
-$ Sale_Date                   &lt;date&gt; 2023-01-01, 2023-01-02, 2023-01-02, 2023-…
-$ Address                     &lt;chr&gt; "12 HARBOURFRONT AVENUE #05-32", "205 JALA…
-$ Type_of_Sale                &lt;chr&gt; "New Sale", "New Sale", "New Sale", "New S…
-$ Type_of_Area                &lt;chr&gt; "Strata", "Strata", "Strata", "Strata", "S…
-$ `Area_(SQM)`                &lt;dbl&gt; 82.0, 82.0, 100.0, 96.0, 81.0, 308.7, 420.…
-$ `Unit_Price_($_PSM)`        &lt;dbl&gt; 28256, 22238, 14211, 13105, 15802, 19015, …
-$ `Nett_Price($)`             &lt;chr&gt; "-", "-", "-", "-", "-", "-", "-", "-", "-…
-$ Property_Type               &lt;chr&gt; "Condominium", "Condominium", "Executive C…
-$ Number_of_Units             &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
-$ Tenure                      &lt;chr&gt; "99 yrs from 12/01/2021", "Freehold", "99 …
-$ Completion_Date             &lt;chr&gt; "Uncompleted", "Uncompleted", "Uncompleted…
-$ Purchaser_Address_Indicator &lt;chr&gt; "HDB", "Private", "HDB", "HDB", "HDB", "Pr…
-$ Postal_Code                 &lt;chr&gt; "097996", "419535", "269343", "269294", "7…
-$ Postal_District             &lt;chr&gt; "04", "14", "27", "27", "28", "19", "10", …
-$ Postal_Sector               &lt;chr&gt; "09", "41", "26", "26", "79", "54", "27", …
-$ Planning_Region             &lt;chr&gt; "Central Region", "East Region", "North Re…
-$ Planning_Area               &lt;chr&gt; "Bukit Merah", "Bedok", "Yishun", "Yishun"…
-$ Quarter                     &lt;chr&gt; "2023Q1", "2023Q1", "2023Q1", "2023Q1", "2…
-$ Month                       &lt;ord&gt; Jan, Jan, Jan, Jan, Jan, Jan, Jan, Jan, Ja…
-$ Area_Category_SQM           &lt;fct&gt; &lt;100, &lt;100, &lt;100, &lt;100, &lt;100, 300-400, &gt;40…</code></pre>
+$ `Project Name`                &lt;chr&gt; "THE REEF AT KING'S DOCK", "URBAN TREASU…
+$ `Transacted Price ($)`        &lt;dbl&gt; 2317000, 1823500, 1421112, 1258112, 1280…
+$ `Area (SQFT)`                 &lt;dbl&gt; 882.65, 882.65, 1076.40, 1033.34, 871.88…
+$ `Unit Price ($ PSF)`          &lt;dbl&gt; 2625, 2066, 1320, 1218, 1468, 1767, 1095…
+$ `Sale Date`                   &lt;date&gt; 2023-01-01, 2023-01-02, 2023-01-02, 202…
+$ Address                       &lt;chr&gt; "12 HARBOURFRONT AVENUE #05-32", "205 JA…
+$ `Type of Sale`                &lt;chr&gt; "New Sale", "New Sale", "New Sale", "New…
+$ `Type of Area`                &lt;chr&gt; "Strata", "Strata", "Strata", "Strata", …
+$ `Area (SQM)`                  &lt;dbl&gt; 82.0, 82.0, 100.0, 96.0, 81.0, 308.7, 42…
+$ `Unit Price ($ PSM)`          &lt;dbl&gt; 28256, 22238, 14211, 13105, 15802, 19015…
+$ `Nett Price($)`               &lt;chr&gt; "-", "-", "-", "-", "-", "-", "-", "-", …
+$ `Property Type`               &lt;chr&gt; "Condominium", "Condominium", "Executive…
+$ `Number of Units`             &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…
+$ Tenure                        &lt;chr&gt; "99 yrs from 12/01/2021", "Freehold", "9…
+$ `Completion Date`             &lt;chr&gt; "Uncompleted", "Uncompleted", "Uncomplet…
+$ `Purchaser Address Indicator` &lt;chr&gt; "HDB", "Private", "HDB", "HDB", "HDB", "…
+$ `Postal Code`                 &lt;chr&gt; "097996", "419535", "269343", "269294", …
+$ `Postal District`             &lt;chr&gt; "04", "14", "27", "27", "28", "19", "10"…
+$ `Postal Sector`               &lt;chr&gt; "09", "41", "26", "26", "79", "54", "27"…
+$ `Planning Region`             &lt;chr&gt; "Central Region", "East Region", "North …
+$ `Planning Area`               &lt;chr&gt; "Bukit Merah", "Bedok", "Yishun", "Yishu…
+$ Quarter                       &lt;chr&gt; "2023Q1", "2023Q1", "2023Q1", "2023Q1", …
+$ Month                         &lt;ord&gt; Jan, Jan, Jan, Jan, Jan, Jan, Jan, Jan, …
+$ `Area Category (SQM)`         &lt;fct&gt; &lt;100, &lt;100, &lt;100, &lt;100, &lt;100, 300-400, &gt;…</code></pre>
 </div>
 </div>
 </div>
@@ -594,6 +574,7 @@ Insights (Extracted from Original Visualisation Submission)
 <li><p>Boxplot for 3 months in 2024Q1 are labelled as 2024-01-01, 2024-02-01, 2024-03-01 which does not represent the whole month.</p></li>
 <li><p>Line graphs are labelled &lt;100, 100-200, 200-300, 300-400, &gt;400 but at first glance it is not clear what these values means. The clarity could be improved by adding a legend or updating labels, for example, from &lt;100 to &lt;100 SQM.</p></li>
 <li><p>For line graph, it is not immediately clear at first glance how many quarters the line passes through without looking at x-axis since there is no indicator on the line at each quarter.</p></li>
+<li><p>Chart titles do not indicate which country does the charts represent. It may be good to indicate “Singapore Private Property Market” for clarity.</p></li>
 </ol>
 <p><u>Aesthetics</u></p>
 <ol type="1">
@@ -607,10 +588,59 @@ Insights (Extracted from Original Visualisation Submission)
 <h1>4. DataVis Makeover</h1>
 <section id="makeover-sketch" class="level2">
 <h2 class="anchored" data-anchor-id="makeover-sketch">4.1 Makeover Sketch</h2>
+<p><img src="sketch1.jpg" class="img-fluid"></p>
+<p><img src="sketch2.jpg" class="img-fluid"></p>
 </section>
 <section id="makeover-visualisation" class="level2">
 <h2 class="anchored" data-anchor-id="makeover-visualisation">4.2 Makeover Visualisation</h2>
-<p>For <u>Quarterly Average Unit Price ($ PSM) by Area Category for Resale</u> plot, Singapore Privare Property Reslae data is need to be prepared first. To get <strong>Resale data</strong> only, use <code>filter()</code> function from <strong>dplyr</strong> to filter from realis_merge data. Use <code>ggplot()</code>, <code>geom_bar()</code> and <code>geom_point()</code> from <strong>ggplot2</strong> <img src="logo.png" class="img-fluid" width="46"> to plot the chart. More functions from ggplot2 are used: <code>labs()</code> functions from ggplot2 are used to set chart title. Use <code>guides()</code> and <code>guide_legend()</code> to update legend title. Use <code>theme()</code> to set text size of chart title, axis text, legend text and legend title. Use <code>theme_wsj()</code> from <strong>ggthemes</strong> to set Wall Street Journal theme.</p>
+<p>For <u>Quarterly Average Unit Price ($ PSM) by Area Category for Resale</u> plot, Singapore Privare Property Reslae data is need to be prepared first. To get <strong>Resale data</strong> only, use <code>filter()</code> function from <strong>dplyr</strong> to filter from realis_merge data. Use <code>ggplot()</code>, <code>geom_bar()</code> and <code>geom_point()</code> from <strong>ggplot2</strong> <img src="logo.png" class="img-fluid" width="46"> to plot the chart. More functions from ggplot2 are used: <code>labs()</code> functions from ggplot2 are used to set chart title. Use <code>theme()</code> to set text size of chart title, axis text, legend text and legend title. Use <code>theme_wsj()</code> from <strong>ggthemes</strong> to set Wall Street Journal theme.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Code</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>resale_data <span class="ot">&lt;-</span> realis_merge <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">Type of Sale</span><span class="st">`</span> <span class="sc">==</span> <span class="st">"Resale"</span>) </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>avg_price_by_quarter_resale <span class="ot">&lt;-</span> resale_data <span class="sc">%&gt;%</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="st">`</span><span class="at">Area Category (SQM)</span><span class="st">`</span>, Quarter) <span class="sc">%&gt;%</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Avg_Unit_Price_PSM =</span> <span class="fu">mean</span>(<span class="st">`</span><span class="at">Unit Price ($ PSM)</span><span class="st">`</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>p_line_resale <span class="ot">&lt;-</span> avg_price_by_quarter_resale <span class="sc">%&gt;%</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Quarter, <span class="at">y =</span> Avg_Unit_Price_PSM, <span class="at">group =</span> <span class="st">`</span><span class="at">Area Category (SQM)</span><span class="st">`</span>, <span class="at">color =</span> <span class="st">`</span><span class="at">Area Category (SQM)</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Quarterly Average Unit Price ($ PSM) by Area Category for Resale"</span>,</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Singapore Private Property Market"</span>,</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Quarter"</span>,</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Average Price ($ PSM)"</span>) <span class="sc">+</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_wsj</span>() <span class="sc">+</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.4</span>)),</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.35</span>)),</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.7</span>)),  </span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.7</span>)),</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.4</span>)),</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.4</span>)),</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.7</span>)),</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.4</span>)))</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>p_line_resale</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+<p>Next, <u>Monthly Unit Price ($ PSM) by Area Category for Resale (Q1 2024)</u> plot will be remake and we need to prepare Resale data for first quarter of 2024. To get <strong>2024 Quarter 1</strong> data only, use <code>filter()</code> function from <strong>dplyr</strong> to filter from resale_data. Use <code>ggplot()</code>, <code>geom_boxplot()</code> and <code>geom_jitter()</code> from ggplot2 to plot the chart. <code>facet_wrap()</code> is used to chart 3 months data side by side: Jan and Feb followed by Mar.&nbsp;More functions from ggplot2 are used: <code>labs()</code> functions from ggplot2 are used to set chart title. Use <code>theme()</code> to set text size of chart title, axis text, legend text and legend title. Use <code>theme_wsj()</code> from <strong>ggthemes</strong> to set Wall Street Journal theme. <code>scale_fill_brewer()</code> is used to color the boxplots.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">Code</a></li></ul>
 <div class="tab-content">
@@ -619,7 +649,7 @@ Insights (Extracted from Original Visualisation Submission)
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -627,73 +657,28 @@ Insights (Extracted from Original Visualisation Submission)
 </div>
 <div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>resale_data <span class="ot">&lt;-</span> realis_merge <span class="sc">%&gt;%</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Type_of_Sale <span class="sc">==</span> <span class="st">"Resale"</span>) </span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>avg_price_by_quarter_resale <span class="ot">&lt;-</span> resale_data <span class="sc">%&gt;%</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Area_Category_SQM, Quarter) <span class="sc">%&gt;%</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Avg_Unit_Price_PSM =</span> <span class="fu">mean</span>(<span class="st">`</span><span class="at">Unit_Price_($_PSM)</span><span class="st">`</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>p_line_resale <span class="ot">&lt;-</span> avg_price_by_quarter_resale <span class="sc">%&gt;%</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Quarter, <span class="at">y =</span> Avg_Unit_Price_PSM, <span class="at">group =</span> Area_Category_SQM, <span class="at">color =</span> Area_Category_SQM)) <span class="sc">+</span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Quarterly Average Unit Price ($ PSM) by Area Category for Resale"</span>,</span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Quarter"</span>,</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Average Price ($ PSM)"</span>) <span class="sc">+</span></span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Area Category (SQM)"</span>))<span class="sc">+</span></span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_wsj</span>() <span class="sc">+</span></span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.4</span>)),  </span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.7</span>)),  </span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.7</span>)),</span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.4</span>)),</span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.4</span>)),</span>
-<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.7</span>)),</span>
-<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.4</span>)))</span>
-<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>p_line_resale</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-</div>
-</div>
-<p>Next, <u>Monthly Unit Price ($ PSM) by Area Category for Resale (Q1 2024)</u> plot will be remake and we need to prepare Resale data for first quarter of 2024. To get <strong>2024 Quarter 1</strong> data only, use <code>filter()</code> function from <strong>dplyr</strong> to filter from resale_data. Use <code>ggplot()</code>, <code>geom_boxplot()</code> and <code>geom_jitter()</code> from ggplot2 to plot the chart. <code>facet_wrap()</code> is used to chart 3 months data side by side: Jan and Feb followed by Mar.&nbsp;More functions from ggplot2 are used: <code>labs()</code> functions from ggplot2 are used to set chart title. Use <code>guides()</code> and <code>guide_legend()</code> to update legend title. Use <code>theme()</code> to set text size of chart title, axis text, legend text and legend title. Use <code>theme_wsj()</code> from <strong>ggthemes</strong> to set Wall Street Journal theme. <code>scale_fill_brewer()</code> is used to color the boxplots.</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Code</a></li></ul>
-<div class="tab-content">
-<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>data_q1_resale <span class="ot">&lt;-</span> resale_data <span class="sc">%&gt;%</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Quarter <span class="sc">==</span> <span class="st">"2024Q1"</span>) </span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>p_box_resale <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data_q1_resale, <span class="fu">aes</span>(<span class="at">x =</span> Area_Category_SQM, <span class="at">y =</span> <span class="st">`</span><span class="at">Unit_Price_($_PSM)</span><span class="st">`</span>, <span class="at">fill =</span> Area_Category_SQM)) <span class="sc">+</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">alpha =</span> <span class="fl">0.001</span>) <span class="sc">+</span>  <span class="co"># Adjusting alpha for visibility</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Month, <span class="at">scales =</span> <span class="st">"fixed"</span>) <span class="sc">+</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Monthly Unit Price ($ PSM) by Area Category for Resale (Q1 2024)"</span>,</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Area Category"</span>,</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Price ($ PSM)"</span>) <span class="sc">+</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">title =</span> <span class="st">"Area Category (SQM)"</span>))<span class="sc">+</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_wsj</span>() <span class="sc">+</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.4</span>)),  </span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.7</span>)),  </span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.7</span>)),</span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.4</span>)),</span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.4</span>)),</span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.7</span>)),</span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.4</span>)))<span class="sc">+</span></span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Greys"</span>)</span>
-<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>p_box_resale</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>data_q1_resale <span class="ot">&lt;-</span> resale_data <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Quarter <span class="sc">==</span> <span class="st">"2024Q1"</span>) </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>p_box_resale <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data_q1_resale, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">`</span><span class="at">Area Category (SQM)</span><span class="st">`</span>, <span class="at">y =</span> <span class="st">`</span><span class="at">Unit Price ($ PSM)</span><span class="st">`</span>, <span class="at">fill =</span> <span class="st">`</span><span class="at">Area Category (SQM)</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">alpha =</span> <span class="fl">0.001</span>) <span class="sc">+</span>  <span class="co"># Adjusting alpha for visibility</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Month, <span class="at">scales =</span> <span class="st">"fixed"</span>) <span class="sc">+</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Monthly Unit Price ($ PSM) by Area Category for Resale (Q1 2024)"</span>,</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Singapore Private Property Market"</span>,</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Area Category"</span>,</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Price ($ PSM)"</span>) <span class="sc">+</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_wsj</span>() <span class="sc">+</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.4</span>)),</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.35</span>)),</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.7</span>)),  </span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.7</span>)),</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.4</span>)),</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.4</span>)),</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.7</span>)),</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.4</span>)))<span class="sc">+</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Greys"</span>)</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>p_box_resale</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>

@@ -72,36 +72,13 @@ realis_merge[duplicated(realis_merge),]
 
 No duplicated rows are present in the data based on duplicate check above using `duplicated()` function.
 
-#### 2.3.3 Rename columns for further data visualization
+#### 2.3.3 Checking for missing values (NA)
 
-Below glimpse of data set shows the current column name. We can see there are spaces in column name.
-
-```{r }
-glimpse(realis_merge)
-```
-
-Replacing space in colume name with underscore. Use `gsub()` to replace space with underscores and use `rename_with()` function from **dplyr** ![](dplyr.png){width="53"} to rename all the columns with new column names.
+Use `summary()` to get quick overview of data and missing values. We can see only Area (SQM) column has 6 missing values (NA). This will be further taken care in later processing of this exercise.
 
 ```{r }
-realis_merge <- realis_merge %>%
-  rename_with(~ gsub(" ", "_", .), everything())
+summary(realis_merge)
 ```
-
-Now, we can see that column names are renamed accordingly with underscore in place of space.
-
-::: panel-tabset
-## Code
-
-```{r, results='hide'}
-glimpse(realis_merge)
-```
-
-## Data Glimpse
-
-```{r,echo=FALSE}
-glimpse(realis_merge)
-```
-:::
 
 ### 2.3.4 Create Quarter and Month Column
 
@@ -111,9 +88,9 @@ Use `as.Date()` function to put Sale_Date column into date object, specify forma
 ## Code
 
 ```{r}
-realis_merge$Sale_Date <- as.Date(realis_merge$Sale_Date, format = "%d %b %Y")
-realis_merge$Quarter <- paste(year(realis_merge$Sale_Date), "Q", quarter(realis_merge$Sale_Date), sep="")
-realis_merge$Month <- month(realis_merge$Sale_Date, label = TRUE)
+realis_merge$"Sale Date" <- as.Date(realis_merge$"Sale Date", format = "%d %b %Y")
+realis_merge$Quarter <- paste(year(realis_merge$"Sale Date"), "Q", quarter(realis_merge$"Sale Date"), sep="")
+realis_merge$Month <- month(realis_merge$"Sale Date", label = TRUE)
 ```
 
 ## Data Glimpse
@@ -133,12 +110,12 @@ Use `mutate()`, `ifelse()` and `is.na()` to replace NA (missing values) with 0. 
 ```{r}
 realis_merge <- realis_merge %>%
   mutate(
-    `Area_(SQM)` = ifelse(is.na(`Area_(SQM)`), 0, `Area_(SQM)`)  # Dealing with NA values
+    `Area (SQM)` = ifelse(is.na(`Area (SQM)`), 0, `Area (SQM)`)  # Dealing with NA values
   )
 realis_merge <- realis_merge %>%
   mutate(
-    Area_Category_SQM = cut(
-      `Area_(SQM)`,
+    `Area Category (SQM)` = cut(
+      `Area (SQM)`,
       breaks = c(0, 100, 200, 300, 400, Inf),  
       labels = c("<100", "100-200", "200-300", "300-400", ">400"),
       include.lowest = TRUE  
@@ -179,6 +156,8 @@ In the resale housing market, the quarterly average unit price per square meter 
 
 4.  For line graph, it is not immediately clear at first glance how many quarters the line passes through without looking at x-axis since there is no indicator on the line at each quarter.
 
+5.  Chart titles do not indicate which country does the charts represent. It may be good to indicate "Singapore Private Property Market" for clarity.
+
 [Aesthetics]{.underline}
 
 1.  X axis, Y axis and chart labels (such as 200-300,2024-01-01) are on smaller font size and may be hard to read.
@@ -191,31 +170,36 @@ In the resale housing market, the quarterly average unit price per square meter 
 
 ## 4.1 Makeover Sketch
 
+![](sketch1.jpg)
+
+![](sketch2.jpg)
+
 ## 4.2 Makeover Visualisation
 
-For [Quarterly Average Unit Price (\$ PSM) by Area Category for Resale]{.underline} plot, Singapore Privare Property Reslae data is need to be prepared first. To get **Resale data** only, use `filter()` function from **dplyr** to filter from realis_merge data. Use `ggplot()`, `geom_bar()` and `geom_point()` from **ggplot2** ![](logo.png){width="46"} to plot the chart. More functions from ggplot2 are used: `labs()` functions from ggplot2 are used to set chart title. Use `guides()` and `guide_legend()` to update legend title. Use `theme()` to set text size of chart title, axis text, legend text and legend title. Use `theme_wsj()` from **ggthemes** to set Wall Street Journal theme.
+For [Quarterly Average Unit Price (\$ PSM) by Area Category for Resale]{.underline} plot, Singapore Privare Property Reslae data is need to be prepared first. To get **Resale data** only, use `filter()` function from **dplyr** to filter from realis_merge data. Use `ggplot()`, `geom_bar()` and `geom_point()` from **ggplot2** ![](logo.png){width="46"} to plot the chart. More functions from ggplot2 are used: `labs()` functions from ggplot2 are used to set chart title. Use `theme()` to set text size of chart title, axis text, legend text and legend title. Use `theme_wsj()` from **ggthemes** to set Wall Street Journal theme.
 
 ::: panel-tabset
 ## Plot
 
 ```{r,echo=FALSE}
 resale_data <- realis_merge %>%
-  filter(Type_of_Sale == "Resale") 
+  filter(`Type of Sale` == "Resale") 
 
 avg_price_by_quarter_resale <- resale_data %>%
-  group_by(Area_Category_SQM, Quarter) %>%
-  summarise(Avg_Unit_Price_PSM = mean(`Unit_Price_($_PSM)`, na.rm = TRUE), .groups = "drop")
+  group_by(`Area Category (SQM)`, Quarter) %>%
+  summarise(Avg_Unit_Price_PSM = mean(`Unit Price ($ PSM)`, na.rm = TRUE), .groups = "drop")
 
 p_line_resale <- avg_price_by_quarter_resale %>%
-  ggplot(aes(x = Quarter, y = Avg_Unit_Price_PSM, group = Area_Category_SQM, color = Area_Category_SQM)) +
+  ggplot(aes(x = Quarter, y = Avg_Unit_Price_PSM, group = `Area Category (SQM)`, color = `Area Category (SQM)`)) +
   geom_line() +
   geom_point() +
   labs(title = "Quarterly Average Unit Price ($ PSM) by Area Category for Resale",
+       subtitle = "Singapore Private Property Market",
        x = "Quarter",
        y = "Average Price ($ PSM)") +
-  guides(color = guide_legend(title = "Area Category (SQM)"))+
   theme_wsj() +
-  theme(plot.title = element_text(size = rel(0.4)),  
+  theme(plot.title = element_text(size = rel(0.4)),
+        plot.subtitle = element_text(size = rel(0.35)),
         axis.text.x = element_text(size = rel(0.7)),  
         axis.text.y = element_text(size = rel(0.7)),
         axis.title.x = element_text(size = rel(0.4)),
@@ -230,22 +214,23 @@ p_line_resale
 
 ```{r,fig.show = 'hide'}
 resale_data <- realis_merge %>%
-  filter(Type_of_Sale == "Resale") 
+  filter(`Type of Sale` == "Resale") 
 
 avg_price_by_quarter_resale <- resale_data %>%
-  group_by(Area_Category_SQM, Quarter) %>%
-  summarise(Avg_Unit_Price_PSM = mean(`Unit_Price_($_PSM)`, na.rm = TRUE), .groups = "drop")
+  group_by(`Area Category (SQM)`, Quarter) %>%
+  summarise(Avg_Unit_Price_PSM = mean(`Unit Price ($ PSM)`, na.rm = TRUE), .groups = "drop")
 
 p_line_resale <- avg_price_by_quarter_resale %>%
-  ggplot(aes(x = Quarter, y = Avg_Unit_Price_PSM, group = Area_Category_SQM, color = Area_Category_SQM)) +
+  ggplot(aes(x = Quarter, y = Avg_Unit_Price_PSM, group = `Area Category (SQM)`, color = `Area Category (SQM)`)) +
   geom_line() +
   geom_point() +
   labs(title = "Quarterly Average Unit Price ($ PSM) by Area Category for Resale",
+       subtitle = "Singapore Private Property Market",
        x = "Quarter",
        y = "Average Price ($ PSM)") +
-  guides(color = guide_legend(title = "Area Category (SQM)"))+
   theme_wsj() +
-  theme(plot.title = element_text(size = rel(0.4)),  
+  theme(plot.title = element_text(size = rel(0.4)),
+        plot.subtitle = element_text(size = rel(0.35)),
         axis.text.x = element_text(size = rel(0.7)),  
         axis.text.y = element_text(size = rel(0.7)),
         axis.title.x = element_text(size = rel(0.4)),
@@ -257,7 +242,7 @@ p_line_resale
 ```
 :::
 
-Next, [Monthly Unit Price (\$ PSM) by Area Category for Resale (Q1 2024)]{.underline} plot will be remake and we need to prepare Resale data for first quarter of 2024. To get **2024 Quarter 1** data only, use `filter()` function from **dplyr** to filter from resale_data. Use `ggplot()`, `geom_boxplot()` and `geom_jitter()` from ggplot2 to plot the chart. `facet_wrap()` is used to chart 3 months data side by side: Jan and Feb followed by Mar. More functions from ggplot2 are used: `labs()` functions from ggplot2 are used to set chart title. Use `guides()` and `guide_legend()` to update legend title. Use `theme()` to set text size of chart title, axis text, legend text and legend title. Use `theme_wsj()` from **ggthemes** to set Wall Street Journal theme. `scale_fill_brewer()` is used to color the boxplots.
+Next, [Monthly Unit Price (\$ PSM) by Area Category for Resale (Q1 2024)]{.underline} plot will be remake and we need to prepare Resale data for first quarter of 2024. To get **2024 Quarter 1** data only, use `filter()` function from **dplyr** to filter from resale_data. Use `ggplot()`, `geom_boxplot()` and `geom_jitter()` from ggplot2 to plot the chart. `facet_wrap()` is used to chart 3 months data side by side: Jan and Feb followed by Mar. More functions from ggplot2 are used: `labs()` functions from ggplot2 are used to set chart title. Use `theme()` to set text size of chart title, axis text, legend text and legend title. Use `theme_wsj()` from **ggthemes** to set Wall Street Journal theme. `scale_fill_brewer()` is used to color the boxplots.
 
 ::: panel-tabset
 ## Plot
@@ -266,16 +251,17 @@ Next, [Monthly Unit Price (\$ PSM) by Area Category for Resale (Q1 2024)]{.under
 data_q1_resale <- resale_data %>%
   filter(Quarter == "2024Q1") 
 
-p_box_resale <- ggplot(data_q1_resale, aes(x = Area_Category_SQM, y = `Unit_Price_($_PSM)`, fill = Area_Category_SQM)) +
+p_box_resale <- ggplot(data_q1_resale, aes(x = `Area Category (SQM)`, y = `Unit Price ($ PSM)`, fill = `Area Category (SQM)`)) +
   geom_boxplot() +
   geom_jitter(width = 0.2, alpha = 0.001) +  # Adjusting alpha for visibility
   facet_wrap(~Month, scales = "fixed") +
   labs(title = "Monthly Unit Price ($ PSM) by Area Category for Resale (Q1 2024)",
+       subtitle = "Singapore Private Property Market",
        x = "Area Category",
        y = "Price ($ PSM)") +
-  guides(fill = guide_legend(title = "Area Category (SQM)"))+
   theme_wsj() +
-  theme(plot.title = element_text(size = rel(0.4)),  
+  theme(plot.title = element_text(size = rel(0.4)),
+        plot.subtitle = element_text(size = rel(0.35)),
         axis.text.x = element_text(angle = 45, hjust = 1, size = rel(0.7)),  
         axis.text.y = element_text(size = rel(0.7)),
         axis.title.x = element_text(size = rel(0.4)),
@@ -292,16 +278,17 @@ p_box_resale
 data_q1_resale <- resale_data %>%
   filter(Quarter == "2024Q1") 
 
-p_box_resale <- ggplot(data_q1_resale, aes(x = Area_Category_SQM, y = `Unit_Price_($_PSM)`, fill = Area_Category_SQM)) +
+p_box_resale <- ggplot(data_q1_resale, aes(x = `Area Category (SQM)`, y = `Unit Price ($ PSM)`, fill = `Area Category (SQM)`)) +
   geom_boxplot() +
   geom_jitter(width = 0.2, alpha = 0.001) +  # Adjusting alpha for visibility
   facet_wrap(~Month, scales = "fixed") +
   labs(title = "Monthly Unit Price ($ PSM) by Area Category for Resale (Q1 2024)",
+       subtitle = "Singapore Private Property Market",
        x = "Area Category",
        y = "Price ($ PSM)") +
-  guides(fill = guide_legend(title = "Area Category (SQM)"))+
   theme_wsj() +
-  theme(plot.title = element_text(size = rel(0.4)),  
+  theme(plot.title = element_text(size = rel(0.4)),
+        plot.subtitle = element_text(size = rel(0.35)),
         axis.text.x = element_text(angle = 45, hjust = 1, size = rel(0.7)),  
         axis.text.y = element_text(size = rel(0.7)),
         axis.title.x = element_text(size = rel(0.4)),
