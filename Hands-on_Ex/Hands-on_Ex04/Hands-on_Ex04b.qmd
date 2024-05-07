@@ -374,8 +374,9 @@ Makeover the plot on previous slide by showing 95% and 99% confidence intervals.
 exam %>%
   ggplot(aes(x = RACE, 
              y = MATHS)) +
-  stat_pointinterval(
-    show.legend = FALSE) +   
+  stat_pointinterval(.width = c(0.95,0.99),
+  .point = median,
+  .interval = qi) +   
   labs(
     title = "Visualising confidence intervals of mean math score",
     subtitle = "Mean Point + Multiple-interval plot")

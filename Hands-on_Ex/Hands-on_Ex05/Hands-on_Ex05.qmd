@@ -1,0 +1,83 @@
+---
+title: "Hands-on Exercise 5"
+author: "Thet Myat Noe"
+date: "April 30, 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+---
+
+# **Visualising and Analysing Text Data with R: tidytext methods**
+
+## 29.1 Learning Outcome
+
+In this hands-on exercise, we will learn how to visualise and analyse text data using R.
+
+By the end of this hands-on exercise, we will be able to:
+
+-   understand tidytext framework for processing, analysing and visualising text data,
+
+-   write function for importing multiple files into R,
+
+-   combine multiple files into a single data frame,
+
+-   clean and wrangle text data by using tidyverse approach,
+
+-   visualise words with Word Cloud,
+
+-   compute term frequency–inverse document frequency (TF-IDF) using tidytext method, and
+
+-   visualising texts and terms relationship.
+
+## 29.2 Getting Started
+
+### 29.2.1 Installing and launching R packages
+
+In this hands-on exercise, the following R packages for handling, processing, wrangling, analysing and visualising text data will be used:
+
+-   tidytext, tidyverse (mainly readr, purrr, stringr, ggplot2)
+
+-   widyr,
+
+-   wordcloud and ggwordcloud,
+
+-   textplot (required igraph, tidygraph and ggraph, )
+
+-   DT,
+
+-   lubridate and hms.
+
+The code chunk:
+
+```{r}
+pacman::p_load(tidytext, widyr, wordcloud, DT, ggwordcloud, textplot, lubridate, hms, tidyverse, tidygraph, ggraph, igraph)
+```
+
+## 29.3 Importing Multiple Text Files from Multiple Folders
+### 29.3.1 Creating a folder list
+
+```{r}
+news20 <- "/data/20news/"
+```
+
+### 29.3.2 Define a function to read all files from a folder into a data frame
+```{r}
+read_folder <- function(infolder) {
+  tibble(file = dir(infolder, 
+                    full.names = TRUE)) %>%
+    mutate(text = map(file, 
+                      read_lines)) %>%
+    transmute(id = basename(file), 
+              text) %>%
+    unnest(text)
+}
+```
+
+## 29.4 Importing Multiple Text Files from Multiple Folders
+### 29.4.1 Reading in all the messages from the 20news folder
+```{r}
+
+```
