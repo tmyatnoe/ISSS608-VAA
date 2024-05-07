@@ -1,7 +1,7 @@
 ---
 title: "Hands-on Exercise 5"
 author: "Thet Myat Noe"
-date: "April 30, 2024"
+date: "May 7, 2024"
 date-modified: "last-modified"
 execute:
   eval: true
@@ -10,7 +10,7 @@ execute:
   freeze: true
 ---
 
-# **Visualising and Analysing Text Data with R: tidytext methods**
+# Visualising and Analysing Text Data with R: tidytext methods
 
 ## 29.1 Learning Outcome
 
