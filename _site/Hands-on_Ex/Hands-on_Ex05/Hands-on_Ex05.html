@@ -282,6 +282,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#visualising-tf-idf-as-interactive-table" id="toc-visualising-tf-idf-as-interactive-table" class="nav-link" data-scroll-target="#visualising-tf-idf-as-interactive-table">29.7.2 Visualising tf-idf as interactive table</a></li>
   <li><a href="#visualising-tf-idf-as-interactive-table-1" id="toc-visualising-tf-idf-as-interactive-table-1" class="nav-link" data-scroll-target="#visualising-tf-idf-as-interactive-table-1">29.7.3 Visualising tf-idf as interactive table</a></li>
   <li><a href="#visualising-tf-idf-within-newsgroups" id="toc-visualising-tf-idf-within-newsgroups" class="nav-link" data-scroll-target="#visualising-tf-idf-within-newsgroups">29.7.4 Visualising tf-idf within newsgroups</a></li>
+  <li><a href="#counting-and-correlating-pairs-of-words-with-the-widyr-package" id="toc-counting-and-correlating-pairs-of-words-with-the-widyr-package" class="nav-link" data-scroll-target="#counting-and-correlating-pairs-of-words-with-the-widyr-package">29.7.5 Counting and correlating pairs of words with the widyr package</a></li>
+  <li><a href="#visualising-correlation-as-a-network" id="toc-visualising-correlation-as-a-network" class="nav-link" data-scroll-target="#visualising-correlation-as-a-network">29.7.6 Visualising correlation as a network</a></li>
+  <li><a href="#bigram" id="toc-bigram" class="nav-link" data-scroll-target="#bigram">29.7.7 Bigram</a></li>
+  <li><a href="#counting-bigrams" id="toc-counting-bigrams" class="nav-link" data-scroll-target="#counting-bigrams">29.7.8 Counting bigrams</a></li>
+  <li><a href="#cleaning-bigram" id="toc-cleaning-bigram" class="nav-link" data-scroll-target="#cleaning-bigram">29.7.9 Cleaning bigram</a></li>
+  <li><a href="#counting-the-bigram-again" id="toc-counting-the-bigram-again" class="nav-link" data-scroll-target="#counting-the-bigram-again">29.7.10 Counting the bigram again</a></li>
+  <li><a href="#create-a-network-graph-from-bigram-data-frame" id="toc-create-a-network-graph-from-bigram-data-frame" class="nav-link" data-scroll-target="#create-a-network-graph-from-bigram-data-frame">29.7.11 Create a network graph from bigram data frame</a></li>
+  <li><a href="#visualizing-a-network-of-bigrams-with-ggraph" id="toc-visualizing-a-network-of-bigrams-with-ggraph" class="nav-link" data-scroll-target="#visualizing-a-network-of-bigrams-with-ggraph">29.7.12 Visualizing a network of bigrams with ggraph</a></li>
+  <li><a href="#revised-version" id="toc-revised-version" class="nav-link" data-scroll-target="#revised-version">29.7.13 Revised version</a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -657,6 +666,260 @@ Things to learn from the code chunk above:
 <section id="visualising-tf-idf-within-newsgroups" class="level3">
 <h3 class="anchored" data-anchor-id="visualising-tf-idf-within-newsgroups">29.7.4 Visualising tf-idf within newsgroups</h3>
 <p>Facet bar charts technique is used to visualise the tf-idf values of science related newsgroup.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex05_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The code chunk used to prepare the plot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>tf_idf <span class="sc">%&gt;%</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(newsgroup, <span class="st">"^sci</span><span class="sc">\\</span><span class="st">."</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(newsgroup) <span class="sc">%&gt;%</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(tf_idf, </span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">n =</span> <span class="dv">12</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">word =</span> <span class="fu">reorder</span>(word, </span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>                        tf_idf)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(tf_idf, </span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>             word, </span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">fill =</span> newsgroup)) <span class="sc">+</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> newsgroup, </span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"tf-idf"</span>, </span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="cn">NULL</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="counting-and-correlating-pairs-of-words-with-the-widyr-package" class="level3">
+<h3 class="anchored" data-anchor-id="counting-and-correlating-pairs-of-words-with-the-widyr-package">29.7.5 Counting and correlating pairs of words with the widyr package</h3>
+<ul>
+<li><p>To count the number of times that two words appear within the same document, or to see how correlated they are.</p></li>
+<li><p>Most operations for finding pairwise counts or correlations need to turn the data into a wide matrix first.</p></li>
+<li><p><a href="https://cran.r-project.org/web/packages/widyr/"><strong>widyr</strong></a> package first ‘casts’ a tidy dataset into a wide matrix, performs an operation such as a correlation on it, then re-tidies the result.</p>
+<p><img src="image10-2.jpg" class="img-fluid"></p></li>
+</ul>
+<p>In this code chunk below, <code>pairwise_cor()</code> of <strong>widyr</strong> package is used to compute the correlation between newsgroup based on the common words found.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>newsgroup_cors <span class="ot">&lt;-</span> words_by_newsgroup <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pairwise_cor</span>(newsgroup, </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>               word, </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>               n, </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="visualising-correlation-as-a-network" class="level3">
+<h3 class="anchored" data-anchor-id="visualising-correlation-as-a-network">29.7.6 Visualising correlation as a network</h3>
+<p>Now, we can visualise the relationship between newgroups in network graph as shown below.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex05_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The code chunk:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2017</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>newsgroup_cors <span class="sc">%&gt;%</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(correlation <span class="sc">&gt;</span> .<span class="dv">025</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">graph_from_data_frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggraph</span>(<span class="at">layout =</span> <span class="st">"fr"</span>) <span class="sc">+</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">alpha =</span> correlation, </span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">width =</span> correlation)) <span class="sc">+</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="at">size =</span> <span class="dv">6</span>, </span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">color =</span> <span class="st">"lightblue"</span>) <span class="sc">+</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> name),</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color =</span> <span class="st">"red"</span>,</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>                 <span class="at">repel =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="bigram" class="level3">
+<h3 class="anchored" data-anchor-id="bigram">29.7.7 Bigram</h3>
+<p>In this code chunk below, a bigram data frame is created by using <code>unnest_tokens()</code> of tidytext.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>bigrams <span class="ot">&lt;-</span> cleaned_text <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(bigram, </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                text, </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">token =</span> <span class="st">"ngrams"</span>, </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">n =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>bigrams</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 28,827 × 3
+   newsgroup   id    bigram    
+   &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;     
+ 1 alt.atheism 54256 &lt;NA&gt;      
+ 2 alt.atheism 54256 &lt;NA&gt;      
+ 3 alt.atheism 54256 as i      
+ 4 alt.atheism 54256 i don't   
+ 5 alt.atheism 54256 don't know
+ 6 alt.atheism 54256 know this 
+ 7 alt.atheism 54256 this book 
+ 8 alt.atheism 54256 book i    
+ 9 alt.atheism 54256 i will    
+10 alt.atheism 54256 will use  
+# ℹ 28,817 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="counting-bigrams" class="level3">
+<h3 class="anchored" data-anchor-id="counting-bigrams">29.7.8 Counting bigrams</h3>
+<p>The code chunk is used to count and sort the bigram data frame ascendingly.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>bigrams_count <span class="ot">&lt;-</span> bigrams <span class="sc">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(bigram <span class="sc">!=</span> <span class="st">'NA'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(bigram, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>bigrams_count</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 19,888 × 2
+   bigram       n
+   &lt;chr&gt;    &lt;int&gt;
+ 1 of the     169
+ 2 in the     113
+ 3 to the      74
+ 4 to be       59
+ 5 for the     52
+ 6 i have      48
+ 7 that the    47
+ 8 if you      40
+ 9 on the      39
+10 it is       38
+# ℹ 19,878 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="cleaning-bigram" class="level3">
+<h3 class="anchored" data-anchor-id="cleaning-bigram">29.7.9 Cleaning bigram</h3>
+<p>The code chunk below is used to seperate the bigram into two words.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>bigrams_separated <span class="ot">&lt;-</span> bigrams <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(bigram <span class="sc">!=</span> <span class="st">'NA'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(bigram, <span class="fu">c</span>(<span class="st">"word1"</span>, <span class="st">"word2"</span>), </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">sep =</span> <span class="st">" "</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>bigrams_filtered <span class="ot">&lt;-</span> bigrams_separated <span class="sc">%&gt;%</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>word1 <span class="sc">%in%</span> stop_words<span class="sc">$</span>word) <span class="sc">%&gt;%</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>word2 <span class="sc">%in%</span> stop_words<span class="sc">$</span>word)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>bigrams_filtered</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4,607 × 4
+   newsgroup   id    word1        word2        
+   &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt;        
+ 1 alt.atheism 54256 defines      god          
+ 2 alt.atheism 54256 term         preclues     
+ 3 alt.atheism 54256 science      ideas        
+ 4 alt.atheism 54256 ideas        drawn        
+ 5 alt.atheism 54256 supernatural precludes    
+ 6 alt.atheism 54256 scientific   assertions   
+ 7 alt.atheism 54256 religious    dogma        
+ 8 alt.atheism 54256 religion     involves     
+ 9 alt.atheism 54256 involves     circumventing
+10 alt.atheism 54256 gain         absolute     
+# ℹ 4,597 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="counting-the-bigram-again" class="level3">
+<h3 class="anchored" data-anchor-id="counting-the-bigram-again">29.7.10 Counting the bigram again</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>bigram_counts <span class="ot">&lt;-</span> bigrams_filtered <span class="sc">%&gt;%</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(word1, word2, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="create-a-network-graph-from-bigram-data-frame" class="level3">
+<h3 class="anchored" data-anchor-id="create-a-network-graph-from-bigram-data-frame">29.7.11 Create a network graph from bigram data frame</h3>
+<p>In the code chunk below, a network graph is created by using <code>graph_from_data_frame()</code> of <strong>igraph</strong> package.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>bigram_graph <span class="ot">&lt;-</span> bigram_counts <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n <span class="sc">&gt;</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">graph_from_data_frame</span>()</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>bigram_graph</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>IGRAPH 94bd8e8 DN-- 40 24 -- 
++ attr: name (v/c), n (e/n)
++ edges from 94bd8e8 (vertex names):
+ [1] 1          -&gt;2           1          -&gt;3           static     -&gt;void       
+ [4] time       -&gt;pad         1          -&gt;4           infield    -&gt;fly        
+ [7] mat        -&gt;28          vv         -&gt;vv          1          -&gt;5          
+[10] cock       -&gt;crow        noticeshell-&gt;widget      27         -&gt;1993       
+[13] 3          -&gt;4           child      -&gt;molestation cock       -&gt;crew       
+[16] gun        -&gt;violence    heat       -&gt;sink        homosexual -&gt;male       
+[19] homosexual -&gt;women       include    -&gt;xol         mary       -&gt;magdalene  
+[22] read       -&gt;write       rev        -&gt;20          tt         -&gt;ee         </code></pre>
+</div>
+</div>
+</section>
+<section id="visualizing-a-network-of-bigrams-with-ggraph" class="level3">
+<h3 class="anchored" data-anchor-id="visualizing-a-network-of-bigrams-with-ggraph">29.7.12 Visualizing a network of bigrams with ggraph</h3>
+<p>In this code chunk below, <strong>ggraph</strong> package is used to plot the bigram.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex05_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The code chunk used to plot the network graph:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggraph</span>(bigram_graph, <span class="at">layout =</span> <span class="st">"fr"</span>) <span class="sc">+</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>() <span class="sc">+</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>() <span class="sc">+</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> name), </span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">vjust =</span> <span class="dv">1</span>, </span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">hjust =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="revised-version" class="level3">
+<h3 class="anchored" data-anchor-id="revised-version">29.7.13 Revised version</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex05_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The code chunl used to plot the network graph.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> grid<span class="sc">::</span><span class="fu">arrow</span>(<span class="at">type =</span> <span class="st">"closed"</span>, </span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">length =</span> <span class="fu">unit</span>(.<span class="dv">15</span>,</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"inches"</span>))</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggraph</span>(bigram_graph, </span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">layout =</span> <span class="st">"fr"</span>) <span class="sc">+</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">edge_alpha =</span> n), </span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">show.legend =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">arrow =</span> a, </span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>                 <span class="at">end_cap =</span> <span class="fu">circle</span>(.<span class="dv">07</span>,</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">'inches'</span>)) <span class="sc">+</span></span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="at">color =</span> <span class="st">"lightblue"</span>, </span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>                  <span class="at">size =</span> <span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> name), </span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>                 <span class="at">vjust =</span> <span class="dv">1</span>, </span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>                 <span class="at">hjust =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 </section>
