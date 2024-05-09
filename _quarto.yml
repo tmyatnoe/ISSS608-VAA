@@ -40,7 +40,12 @@ website:
     right:
       - href: index.qmd
         text: Home
-      - about.qmd
+      - href: about.qmd
+        text: About
+
+    tools:       
+      - icon: github         
+        href: https://github.com/tmyatnoe
 
 format:
   html:
