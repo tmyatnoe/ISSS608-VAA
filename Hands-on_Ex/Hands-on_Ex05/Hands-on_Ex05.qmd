@@ -537,7 +537,7 @@ ggraph(bigram_graph,
                  hjust = 1) +
   theme_void()
 ```
-The code chunl used to plot the network graph.
+The code chunk used to plot the network graph.
 
 ```{r}
 #| eval: false
