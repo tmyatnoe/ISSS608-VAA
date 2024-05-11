@@ -1,0 +1,15 @@
+{
+  "hash": "2e94e357123728a5cf5f1cb549541933",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"In-class Exercise 05\"\nauthor: \"Thet Myat Noe\"\ndate: \"May 11, 2024\"\ndate-modified: \"last-modified\"\nexecute:\n  eval: true\n  echo: true\n  warning: false\n  freeze: true\n---\n\n# 1. Loading R Packages\n\n\n::: {.cell}\n\n```{.r .cell-code}\npacman::p_load(tidyverse, readtext, quanteda, tidytext)\n```\n:::\n\n\n# 2. Importing the data\n\n\n::: {.cell}\n\n```{.r .cell-code}\ntext_data <- readtext(\"data/articles/*\")\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\ncorpus_text <- corpus(text_data)\nsummary(corpus_text, 5)\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\nCorpus consisting of 338 documents, showing 5 documents:\n\n                                   Text Types Tokens Sentences\n Alvarez PLC__0__0__Haacklee Herald.txt   206    433        18\n    Alvarez PLC__0__0__Lomark Daily.txt   102    170        12\n   Alvarez PLC__0__0__The News Buoy.txt    90    200         9\n Alvarez PLC__0__1__Haacklee Herald.txt    96    187         8\n    Alvarez PLC__0__1__Lomark Daily.txt   241    504        21\n```\n\n\n:::\n:::",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

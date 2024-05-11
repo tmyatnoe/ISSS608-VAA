@@ -1,0 +1,27 @@
+---
+title: "In-class Exercise 05"
+author: "Thet Myat Noe"
+date: "May 11, 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+---
+# 1. Loading R Packages
+
+```{r}
+pacman::p_load(tidyverse, readtext, quanteda, tidytext)
+```
+
+# 2. Importing the data
+
+```{r}
+text_data <- readtext("data/articles/*")
+```
+
+```{r}
+corpus_text <- corpus(text_data)
+summary(corpus_text, 5)
+```
