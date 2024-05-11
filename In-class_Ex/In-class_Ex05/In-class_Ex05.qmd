@@ -9,13 +9,14 @@ execute:
   warning: false
   freeze: true
 ---
-# 1. Loading R Packages
+# Part 1
+## 1. Loading R Packages
 
 ```{r}
 pacman::p_load(tidyverse, readtext, quanteda, tidytext)
 ```
 
-# 2. Importing the data
+## 2. Importing the data
 
 ```{r}
 text_data <- readtext("data/articles/*")
@@ -24,4 +25,42 @@ text_data <- readtext("data/articles/*")
 ```{r}
 corpus_text <- corpus(text_data)
 summary(corpus_text, 5)
+```
+
+## 3. Text Preprocessing
+
+```{r}
+usenet_words <- text_data %>%
+  unnest_tokens(word, text) %>%
+  filter(str_detect(word, "[a-z']$"),
+         !word %in% stop_words$word)
+```
+
+```{r}
+usenet_words %>%
+  count(word, sort = TRUE)
+```
+
+
+```{r}
+text_data_splitted <- text_data %>%
+  separate_wider_delim("doc_id",
+                       delim= "__0__",
+                       names = c("X","Y"),
+                       too_few ="align_end")
+```
+
+
+# Part 2
+## 1. Loading R Packages
+
+```{r}
+pacman::p_load(jsonlite,tidyverse,tidyr)
+```
+
+
+## 2. Importing the data
+
+```{r}
+mc1_data <- fromJSON("data/mc1.json")
 ```

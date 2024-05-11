@@ -232,8 +232,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#loading-r-packages" id="toc-loading-r-packages" class="nav-link active" data-scroll-target="#loading-r-packages">1. Loading R Packages</a></li>
+  <li><a href="#part-1" id="toc-part-1" class="nav-link active" data-scroll-target="#part-1">Part 1</a>
+  <ul class="collapse">
+  <li><a href="#loading-r-packages" id="toc-loading-r-packages" class="nav-link" data-scroll-target="#loading-r-packages">1. Loading R Packages</a></li>
   <li><a href="#importing-the-data" id="toc-importing-the-data" class="nav-link" data-scroll-target="#importing-the-data">2. Importing the data</a></li>
+  <li><a href="#text-preprocessing" id="toc-text-preprocessing" class="nav-link" data-scroll-target="#text-preprocessing">3. Text Preprocessing</a></li>
+  </ul></li>
+  <li><a href="#part-2" id="toc-part-2" class="nav-link" data-scroll-target="#part-2">Part 2</a>
+  <ul class="collapse">
+  <li><a href="#loading-r-packages-1" id="toc-loading-r-packages-1" class="nav-link" data-scroll-target="#loading-r-packages-1">1. Loading R Packages</a></li>
+  <li><a href="#importing-the-data-1" id="toc-importing-the-data-1" class="nav-link" data-scroll-target="#importing-the-data-1">2. Importing the data</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -277,14 +286,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="loading-r-packages" class="level1">
-<h1>1. Loading R Packages</h1>
+<section id="part-1" class="level1">
+<h1>Part 1</h1>
+<section id="loading-r-packages" class="level2">
+<h2 class="anchored" data-anchor-id="loading-r-packages">1. Loading R Packages</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, readtext, quanteda, tidytext)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="importing-the-data" class="level1">
-<h1>2. Importing the data</h1>
+<section id="importing-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="importing-the-data">2. Importing the data</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>text_data <span class="ot">&lt;-</span> <span class="fu">readtext</span>(<span class="st">"data/articles/*"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -302,8 +313,57 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     Alvarez PLC__0__1__Lomark Daily.txt   241    504        21</code></pre>
 </div>
 </div>
+</section>
+<section id="text-preprocessing" class="level2">
+<h2 class="anchored" data-anchor-id="text-preprocessing">3. Text Preprocessing</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>usenet_words <span class="ot">&lt;-</span> text_data <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_tokens</span>(word, text) <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(word, <span class="st">"[a-z']$"</span>),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span>word <span class="sc">%in%</span> stop_words<span class="sc">$</span>word)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>usenet_words <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(word, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>readtext object consisting of 3260 documents and 0 docvars.
+# A data frame: 3,260 × 3
+  word             n text     
+  &lt;chr&gt;        &lt;int&gt; &lt;chr&gt;    
+1 fishing       2177 "\"\"..."
+2 sustainable   1525 "\"\"..."
+3 company       1036 "\"\"..."
+4 practices      838 "\"\"..."
+5 industry       715 "\"\"..."
+6 transactions   696 "\"\"..."
+# ℹ 3,254 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>text_data_splitted <span class="ot">&lt;-</span> text_data <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate_wider_delim</span>(<span class="st">"doc_id"</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">delim=</span> <span class="st">"__0__"</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">names =</span> <span class="fu">c</span>(<span class="st">"X"</span>,<span class="st">"Y"</span>),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">too_few =</span><span class="st">"align_end"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="part-2" class="level1">
+<h1>Part 2</h1>
+<section id="loading-r-packages-1" class="level2">
+<h2 class="anchored" data-anchor-id="loading-r-packages-1">1. Loading R Packages</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(jsonlite,tidyverse,tidyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="importing-the-data-1" class="level2">
+<h2 class="anchored" data-anchor-id="importing-the-data-1">2. Importing the data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mc1_data <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="st">"data/mc1.json"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
