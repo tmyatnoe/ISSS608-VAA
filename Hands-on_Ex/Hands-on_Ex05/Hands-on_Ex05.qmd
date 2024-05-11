@@ -113,6 +113,7 @@ write_rds(raw_text, "data/rds/news20.rds")
 
 ## 29.5 Initial EDA Figure below shows the frequency of messages by newsgroup.
 
+Figure below shows the frequency of messages by newsgroup.
 ```{r}
 #| echo: false
 raw_text <- read_rds("data/rds/news20.rds")
@@ -124,7 +125,7 @@ raw_text %>%
   labs(y = NULL)
 ```
 
-Figure below shows the frequency of messages by newsgroup. The code chunk:
+ The code chunk:
 
 ```{r}
 #| eval: false
@@ -227,9 +228,14 @@ wordcloud(words_by_newsgroup$word,
           max.words = 300)
 ```
 
+A DT table can be used to complement the visual discovery.
+```{r}
+datatable(words_by_newsgroup, filter = "top")
+```
+
 ### 29.6.5 Visualising Words in newsgroups
 
-The wordcloud below is plotted by using [`ggwordcloud`](https://lepennec.github.io/ggwordcloud/) package.
+The wordcloud below is plotted by using [**ggwordcloud**](https://lepennec.github.io/ggwordcloud/) package.
 
 ```{r}
 set.seed(1234)
@@ -275,6 +281,7 @@ tf_idf <- words_by_newsgroup %>%
 ```
 
 ### 29.7.2 Visualising tf-idf as interactive table
+Table below is an interactive table created by using `datatable()`.
 
 ```{r}
 #| echo: false
@@ -287,7 +294,7 @@ DT::datatable(tf_idf, filter = 'top') %>%
               lineHeight='25%')
 ```
 
-Table below is an interactive table created by using `datatable()`.
+
 
 ### 29.7.3 Visualising tf-idf as interactive table
 
@@ -383,7 +390,9 @@ newsgroup_cors <- words_by_newsgroup %>%
 ```
 
 ### 29.7.6 Visualising correlation as a network
+
 Now, we can visualise the relationship between newgroups in network graph as shown below.
+
 ```{r}
 #| echo: false
 set.seed(2017)
@@ -401,6 +410,7 @@ newsgroup_cors %>%
                  repel = TRUE) +
   theme_void()
 ```
+
 The code chunk:
 
 ```{r}
@@ -422,6 +432,7 @@ newsgroup_cors %>%
 ```
 
 ### 29.7.7 Bigram
+
 In this code chunk below, a bigram data frame is created by using `unnest_tokens()` of tidytext.
 
 ```{r}
@@ -432,12 +443,12 @@ bigrams <- cleaned_text %>%
                 n = 2)
 ```
 
-
 ```{r}
 bigrams
 ```
 
 ### 29.7.8 Counting bigrams
+
 The code chunk is used to count and sort the bigram data frame ascendingly.
 
 ```{r}
@@ -446,13 +457,12 @@ bigrams_count <- bigrams %>%
   count(bigram, sort = TRUE)
 ```
 
-
 ```{r}
 bigrams_count
 ```
 
-
 ### 29.7.9 Cleaning bigram
+
 The code chunk below is used to seperate the bigram into two words.
 
 ```{r}
@@ -466,19 +476,21 @@ bigrams_filtered <- bigrams_separated %>%
   filter(!word2 %in% stop_words$word)
 ```
 
-
 ```{r}
 bigrams_filtered
 ```
 
 ### 29.7.10 Counting the bigram again
+
 ```{r}
 bigram_counts <- bigrams_filtered %>% 
   count(word1, word2, sort = TRUE)
 ```
 
 ### 29.7.11 Create a network graph from bigram data frame
+
 In the code chunk below, a network graph is created by using `graph_from_data_frame()` of **igraph** package.
+
 ```{r}
 bigram_graph <- bigram_counts %>%
   filter(n > 3) %>%
@@ -487,7 +499,9 @@ bigram_graph
 ```
 
 ### 29.7.12 Visualizing a network of bigrams with ggraph
+
 In this code chunk below, **ggraph** package is used to plot the bigram.
+
 ```{r}
 #| echo: false
 set.seed(1234)
@@ -499,6 +513,7 @@ ggraph(bigram_graph, layout = "fr") +
                  vjust = 1, 
                  hjust = 1)
 ```
+
 The code chunk used to plot the network graph:
 
 ```{r}
@@ -537,6 +552,7 @@ ggraph(bigram_graph,
                  hjust = 1) +
   theme_void()
 ```
+
 The code chunk used to plot the network graph.
 
 ```{r}
