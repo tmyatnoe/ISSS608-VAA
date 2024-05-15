@@ -1,0 +1,15 @@
+{
+  "hash": "e7a605010cf28632ece90ba598a1b3e7",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Take-home Exercise 3\"\nauthor: \"Thet Myat Noe\"\ndate: \"May 14, 2024\"\ndate-modified: \"last-modified\"\nexecute:\n  eval: true\n  echo: true\n  warning: false\n  freeze: true\n---\n\n\n# 1. Overview\n\n## 1.1 Setting the scene\n\n\n\n## 1.2 Task\n\nThis exercise aims to help FishEye, a non-profit organization that focuses on illegal fishing, to better identify bias, track behavior changes, and infer temporal patterns from the knowledge graphs prepared by their data analysts.\n\n# 2. Getting Started\n\n## 2.1 Installing and loading the required libraries\nThe code chunk below uses `p_load()` function from **pacman** package to check if packages listed are already installed in the computer. The packages are loaded if they are found to be installed. If they are not installed, the function will proceed to install and load them into R environment.\n\n\n::: {.cell}\n\n```{.r .cell-code}\npacman::p_load(jsonlite,readxl,tidyverse)\n```\n:::\n\n\n## 2.2 Importing Data\n\n::: {.cell}\n\n```{.r .cell-code}\nmc2_data <- fromJSON(\"data/MC2/mc2.json\")\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\n# Convert date_added to Date type if it's not already\n# mc2_data$date_added <- as.Date(mc2_data$date_added)\n\n# Filter data to include only relevant details or clean data as needed\n# clean_data <- mc2_data %>%\n  # filter(!is.na(date_added)) %>% # Ensures that only entries with a valid 'date_added' are used\n  # select(Name, date_added, flag_country, tonnage) # Selects only the relevant columns\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nrecruitment_data <- read_excel(\"data/JobWanted.xlsx\")\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nrecruitment_data <- recruitment_data %>%\n  mutate(min_salary = as.numeric(gsub(\"K\", \"\", sub(\"-.*\", \"\", salary))))\n```\n:::",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
