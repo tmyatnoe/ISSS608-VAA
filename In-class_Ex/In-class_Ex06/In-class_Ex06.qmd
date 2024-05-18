@@ -22,7 +22,7 @@ pacman::p_load(jsonlite,tidyverse,tidyr)
 mc3_data <- fromJSON("data/MC3/mc3-v1.json")
 ```
 
-# In-class Exercise 6
+# Text Analytics
 ## 1. Loading R Packages
 
 ```{r}
@@ -110,4 +110,84 @@ class(KJB)
 
 ```{r}
 explore(KJB)
+```
+
+# Network Analytics
+## 1. Loading R Packages
+```{r}
+pacman::p_load(jsonlite,tidygraph, ggraph, visNetwork, graphlayouts, ggforce, skimr, tidytext, tidyverse,tidyr)
+```
+## 2. Importing the data
+
+```{r}
+#Vast Challenge 2023 MC3
+mc3_data_2023 <- fromJSON("data/MC3.json")
+```
+
+## 3. Extract Edges
+```{r}
+mc3_edges <-
+as_tibble(mc3_data_2023$links) %>%
+  distinct() %>%
+  mutate(source =
+as.character(source),
+         target =
+as.character(target),
+         type = as.character(type))%>%
+  group_by(source,target,type) %>%
+    summarise(weights = n()) %>%
+  filter(source!=target) %>%
+  ungroup()
+```
+
+## 4. Extract Nodes
+```{r}
+mc3_nodes <-
+as_tibble(mc3_data_2023$nodes) %>%
+  mutate(country = as.character(country),
+         id = as.character(id),
+         product_services = 
+           as.character(product_services),
+         revenue_omu = 
+           as.numeric(as.character(revenue_omu)),
+         type=as.character(type)) %>%
+  select(id,country,type,revenue_omu,product_services)
+```
+
+```{r}
+id1 <- mc3_edges %>%
+  select(source) %>%
+  rename(id = source)
+id2 <- mc3_edges %>%
+  select(target) %>%
+  rename(id = target)
+mc3_nodes1 <- rbind(id1, id2) %>%
+  distinct() %>%
+  left_join(mc3_nodes,
+            unmatched = "drop")
+```
+
+## 5. Construct the graph
+```{r}
+mc3_graph <- tbl_graph(nodes = mc3_nodes1,
+                       edges = mc3_edges,
+                       directed = FALSE) %>%
+  mutate(betweenness_centrality =
+           centrality_betweenness(),
+         cloesness_centrality = centrality_closeness())
+```
+
+## 6. Plotting the network graph
+```{r}
+mc3_graph %>%
+  filter(betweenness_centrality >= 100000) %>%
+  ggraph(layout = "fr") +
+  geom_edge_link(aes(alpha=0.5)) +
+  geom_node_point(aes(
+    size= betweenness_centrality,
+    color = "lightblue",
+    alpha = 0.5))+
+  scale_size_continuous(range=c(1,10))+
+  theme_graph()
+  
 ```

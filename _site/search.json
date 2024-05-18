@@ -957,5 +957,47 @@
     "title": "Take-home Exercise 2",
     "section": "4.2 Makeover Visualisation",
     "text": "4.2 Makeover Visualisation\nFor Quarterly Average Unit Price ($ PSM) by Area Category for Resale plot, Singapore Privare Property Reslae data is need to be prepared first. To get Resale data only, use filter() function from dplyr to filter from realis_merge data. Use group_by() to group mdata into by Area Category and Quarter, then use summarise() to get data frame containing mean unit price ($ PSM) for each group. mean() is used to calculate mean unit price ($ PSM) for each group. Use ggplot(), geom_bar() and geom_point() from ggplot2  to plot the chart. More functions from ggplot2 are used: labs() functions from ggplot2 are used to set chart title, subtitle, X and Y axis labels. Use theme() to set text size of chart title, subtitle, axis label, axis text, legend text and legend title. Use theme_wsj() from ggthemes to set Wall Street Journal theme.\n\nPlotCodeImprovements Made\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nresale_data &lt;- realis_merge %&gt;%\n  filter(`Type of Sale` == \"Resale\") \n\navg_price_by_quarter_resale &lt;- resale_data %&gt;%\n  group_by(`Area Category (SQM)`, Quarter) %&gt;%\n  summarise(Avg_Unit_Price_PSM = mean(`Unit Price ($ PSM)`, na.rm = TRUE), .groups = \"drop\")\n\np_line_resale &lt;- avg_price_by_quarter_resale %&gt;%\n  ggplot(aes(x = Quarter, y = Avg_Unit_Price_PSM, group = `Area Category (SQM)`, color = `Area Category (SQM)`)) +\n  geom_line() +\n  geom_point() +\n  labs(title = \"Quarterly Average Unit Price ($ PSM) by Area Category for Resale\",\n       subtitle = \"Singapore Private Property Market\",\n       x = \"Quarter\",\n       y = \"Average Price ($ PSM)\") +\n  theme_wsj() +\n  theme(plot.title = element_text(size = rel(0.4)),\n        plot.subtitle = element_text(size = rel(0.35)),\n        axis.text.x = element_text(size = rel(0.7)),  \n        axis.text.y = element_text(size = rel(0.7)),\n        axis.title.x = element_text(size = rel(0.4)),\n        axis.title.y = element_text(size = rel(0.4)),\n        legend.text = element_text(size = rel(0.7)),\n        legend.title = element_text(size = rel(0.4)))\n\np_line_resale\n\n\n\n\nCombined 5 line graphs into one for compactness and clean look.\nAdded legend for Area Category (SQM) for clarity.\nAdded “dot” indicator at points where line passes each quarter.\nAdded “Singapore Private Property Market” subtitle for clarity.\nBigger X axis, Y axis texts and chart labels.\n\n\n\n\nNext, Monthly Unit Price ($ PSM) by Area Category for Resale (Q1 2024) plot will be remake and we need to prepare Resale data for first quarter of 2024. To get 2024 Quarter 1 data only, use filter() function from dplyr to filter from resale_data. Use ggplot(), geom_boxplot() and geom_jitter() from ggplot2 to plot the chart. facet_wrap() is used to chart 3 months data side by side: Jan and Feb followed by Mar. More functions from ggplot2 are used: labs() functions from ggplot2 are used to set chart title, subtitle, X and Y axis labels. Use theme() to set text size of chart title, subtitle, axis label, axis text, legend text and legend title. Use theme_wsj() from ggthemes to set Wall Street Journal theme. scale_fill_brewer() is used to color the boxplots.\n\nPlotCodeImprovements Made\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ndata_q1_resale &lt;- resale_data %&gt;%\n  filter(Quarter == \"2024Q1\") \n\np_box_resale &lt;- ggplot(data_q1_resale, aes(x = `Area Category (SQM)`, y = `Unit Price ($ PSM)`, fill = `Area Category (SQM)`)) +\n  geom_boxplot() +\n  geom_jitter(width = 0.2, alpha = 0.001) +  # Adjusting alpha for visibility\n  facet_wrap(~Month, scales = \"fixed\") +\n  labs(title = \"Monthly Unit Price ($ PSM) by Area Category for Resale (Q1 2024)\",\n       subtitle = \"Singapore Private Property Market\",\n       x = \"Area Category\",\n       y = \"Price ($ PSM)\") +\n  theme_wsj() +\n  theme(plot.title = element_text(size = rel(0.4)),\n        plot.subtitle = element_text(size = rel(0.35)),\n        axis.text.x = element_text(angle = 45, hjust = 1, size = rel(0.7)),  \n        axis.text.y = element_text(size = rel(0.7)),\n        axis.title.x = element_text(size = rel(0.4)),\n        axis.title.y = element_text(size = rel(0.4)),\n        legend.text = element_text(size = rel(0.7)),\n        legend.title = element_text(size = rel(0.4)))+\n  scale_fill_brewer(palette = \"Greys\")\np_box_resale\n\n\n\n\nMade Boxplot for Jan, Feb and Mar on same Y axis scale for better comparing the ranges.\nBoxplot for 3 months in 2024Q1 are labelled as 2024-01-01, 2024-02-01, 2024-03-01 which does not represent the whole month. Used “Jan”, “Feb”, “Mar” instead.\nAdded “Singapore Private Property Market” subtitle for clarity.\nBigger X axis, Y axis texts and chart labels.\nBoxplot colors help to distinguish each area category clearly. However, using too many bright colors on boxplot may be distracting to readers. Used grey color palette with varying tones which does not produce too many vivid distracting colors."
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex06/In-class_Ex06.html#loading-r-packages-2",
+    "href": "In-class_Ex/In-class_Ex06/In-class_Ex06.html#loading-r-packages-2",
+    "title": "In-class Exercise 06",
+    "section": "1. Loading R Packages",
+    "text": "1. Loading R Packages\n\npacman::p_load(jsonlite,tidygraph, ggraph, visNetwork, graphlayouts, ggforce, skimr, tidytext, tidyverse,tidyr)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex06/In-class_Ex06.html#importing-the-data-2",
+    "href": "In-class_Ex/In-class_Ex06/In-class_Ex06.html#importing-the-data-2",
+    "title": "In-class Exercise 06",
+    "section": "2. Importing the data",
+    "text": "2. Importing the data\n\n#Vast Challenge 2023 MC3\nmc3_data_2023 &lt;- fromJSON(\"data/MC3.json\")"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex06/In-class_Ex06.html#extract-edges",
+    "href": "In-class_Ex/In-class_Ex06/In-class_Ex06.html#extract-edges",
+    "title": "In-class Exercise 06",
+    "section": "3. Extract Edges",
+    "text": "3. Extract Edges\n\nmc3_edges &lt;-\nas_tibble(mc3_data_2023$links) %&gt;%\n  distinct() %&gt;%\n  mutate(source =\nas.character(source),\n         target =\nas.character(target),\n         type = as.character(type))%&gt;%\n  group_by(source,target,type) %&gt;%\n    summarise(weights = n()) %&gt;%\n  filter(source!=target) %&gt;%\n  ungroup()"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex06/In-class_Ex06.html#extract-nodes",
+    "href": "In-class_Ex/In-class_Ex06/In-class_Ex06.html#extract-nodes",
+    "title": "In-class Exercise 06",
+    "section": "4. Extract Nodes",
+    "text": "4. Extract Nodes\n\nmc3_nodes &lt;-\nas_tibble(mc3_data_2023$nodes) %&gt;%\n  mutate(country = as.character(country),\n         id = as.character(id),\n         product_services = \n           as.character(product_services),\n         revenue_omu = \n           as.numeric(as.character(revenue_omu)),\n         type=as.character(type)) %&gt;%\n  select(id,country,type,revenue_omu,product_services)\n\n\nid1 &lt;- mc3_edges %&gt;%\n  select(source) %&gt;%\n  rename(id = source)\nid2 &lt;- mc3_edges %&gt;%\n  select(target) %&gt;%\n  rename(id = target)\nmc3_nodes1 &lt;- rbind(id1, id2) %&gt;%\n  distinct() %&gt;%\n  left_join(mc3_nodes,\n            unmatched = \"drop\")"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex06/In-class_Ex06.html#construct-the-graph",
+    "href": "In-class_Ex/In-class_Ex06/In-class_Ex06.html#construct-the-graph",
+    "title": "In-class Exercise 06",
+    "section": "5. Construct the graph",
+    "text": "5. Construct the graph\n\nmc3_graph &lt;- tbl_graph(nodes = mc3_nodes1,\n                       edges = mc3_edges,\n                       directed = FALSE) %&gt;%\n  mutate(betweenness_centrality =\n           centrality_betweenness(),\n         cloesness_centrality = centrality_closeness())"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex06/In-class_Ex06.html#plotting-the-network-graph",
+    "href": "In-class_Ex/In-class_Ex06/In-class_Ex06.html#plotting-the-network-graph",
+    "title": "In-class Exercise 06",
+    "section": "6. Plotting the network graph",
+    "text": "6. Plotting the network graph\n\nmc3_graph %&gt;%\n  filter(betweenness_centrality &gt;= 100000) %&gt;%\n  ggraph(layout = \"fr\") +\n  geom_edge_link(aes(alpha=0.5)) +\n  geom_node_point(aes(\n    size= betweenness_centrality,\n    color = \"lightblue\",\n    alpha = 0.5))+\n  scale_size_continuous(range=c(1,10))+\n  theme_graph()"
   }
 ]
