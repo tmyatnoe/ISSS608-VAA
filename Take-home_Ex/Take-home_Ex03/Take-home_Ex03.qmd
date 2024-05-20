@@ -124,12 +124,17 @@ N_vessel <- mc2_nodes %>%
 ## 3.1.2 Vessels' Possible Delivery Content By Season
 
 ## 3.2.1 Transponder Ping Pattern
+
+Transponder ping data can provide the locations the vessels from shipping company has been to and give insight whether vessels have visited non-fishing areas. In this section, we will focus only on fishing vessels to understand fishing activities.
 ```{r}
+# Rename target column as vessel_id
 E_Tping_c <- E_Tping_c %>%
   rename(vessel_id = target)
 ```
 
+Plot a network graph showing all the shipping vessel movements by different companies
 ``` {r}
+# Join data tables to include vessel_type, vessel_company in transponder ping data and filter only Fishing vessel type
 E_Tping_c_Fishing <- E_Tping_c %>%
   left_join(N_vessel %>% select(vessel_id, vessel_type, vessel_company), by = "vessel_id") %>%
   filter(vessel_type == "Fishing")
@@ -144,10 +149,11 @@ graph <- graph_from_data_frame(edges, directed = FALSE)
 
 # Plot the network
 plot(graph, vertex.size=10, vertex.label.cex=0.8, vertex.label.color="black",
-     main="Network Visualization of Boats Movement")
+     main="Network Visualization of Vessel Movement")
 ```
-
+Zoom into SouthSeafood Express Corp's vessel movement to uncover any suspicious behaviour.
 ``` {r}
+# Filter SouthSeafood Express Corp Vessels Only
 E_Tping_c_Fishing_SS <- E_Tping_c_Fishing %>%
   filter(vessel_company == "SouthSeafood Express Corp")
 
@@ -171,7 +177,7 @@ ggraph(graph_ss, layout = 'fr') +  # 'fr' layout (Fruchterman-Reingold) to sprea
   geom_node_text(aes(label = name), repel = TRUE, size = 3, color = "black") +  # Add labels with repulsion
   scale_color_manual(values = c("boat" = "orange", "location" = "blue", "southseafood" = "red")) +  # Define custom colors
   theme_void() +  # Use a void theme to remove background grid
-  labs(title = "Network Visualization of Boats Movement")  # Add title
+  labs(title = "Network Visualization of SouthSeafood Express Corp Vessel Movement")  # Add title
 
 
 ```
