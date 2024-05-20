@@ -4,7 +4,7 @@
     "href": "Take-home_Ex/Take-home_Ex03/Take-home_Ex03.html",
     "title": "Take-home Exercise 3",
     "section": "",
-    "text": "This exercise aims to help FishEye, a non-profit organization that focuses on illegal fishing, to better identify bias, track behavior changes, and infer temporal patterns from the knowledge graphs prepared by their data analysts."
+    "text": "In Oceanus, island life is defined by the coming and going of seafaring vessels, many of which are operated by commercial fishing companies. Typically, the movement of ships and goods are a sign of Oceanus’s healthy economy, especially in the fishing business. But mundane routines can be disrupted by a major event. Analysts at FishEye International, a non-profit organization that aims to find and prevent illegal fishing, need help to better understand one such event.\nFishEye has learned that SouthSeafood Express Corp has been caught fishing illegally. The scandal caused a major disruption in the close-knit fishing community. FishEye has been collecting data on ship movements and shipping records in hopes that they could assemble a cohesive store of knowledge that will allow them to better understand local commercial fishing behavior. FishEye processed open-source and commercial vessel tracking and shipping records into CatchNet: the Oceanus Knowledge Graph. Analysts examine and correct data as it is loaded but need help to create analytical capabilities for this data.\n\n\n\nThis exercise aims to help FishEye, a non-profit organization that focuses on illegal fishing, to better identify bias, track behavior changes, and infer temporal patterns from the knowledge graphs prepared by their data analysts."
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex03/Take-home_Ex03.html#task",
@@ -18,14 +18,14 @@
     "href": "Take-home_Ex/Take-home_Ex03/Take-home_Ex03.html#installing-and-loading-the-required-libraries",
     "title": "Take-home Exercise 3",
     "section": "2.1 Installing and loading the required libraries",
-    "text": "2.1 Installing and loading the required libraries\nThe code chunk below uses p_load() function from pacman package to check if packages listed are already installed in the computer. The packages are loaded if they are found to be installed. If they are not installed, the function will proceed to install and load them into R environment.\n\npacman::p_load(jsonlite,readxl,tidyverse)"
+    "text": "2.1 Installing and loading the required libraries\nThe code chunk below uses p_load() function from pacman package to check if packages listed are already installed in the computer. The packages are loaded if they are found to be installed. If they are not installed, the function will proceed to install and load them into R environment.\n\n\nCode\npacman::p_load(jsonlite,tidyverse,igraph,ggraph)"
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex03/Take-home_Ex03.html#importing-data",
     "href": "Take-home_Ex/Take-home_Ex03/Take-home_Ex03.html#importing-data",
     "title": "Take-home Exercise 3",
     "section": "2.2 Importing Data",
-    "text": "2.2 Importing Data\n\nmc2_data &lt;- fromJSON(\"data/MC2/mc2.json\")\n\n\n# Convert date_added to Date type if it's not already\n# mc2_data$date_added &lt;- as.Date(mc2_data$date_added)\n\n# Filter data to include only relevant details or clean data as needed\n# clean_data &lt;- mc2_data %&gt;%\n  # filter(!is.na(date_added)) %&gt;% # Ensures that only entries with a valid 'date_added' are used\n  # select(Name, date_added, flag_country, tonnage) # Selects only the relevant columns\n\n\nrecruitment_data &lt;- read_excel(\"data/JobWanted.xlsx\")\n\n\nrecruitment_data &lt;- recruitment_data %&gt;%\n  mutate(min_salary = as.numeric(gsub(\"K\", \"\", sub(\"-.*\", \"\", salary))))"
+    "text": "2.2 Importing Data\n\n\nCode\nmc2_data &lt;- fromJSON(\"data/MC2/mc2.json\")\n\n\n\n2.2.1 Processing Edges/Links Data\n\n\nCode\n#assigning to mc2_edges2\nmc2_edges &lt;- as_tibble(mc2_data$links)\n\n# Breaking into subsets based on event category\nE_TransponderPing &lt;- subset(mc2_edges,  mc2_edges$type == \"Event.TransportEvent.TransponderPing\")\nE_HarborRpt &lt;- subset(mc2_edges,  mc2_edges$type == \"Event.HarborReport\")\nE_Tx &lt;- subset(mc2_edges, mc2_edges$type == \"Event.Transaction\")\n\n# Dropping columns that are NULL - check if code drops where data is 1 null or all null\n\nE_Tx_c &lt;- E_Tx %&gt;%\n  select_if(~ !any(is.na(.)))\n\nE_Tping_c &lt;- E_TransponderPing %&gt;%\n  select_if(~ !any(is.na(.)))\n\n# Exclude dropping of null for Habor report due to last 3 columns\n\n#E_Hbrpt_c &lt;- E_HarborRpt %&gt;%\n#  select_if(~ !any(is.na(.)))\n\n\n\n\n2.2.2 Processing Nodes Data\n\n\nCode\n# Segmenting nodes data\nmc2_nodes &lt;- as_tibble(mc2_data$nodes)\n\n# Creating subset on nodes information\nN_fish &lt;- subset(mc2_nodes,  mc2_nodes$type == \"Entity.Commodity.Fish\") %&gt;%\n  select_if(~ !any(is.na(.))) %&gt;%\n  select(-c(`type`, `_raw_source`, `_algorithm`, `Activities`, `fish_species_present`)) %&gt;%\n  rename(fish_species = name, \n         fish_id = id)\n\nNL_City &lt;- subset(mc2_nodes,  mc2_nodes$type == \"Entity.Location.City\") %&gt;%\n  select_if(~ !any(is.na(.))) %&gt;%\n  select(-c(`_raw_source`, `_algorithm`, `type`, `fish_species_present`)) %&gt;%\n  rename(city_name = Name, \n         city_id = id)\n\n\nNL_Point &lt;- subset(mc2_nodes,  mc2_nodes$type == \"Entity.Location.Point\") %&gt;%\n  select_if(~ !any(is.na(.))) %&gt;%\n  select(-c(`_raw_source`, `_algorithm`, `kind`, `fish_species_present`)) %&gt;%\n  rename(point_name = Name, \n         point_id = id)\n\n## Need to tidy NL Region\nNL_Region &lt;- subset(mc2_nodes,  mc2_nodes$type == \"Entity.Location.Region\") %&gt;%\n  select_if(~ !any(is.na(.))) %&gt;%\n  select(-c(`_raw_source`, `_algorithm`, `type`, `Description`)) %&gt;%\n  rename(region_name = Name, \n         region_id = id, \n         region_kind = kind)\n\nN_Delivery_doc &lt;- subset(mc2_nodes,  mc2_nodes$type == \"Entity.Document.DeliveryReport\") %&gt;%\n  select_if(~ !any(is.na(.))) %&gt;%\n  rename(deliver_date = date,\n         cargo_id = id) %&gt;%\n  select(-c(`_algorithm`, `type`, `_raw_source`, `Activities`, `fish_species_present`)) \n\nN_vessel &lt;- mc2_nodes %&gt;%\n  filter(grepl(\"Entity.Vessel\", type)) %&gt;%\n  mutate(vessel_type = case_when(\n    grepl(\"FishingVessel\", type, ignore.case = TRUE) ~ \"Fishing\",\n    grepl(\"Ferry.Passenger\", type, ignore.case = TRUE) ~ \"Ferry_Passenger\",\n    grepl(\"Ferry.Cargo\", type, ignore.case = TRUE) ~ \"Ferry_Cargo\",\n    grepl(\"Research\", type, ignore.case = TRUE) ~ \"Research\", \n    grepl(\"Other\", type, ignore.case = TRUE) ~ \"Other\", \n    grepl(\"Tour\", type, ignore.case = TRUE) ~ \"Tour\", \n    grepl(\"CargoVessel\", type, ignore.case = TRUE) ~ \"Cargo_Vessel\"\n    )) %&gt;%\n  select(-c(`_algorithm`, `type`, `_raw_source`, `Activities`, `fish_species_present`)) %&gt;%\n  mutate(company = ifelse(is.na(company), \"Unknown\", company)) %&gt;% # Handle NA values by replacing NA with unknown\n  rename(vessel_id = id, \n         vessel_name = Name,\n         vessel_company = company) %&gt;%\n  select_if(~ !any(is.na(.)))"
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html",
@@ -999,5 +999,40 @@
     "title": "In-class Exercise 06",
     "section": "6. Plotting the network graph",
     "text": "6. Plotting the network graph\n\nmc3_graph %&gt;%\n  filter(betweenness_centrality &gt;= 100000) %&gt;%\n  ggraph(layout = \"fr\") +\n  geom_edge_link(aes(alpha=0.5)) +\n  geom_node_point(aes(\n    size= betweenness_centrality,\n    color = \"lightblue\",\n    alpha = 0.5))+\n  scale_size_continuous(range=c(1,10))+\n  theme_graph()"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex03/Take-home_Ex03.html#setting-the-scene",
+    "href": "Take-home_Ex/Take-home_Ex03/Take-home_Ex03.html#setting-the-scene",
+    "title": "Take-home Exercise 3",
+    "section": "",
+    "text": "In Oceanus, island life is defined by the coming and going of seafaring vessels, many of which are operated by commercial fishing companies. Typically, the movement of ships and goods are a sign of Oceanus’s healthy economy, especially in the fishing business. But mundane routines can be disrupted by a major event. Analysts at FishEye International, a non-profit organization that aims to find and prevent illegal fishing, need help to better understand one such event.\nFishEye has learned that SouthSeafood Express Corp has been caught fishing illegally. The scandal caused a major disruption in the close-knit fishing community. FishEye has been collecting data on ship movements and shipping records in hopes that they could assemble a cohesive store of knowledge that will allow them to better understand local commercial fishing behavior. FishEye processed open-source and commercial vessel tracking and shipping records into CatchNet: the Oceanus Knowledge Graph. Analysts examine and correct data as it is loaded but need help to create analytical capabilities for this data."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex03/Take-home_Ex03.html#vessels-possible-delivery-content",
+    "href": "Take-home_Ex/Take-home_Ex03/Take-home_Ex03.html#vessels-possible-delivery-content",
+    "title": "Take-home Exercise 3",
+    "section": "3.1.1 Vessels’ Possible Delivery Content",
+    "text": "3.1.1 Vessels’ Possible Delivery Content"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex03/Take-home_Ex03.html#vessels-possible-delivery-content-by-season",
+    "href": "Take-home_Ex/Take-home_Ex03/Take-home_Ex03.html#vessels-possible-delivery-content-by-season",
+    "title": "Take-home Exercise 3",
+    "section": "3.1.2 Vessels’ Possible Delivery Content By Season",
+    "text": "3.1.2 Vessels’ Possible Delivery Content By Season"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex03/Take-home_Ex03.html#transponder-ping-pattern",
+    "href": "Take-home_Ex/Take-home_Ex03/Take-home_Ex03.html#transponder-ping-pattern",
+    "title": "Take-home Exercise 3",
+    "section": "3.2.1 Transponder Ping Pattern",
+    "text": "3.2.1 Transponder Ping Pattern\n\n\nCode\nE_Tping_c &lt;- E_Tping_c %&gt;%\n  rename(vessel_id = target)\n\n\n\n\nCode\nE_Tping_c_Fishing &lt;- E_Tping_c %&gt;%\n  left_join(N_vessel %&gt;% select(vessel_id, vessel_type, vessel_company), by = \"vessel_id\") %&gt;%\n  filter(vessel_type == \"Fishing\")\n\nedges &lt;- data.frame(\n  from = E_Tping_c_Fishing$vessel_company,\n  to = E_Tping_c_Fishing$source\n)\n\n# Create a graph object\ngraph &lt;- graph_from_data_frame(edges, directed = FALSE)\n\n# Plot the network\nplot(graph, vertex.size=10, vertex.label.cex=0.8, vertex.label.color=\"black\",\n     main=\"Network Visualization of Boats Movement\")\n\n\n\n\n\n\n\n\n\n\n\nCode\nE_Tping_c_Fishing_SS &lt;- E_Tping_c_Fishing %&gt;%\n  filter(vessel_company == \"SouthSeafood Express Corp\")\n\nedges_ss &lt;- data.frame(\n  from = E_Tping_c_Fishing_SS$vessel_company,\n  to = E_Tping_c_Fishing_SS$source\n)\n\n# Create a graph object\ngraph_ss &lt;- graph_from_data_frame(edges_ss, directed = FALSE)\n\n\n# Create a vertex attribute to distinguish between boats, SouthSeafood, and other companies\nV(graph_ss)$type &lt;- ifelse(V(graph_ss)$name == \"SouthSeafood Express Corp\", \"southseafood\", \n                        ifelse(V(graph)$name %in% E_Tping_c_Fishing_SS$vessel_id, \"boat\", \"location\"))\n\n# Plot the network with ggraph\nggraph(graph_ss, layout = 'fr') +  # 'fr' layout (Fruchterman-Reingold) to spread nodes nicely\n  geom_edge_link(aes(width = 1), edge_colour = \"grey\") +  # Add edges with grey color\n  geom_node_point(aes(color = type), size = 5) +  # Add nodes with different colors based on type\n  geom_node_text(aes(label = name), repel = TRUE, size = 3, color = \"black\") +  # Add labels with repulsion\n  scale_color_manual(values = c(\"boat\" = \"orange\", \"location\" = \"blue\", \"southseafood\" = \"red\")) +  # Define custom colors\n  theme_void() +  # Use a void theme to remove background grid\n  labs(title = \"Network Visualization of Boats Movement\")  # Add title"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex03/Take-home_Ex03.html#catch-content-comparison",
+    "href": "Take-home_Ex/Take-home_Ex03/Take-home_Ex03.html#catch-content-comparison",
+    "title": "Take-home Exercise 3",
+    "section": "3.2.2 Catch Content Comparison",
+    "text": "3.2.2 Catch Content Comparison"
   }
 ]

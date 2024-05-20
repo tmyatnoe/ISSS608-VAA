@@ -3,6 +3,7 @@ title: "Take-home Exercise 3"
 author: "Thet Myat Noe"
 date: "May 14, 2024"
 date-modified: "last-modified"
+code-fold: true
 execute:
   eval: true
   echo: true
@@ -13,8 +14,9 @@ execute:
 # 1. Overview
 
 ## 1.1 Setting the scene
+In Oceanus, island life is defined by the coming and going of seafaring vessels, many of which are operated by commercial fishing companies. Typically, the movement of ships and goods are a sign of Oceanus’s healthy economy, especially in the fishing business. But mundane routines can be disrupted by a major event. Analysts at FishEye International, a non-profit organization that aims to find and prevent illegal fishing, need help to better understand one such event.
 
-
+FishEye has learned that SouthSeafood Express Corp has been caught fishing illegally. The scandal caused a major disruption in the close-knit fishing community. FishEye has been collecting data on ship movements and shipping records in hopes that they could assemble a cohesive store of knowledge that will allow them to better understand local commercial fishing behavior. FishEye processed open-source and commercial vessel tracking and shipping records into CatchNet: the Oceanus Knowledge Graph. Analysts examine and correct data as it is loaded but need help to create analytical capabilities for this data.
 
 ## 1.2 Task
 
@@ -26,7 +28,7 @@ This exercise aims to help FishEye, a non-profit organization that focuses on il
 The code chunk below uses `p_load()` function from **pacman** package to check if packages listed are already installed in the computer. The packages are loaded if they are found to be installed. If they are not installed, the function will proceed to install and load them into R environment.
 
 ```{r}
-pacman::p_load(jsonlite,readxl,tidyverse,ggridges)
+pacman::p_load(jsonlite,tidyverse,igraph,ggraph)
 ```
 
 ## 2.2 Importing Data
@@ -34,70 +36,147 @@ pacman::p_load(jsonlite,readxl,tidyverse,ggridges)
 mc2_data <- fromJSON("data/MC2/mc2.json")
 ```
 
+### 2.2.1 Processing Edges/Links Data
 ```{r}
-# Convert date_added to Date type if it's not already
-# mc2_data$date_added <- as.Date(mc2_data$date_added)
+#assigning to mc2_edges2
+mc2_edges <- as_tibble(mc2_data$links)
 
-# Filter data to include only relevant details or clean data as needed
-# clean_data <- mc2_data %>%
-  # filter(!is.na(date_added)) %>% # Ensures that only entries with a valid 'date_added' are used
-  # select(Name, date_added, flag_country, tonnage) # Selects only the relevant columns
+# Breaking into subsets based on event category
+E_TransponderPing <- subset(mc2_edges,  mc2_edges$type == "Event.TransportEvent.TransponderPing")
+E_HarborRpt <- subset(mc2_edges,  mc2_edges$type == "Event.HarborReport")
+E_Tx <- subset(mc2_edges, mc2_edges$type == "Event.Transaction")
 
+# Dropping columns that are NULL - check if code drops where data is 1 null or all null
+
+E_Tx_c <- E_Tx %>%
+  select_if(~ !any(is.na(.)))
+
+E_Tping_c <- E_TransponderPing %>%
+  select_if(~ !any(is.na(.)))
+
+# Exclude dropping of null for Habor report due to last 3 columns
+
+#E_Hbrpt_c <- E_HarborRpt %>%
+#  select_if(~ !any(is.na(.)))
 ```
 
+### 2.2.2 Processing Nodes Data
 ```{r}
-recruitment_data <- read_excel("data/JobWanted.xlsx")
+# Segmenting nodes data
+mc2_nodes <- as_tibble(mc2_data$nodes)
+
+# Creating subset on nodes information
+N_fish <- subset(mc2_nodes,  mc2_nodes$type == "Entity.Commodity.Fish") %>%
+  select_if(~ !any(is.na(.))) %>%
+  select(-c(`type`, `_raw_source`, `_algorithm`, `Activities`, `fish_species_present`)) %>%
+  rename(fish_species = name, 
+         fish_id = id)
+
+NL_City <- subset(mc2_nodes,  mc2_nodes$type == "Entity.Location.City") %>%
+  select_if(~ !any(is.na(.))) %>%
+  select(-c(`_raw_source`, `_algorithm`, `type`, `fish_species_present`)) %>%
+  rename(city_name = Name, 
+         city_id = id)
+
+
+NL_Point <- subset(mc2_nodes,  mc2_nodes$type == "Entity.Location.Point") %>%
+  select_if(~ !any(is.na(.))) %>%
+  select(-c(`_raw_source`, `_algorithm`, `kind`, `fish_species_present`)) %>%
+  rename(point_name = Name, 
+         point_id = id)
+
+## Need to tidy NL Region
+NL_Region <- subset(mc2_nodes,  mc2_nodes$type == "Entity.Location.Region") %>%
+  select_if(~ !any(is.na(.))) %>%
+  select(-c(`_raw_source`, `_algorithm`, `type`, `Description`)) %>%
+  rename(region_name = Name, 
+         region_id = id, 
+         region_kind = kind)
+
+N_Delivery_doc <- subset(mc2_nodes,  mc2_nodes$type == "Entity.Document.DeliveryReport") %>%
+  select_if(~ !any(is.na(.))) %>%
+  rename(deliver_date = date,
+         cargo_id = id) %>%
+  select(-c(`_algorithm`, `type`, `_raw_source`, `Activities`, `fish_species_present`)) 
+
+N_vessel <- mc2_nodes %>%
+  filter(grepl("Entity.Vessel", type)) %>%
+  mutate(vessel_type = case_when(
+    grepl("FishingVessel", type, ignore.case = TRUE) ~ "Fishing",
+    grepl("Ferry.Passenger", type, ignore.case = TRUE) ~ "Ferry_Passenger",
+    grepl("Ferry.Cargo", type, ignore.case = TRUE) ~ "Ferry_Cargo",
+    grepl("Research", type, ignore.case = TRUE) ~ "Research", 
+    grepl("Other", type, ignore.case = TRUE) ~ "Other", 
+    grepl("Tour", type, ignore.case = TRUE) ~ "Tour", 
+    grepl("CargoVessel", type, ignore.case = TRUE) ~ "Cargo_Vessel"
+    )) %>%
+  select(-c(`_algorithm`, `type`, `_raw_source`, `Activities`, `fish_species_present`)) %>%
+  mutate(company = ifelse(is.na(company), "Unknown", company)) %>% # Handle NA values by replacing NA with unknown
+  rename(vessel_id = id, 
+         vessel_name = Name,
+         vessel_company = company) %>%
+  select_if(~ !any(is.na(.)))
 ```
 
 
+# 3. Visualisation
+## 3.1.1 Vessels' Possible Delivery Content
+## 3.1.2 Vessels' Possible Delivery Content By Season
+
+## 3.2.1 Transponder Ping Pattern
 ```{r}
-recruitment_data <- recruitment_data %>%
-  mutate(min_salary = ifelse(grepl("K", salary), 
-                             as.numeric(gsub("K.*", "", sub("-.*", "", salary))), 
-                             0),
-         max_salary = ifelse(grepl("K", salary),
-                             as.numeric(gsub("K.*", "", sub(".*-", "", salary))),
-                             0))
+E_Tping_c <- E_Tping_c %>%
+  rename(vessel_id = target)
 ```
 
-```{r}
-ggplot(recruitment_data, aes(x = min_salary, y = experience, fill = experience)) +
-  geom_density_ridges(scale = 3) +
-  theme_minimal() +
-  labs(title = "Salary Distribution (Min) per Experience Type",
-       x = "Minimum Salary (K)",
-       y = "Experience Type") +
-  theme(legend.position = "none")
+``` {r}
+E_Tping_c_Fishing <- E_Tping_c %>%
+  left_join(N_vessel %>% select(vessel_id, vessel_type, vessel_company), by = "vessel_id") %>%
+  filter(vessel_type == "Fishing")
+
+edges <- data.frame(
+  from = E_Tping_c_Fishing$vessel_company,
+  to = E_Tping_c_Fishing$source
+)
+
+# Create a graph object
+graph <- graph_from_data_frame(edges, directed = FALSE)
+
+# Plot the network
+plot(graph, vertex.size=10, vertex.label.cex=0.8, vertex.label.color="black",
+     main="Network Visualization of Boats Movement")
 ```
 
+``` {r}
+E_Tping_c_Fishing_SS <- E_Tping_c_Fishing %>%
+  filter(vessel_company == "SouthSeafood Express Corp")
 
-```{r}
-ggplot(recruitment_data, aes(x = max_salary, y = experience, fill = experience)) +
-  geom_density_ridges(scale = 3) +
-  theme_minimal() +
-  labs(title = "Salary Distribution (Max) per Experience Type",
-       x = "Maximum Salary (K)",
-       y = "Experience Type") +
-  theme(legend.position = "none")
+edges_ss <- data.frame(
+  from = E_Tping_c_Fishing_SS$vessel_company,
+  to = E_Tping_c_Fishing_SS$source
+)
+
+# Create a graph object
+graph_ss <- graph_from_data_frame(edges_ss, directed = FALSE)
+
+
+# Create a vertex attribute to distinguish between boats, SouthSeafood, and other companies
+V(graph_ss)$type <- ifelse(V(graph_ss)$name == "SouthSeafood Express Corp", "southseafood", 
+                        ifelse(V(graph)$name %in% E_Tping_c_Fishing_SS$vessel_id, "boat", "location"))
+
+# Plot the network with ggraph
+ggraph(graph_ss, layout = 'fr') +  # 'fr' layout (Fruchterman-Reingold) to spread nodes nicely
+  geom_edge_link(aes(width = 1), edge_colour = "grey") +  # Add edges with grey color
+  geom_node_point(aes(color = type), size = 5) +  # Add nodes with different colors based on type
+  geom_node_text(aes(label = name), repel = TRUE, size = 3, color = "black") +  # Add labels with repulsion
+  scale_color_manual(values = c("boat" = "orange", "location" = "blue", "southseafood" = "red")) +  # Define custom colors
+  theme_void() +  # Use a void theme to remove background grid
+  labs(title = "Network Visualization of Boats Movement")  # Add title
+
+
 ```
+## 3.2.2 Catch Content Comparison
 
-```{r}
-ggplot(recruitment_data, aes(x = min_salary, y = company_type, fill = company_type)) +
-  geom_density_ridges(scale = 3) +
-  theme_minimal() +
-  labs(title = "Salary Distribution (Min) per Company Type",
-       x = "Minimum Salary (K)",
-       y = "Company Type") +
-  theme(legend.position = "none")
-```
+# 4. Conclusion
 
-
-```{r}
-ggplot(recruitment_data, aes(x = max_salary, y = company_type, fill = company_type)) +
-  geom_density_ridges(scale = 3) +
-  theme_minimal() +
-  labs(title = "Salary Distribution (Max) per Company Type",
-       x = "Maximum Salary (K)",
-       y = "Company Type") +
-  theme(legend.position = "none")
-```
+# 5. References
