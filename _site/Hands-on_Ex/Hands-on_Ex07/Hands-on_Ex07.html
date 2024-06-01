@@ -341,9 +341,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="plotting-calendar-heatmap" class="level2">
 <h2 class="anchored" data-anchor-id="plotting-calendar-heatmap">17.4 Plotting Calendar Heatmap</h2>
-<p>In this section, you will learn how to plot a calender heatmap programmatically by using ggplot2 package.</p>
+<p>In this section, we will learn how to plot a calender heatmap programmatically by using ggplot2 package.</p>
 <p><img src="image01.png" class="img-fluid"></p>
-<p>By the end of this section, you will be able to:</p>
+<p>By the end of this section, we will be able to:</p>
 <ul>
 <li><p>plot a calender heatmap by using ggplot2 functions and extension,</p></li>
 <li><p>to write function using R programming,</p></li>
@@ -356,7 +356,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="importing-the-data" class="level3">
 <h3 class="anchored" data-anchor-id="importing-the-data">17.4.2 Importing the data</h3>
-<p>First, you will use the code chunk below to import <em>eventlog.csv</em> file into R environment and called the data frame as <em>attacks</em>.</p>
+<p>First, we will use the code chunk below to import <em>eventlog.csv</em> file into R environment and called the data frame as <em>attacks</em>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>attacks <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/eventlog.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -650,7 +650,7 @@ Things to learn from the code chunk
 <section id="plotting-multiple-calendar-heatmaps" class="level3">
 <h3 class="anchored" data-anchor-id="plotting-multiple-calendar-heatmaps">17.4.7 Plotting Multiple Calendar Heatmaps</h3>
 <p>Step 1: Deriving attack by country object</p>
-<p>In order to identify the top 4 countries with the highest number of attacks, you are required to do the followings:</p>
+<p>In order to identify the top 4 countries with the highest number of attacks, we are required to do the followings:</p>
 <ul>
 <li><p>count the number of attacks by country,</p></li>
 <li><p>calculate the percent of attackes by country, and</p></li>
@@ -663,7 +663,7 @@ Things to learn from the code chunk
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Step 2: Preparing the tidy data frame</p>
-<p>In this step, you are required to extract the attack records of the top 4 countries from attacks data frame and save the data in a new tibble data frame (i.e.&nbsp;top4_attacks).</p>
+<p>In this step, we are required to extract the attack records of the top 4 countries from attacks data frame and save the data in a new tibble data frame (i.e.&nbsp;top4_attacks).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>top4 <span class="ot">&lt;-</span> attacks_by_country<span class="sc">$</span>source_country[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>top4_attacks <span class="ot">&lt;-</span> attacks <span class="sc">%&gt;%</span></span>
@@ -710,7 +710,7 @@ Things to learn from the code chunk
 </section>
 <section id="plotting-cycle-plot" class="level2">
 <h2 class="anchored" data-anchor-id="plotting-cycle-plot">17.5 Plotting Cycle Plot</h2>
-<p>In this section, you will learn how to plot a cycle plot showing the time-series patterns and trend of visitor arrivals from Vietnam programmatically by using ggplot2 functions.</p>
+<p>In this section, we will learn how to plot a cycle plot showing the time-series patterns and trend of visitor arrivals from Vietnam programmatically by using ggplot2 functions.</p>
 <p><img src="image03.png" class="img-fluid"></p>
 <section id="step-1-data-import" class="level3">
 <h3 class="anchored" data-anchor-id="step-1-data-import">17.5.1 Step 1: Data Import</h3>
@@ -733,7 +733,7 @@ Things to learn from the code chunk
 </section>
 <section id="step-4-extracting-the-target-country" class="level3">
 <h3 class="anchored" data-anchor-id="step-4-extracting-the-target-country">17.5.3 Step 4: Extracting the target country</h3>
-<p>Next, the code chunk below is use to extract data for the target country (i.e.&nbsp;Vietnam)</p>
+<p>Next, the code chunk below is use to extract data for the target country (i.e.Vietnam)</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>Vietnam <span class="ot">&lt;-</span> air <span class="sc">%&gt;%</span> </span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="st">`</span><span class="at">Vietnam</span><span class="st">`</span>, </span>
@@ -777,7 +777,7 @@ Things to learn from the code chunk
 </section>
 <section id="plotting-slopegraph" class="level2">
 <h2 class="anchored" data-anchor-id="plotting-slopegraph">17.6 Plotting Slopegraph</h2>
-<p>In this section you will learn how to plot a <a href="https://www.storytellingwithdata.com/blog/2020/7/27/what-is-a-slopegraph">slopegraph</a> by using R.</p>
+<p>In this section we will learn how to plot a <a href="https://www.storytellingwithdata.com/blog/2020/7/27/what-is-a-slopegraph">slopegraph</a> by using R.</p>
 <p>Before getting start, make sure that <strong>CGPfunctions</strong> has been installed and loaded onto R environment. Then, refer to <a href="https://cran.r-project.org/web/packages/CGPfunctions/vignettes/Using-newggslopegraph.html">Using newggslopegraph</a> to learn more about the function. Lastly, read more about <code>newggslopegraph()</code> and its arguments by referring to this <a href="https://www.rdocumentation.org/packages/CGPfunctions/versions/0.6.3/topics/newggslopegraph">link</a>.</p>
 <section id="step-1-data-import-1" class="level3">
 <h3 class="anchored" data-anchor-id="step-1-data-import-1">17.6.1 Step 1: Data Import</h3>
@@ -815,7 +815,7 @@ Things to learn from the code chunk
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>For effective data visualisation design,&nbsp;<code>factor()</code>&nbsp;is used convert the value type of&nbsp;<em>Year</em>&nbsp;field from numeric to factor.</p>
+<p>For effective data visualisation design,<code>factor()</code> is used convert the value type of <em>Year</em> field from numeric to factor.</p>
 </div>
 </div>
 
