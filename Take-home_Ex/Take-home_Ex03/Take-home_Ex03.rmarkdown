@@ -11,6 +11,7 @@ execute:
   freeze: true
 ---
 
+
 # 1. Overview
 
 ## 1.1 Setting the scene
@@ -27,18 +28,23 @@ This exercise aims to help FishEye, a non-profit organization that focuses on il
 ## 2.1 Installing and loading the required libraries
 The code chunk below uses `p_load()` function from **pacman** package to check if packages listed are already installed in the computer. The packages are loaded if they are found to be installed. If they are not installed, the function will proceed to install and load them into R environment.
 
+
 ```{r}
 pacman::p_load(jsonlite,tidyverse,igraph,ggraph)
 ```
 
+
 ## 2.2 Importing Data
 Below code import MC2 data using fromJSON command from jsonlite package.
+
 ```{r}
 mc2_data <- fromJSON("data/MC2/mc2.json")
 ```
 
+
 ### 2.2.1 Processing Edges/Links Data
 Below code process and clean Edges data.
+
 ```{r}
 # Load edges data to mc2_edges
 mc2_edges <- as_tibble(mc2_data$links) %>% 
@@ -64,13 +70,17 @@ E_HarborRpt <- subset(mc2_edges,  mc2_edges$type == "Event.HarborReport")
 E_Tx <- subset(mc2_edges, mc2_edges$type == "Event.Transaction")
 
 ```
+
 Take a look at mc2_edges to ensure data is processed correctly. 
+
 ```{r}
 glimpse(mc2_edges)
 ```
 
+
 ### 2.2.2 Processing Nodes Data
 Below code process and clean Nodes data.
+
 ```{r}
 # Load nodes data to mc2_nodes
 mc2_nodes <- as_tibble(mc2_data$nodes) %>%
@@ -141,11 +151,15 @@ N_vessel <- mc2_nodes %>%
          vessel_company = company) %>%
   select_if(~ !any(is.na(.)))
 ```
+
 Take a look at mc2_nodes to ensure data is processed correctly. 
+
 ```{r}
 glimpse(mc2_nodes)
 ```
+
 ### 2.2.3 Processing Transponder Ping Data
+
 ```{r}
 # Rename target column as vessel_id
 E_TransponderPing <- E_TransponderPing %>%
@@ -157,10 +171,12 @@ E_Tping_Fishing <- E_TransponderPing %>%
   filter(vessel_type == "Fishing")
 ```
 
+
 # 3. Visualisation
 ## 3.1.1 Vessels' Possible Delivery Content
 
 First, we need to associate Cargo in delivery doc to fish species info using Transaction and Fish Nodes data.
+
 ```{r}
 # Extract Cargo to Fish data from Transaction Event data
 Cargo_to_Fish <- E_Tx %>%
@@ -178,39 +194,46 @@ N_Delivery_doc <- N_Delivery_doc %>%
 N_Delivery_doc <- N_Delivery_doc %>% 
   rename(fish_id = target)
 ```
+
 Next, extract date only from time column of transponder data.
+
 ```{r}
 # Extract Date only from time column of Transponder Ping data
 E_Tping_Fishing <- E_Tping_Fishing %>%
   mutate(date_only = as.Date(time))
 ```
-Connect possible cargo to vessels using date as connection.
+
+Visualizing the graph network of possible cargo to vessels using date as connection.
+
 ```{r}
 # Merge the datasets based on the date
 Tping_to_Delivery <- E_Tping_Fishing %>%
-  filter(source %in% NL_City$city_id) %>%
   left_join(N_Delivery_doc %>% select("deliver_date","cargo_id", "qty_tons", "fish_id", "fish_species"), by = c("date_only" = "deliver_date"))
 
 
 ```
-Visualize which company possibly deliver which fish species.
-```{r}
-# Remove duplicate rows based on vessel_company and fish_species
-distinct_species <- Tping_to_Delivery %>%
-  distinct(vessel_company, fish_species) %>% na.omit() %>% select(vessel_company, fish_species)
 
-# Creating stacked bar chart
-ggplot(distinct_species, aes(x = vessel_company, fill = fish_species)) +
-  geom_bar(position = "stack") +
-  labs(title = "Probable Fish Species Delivered by Company",
-       x = "Vessel Company",
-       y = "Count of Fish Species") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 6),
-        axis.text.y = element_text(size = 8),
-        legend.text = element_text(size = 8),
-        legend.title = element_text(size = 8)) +
-  scale_fill_discrete(name = "Fish Species")
+```{r}
+
+# Create edges for the graph: Vessel to Cargo
+edges_cargo_bennett <- Tping_to_Delivery %>%
+  filter(vessel_company == "Bennett, Jones and Miller") %>% 
+  select(from = vessel_id, to = cargo_id) 
+
+# Create a graph object
+graph_cargo <- graph_from_data_frame(edges_cargo, directed = FALSE)
+
+# Convert to ggraph object
+g <- ggraph(graph_cargo, layout = 'fr') +  # 'fr' layout (Fruchterman-Reingold) to spread nodes nicely
+  geom_edge_link(aes(width = 1), edge_colour = "grey") +  # Add edges with grey color
+  geom_node_point(aes(color = name), size = 5) +  # Add nodes with different colors
+  geom_node_text(aes(label = name), repel = TRUE, size = 3, color = "black") +  # Add labels with repulsion
+  theme_void() +  # Use a void theme to remove background grid
+  labs(title = "Network Visualization of Vessel to Cargo ID")
+
+
 ```
+
 ## 3.1.2 Vessels' Possible Delivery Content By Season
 
 ## 3.2.1 Transponder Ping Pattern
@@ -218,6 +241,7 @@ ggplot(distinct_species, aes(x = vessel_company, fill = fish_species)) +
 Transponder ping data can provide the locations the vessels from shipping company has been to and give insight whether vessels have visited non-fishing areas. In this section, we will focus only on fishing vessels to understand fishing activities.
 
 Plot a network graph showing all the shipping vessel movements by different companies
+
 ``` {r}
 edges <- data.frame(
   from = E_Tping_Fishing$vessel_company,
@@ -231,7 +255,9 @@ graph <- graph_from_data_frame(edges, directed = FALSE)
 plot(graph, vertex.size=10, vertex.label.cex=0.8, vertex.label.color="black",
      main="Network Visualization of Vessel Movement")
 ```
+
 Zoom into SouthSeafood Express Corp's vessel movement to uncover any suspicious behavior.
+
 ``` {r}
 # Filter SouthSeafood Express Corp Vessels Only
 E_Tping_Fishing_SS <- E_Tping_Fishing %>%
@@ -260,6 +286,7 @@ ggraph(graph_ss, layout = 'fr') +
   labs(title = "Network Visualization of SouthSeafood Express Corp Vessel Movement")  
 
 ```
+
 ## 3.2.2 Catch Content Comparison
 
 # 4. Conclusion

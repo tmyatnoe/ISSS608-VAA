@@ -1034,5 +1034,33 @@
     "title": "Take-home Exercise 3",
     "section": "3.2.2 Catch Content Comparison",
     "text": "3.2.2 Catch Content Comparison"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html",
+    "href": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html",
+    "title": "Hands-on Exercise 7",
+    "section": "",
+    "text": "By the end of this hands-on exercise we will be able create the followings data visualisation by using R packages:\n\nplotting a calender heatmap by using ggplot2 functions,\nplotting a cycle plot by using ggplot2 function,\nplotting a slopegraph\nplotting a horizon chart\n\n\n\n\n\n\n\nWrite a code chunk to check, install and launch the following R packages: scales, viridis, lubridate, ggthemes, gridExtra, readxl, knitr, data.table and tidyverse.\n\n\nCode\npacman::p_load(scales, viridis, lubridate, ggthemes, gridExtra, readxl, knitr, data.table, CGPfunctions, ggHoriPlot, tidyverse)\n\n\n\n\n\nIn this section, you will learn how to plot a calender heatmap programmatically by using ggplot2 package.\n\nBy the end of this section, you will be able to:\n\nplot a calender heatmap by using ggplot2 functions and extension,\nto write function using R programming,\nto derive specific date and time related field by using base R and lubridate packages\nto perform data preparation task by using tidyr and dplyr packages.\n\n\n\nFor the purpose of this hands-on exercise, eventlog.csv file will be used. This data file consists of 199,999 rows of time-series cyber attack records by country.\n\n\n\nFirst, you will use the code chunk below to import eventlog.csv file into R environment and called the data frame as attacks.\n\n\nCode\nattacks &lt;- read_csv(\"data/eventlog.csv\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html#learning-outcome",
+    "href": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html#learning-outcome",
+    "title": "Hands-on Exercise 7",
+    "section": "",
+    "text": "By the end of this hands-on exercise we will be able create the followings data visualisation by using R packages:\n\nplotting a calender heatmap by using ggplot2 functions,\nplotting a cycle plot by using ggplot2 function,\nplotting a slopegraph\nplotting a horizon chart"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html#do-it-yourself",
+    "href": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html#do-it-yourself",
+    "title": "Hands-on Exercise 7",
+    "section": "",
+    "text": "Write a code chunk to check, install and launch the following R packages: scales, viridis, lubridate, ggthemes, gridExtra, readxl, knitr, data.table and tidyverse.\n\n\nCode\npacman::p_load(scales, viridis, lubridate, ggthemes, gridExtra, readxl, knitr, data.table, CGPfunctions, ggHoriPlot, tidyverse)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html#plotting-calendar-heatmap",
+    "href": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07.html#plotting-calendar-heatmap",
+    "title": "Hands-on Exercise 7",
+    "section": "",
+    "text": "In this section, you will learn how to plot a calender heatmap programmatically by using ggplot2 package.\n\nBy the end of this section, you will be able to:\n\nplot a calender heatmap by using ggplot2 functions and extension,\nto write function using R programming,\nto derive specific date and time related field by using base R and lubridate packages\nto perform data preparation task by using tidyr and dplyr packages.\n\n\n\nFor the purpose of this hands-on exercise, eventlog.csv file will be used. This data file consists of 199,999 rows of time-series cyber attack records by country.\n\n\n\nFirst, you will use the code chunk below to import eventlog.csv file into R environment and called the data frame as attacks.\n\n\nCode\nattacks &lt;- read_csv(\"data/eventlog.csv\")"
   }
 ]

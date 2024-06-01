@@ -1,0 +1,15 @@
+{
+  "hash": "53336fbcacd8143e4c6ed095305948b3",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Hands-on Exercise 7\"\nauthor: \"Thet Myat Noe\"\ndate: \"Jun 1, 2024\"\ndate-modified: \"last-modified\"\ncode-fold: true\nexecute:\n  eval: true\n  echo: true\n  warning: false\n  freeze: true\n---\n\n\n# 17 Visualising and Analysing Time-oriented Data\n\n## 17.1 Learning Outcome\n\nBy the end of this hands-on exercise we will be able create the followings data visualisation by using R packages:\n\n-   plotting a calender heatmap by using ggplot2 functions,\n\n-   plotting a cycle plot by using ggplot2 function,\n\n-   plotting a slopegraph\n\n-   plotting a horizon chart\n\n## 17.2 Getting Started\n\n## 17.3 Do It Yourself\n\nWrite a code chunk to check, install and launch the following R packages: scales, viridis, lubridate, ggthemes, gridExtra, readxl, knitr, data.table and tidyverse.\n\n\n::: {.cell}\n\n```{.r .cell-code}\npacman::p_load(scales, viridis, lubridate, ggthemes, gridExtra, readxl, knitr, data.table, CGPfunctions, ggHoriPlot, tidyverse)\n```\n:::\n\n\n## 17.4 Plotting Calendar Heatmap\n\nIn this section, you will learn how to plot a calender heatmap programmatically by using ggplot2 package.\n\n![](image01.png)\n\nBy the end of this section, you will be able to:\n\n-   plot a calender heatmap by using ggplot2 functions and extension,\n\n-   to write function using R programming,\n\n-   to derive specific date and time related field by using base R and lubridate packages\n\n-   to perform data preparation task by using tidyr and dplyr packages.\n\n### 17.4.1 The Data\n\nFor the purpose of this hands-on exercise, *eventlog.csv* file will be used. This data file consists of 199,999 rows of time-series cyber attack records by country.\n\n### 17.4.2 Importing the data\n\nFirst, you will use the code chunk below to import *eventlog.csv* file into R environment and called the data frame as *attacks*.\n\n::: {.cell}\n\n```{.r .cell-code}\nattacks <- read_csv(\"data/eventlog.csv\")\n```\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
