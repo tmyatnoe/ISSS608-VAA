@@ -261,10 +261,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#visualisation" id="toc-visualisation" class="nav-link" data-scroll-target="#visualisation">3. Visualisation</a>
   <ul class="collapse">
-  <li><a href="#vessels-possible-delivery-content" id="toc-vessels-possible-delivery-content" class="nav-link" data-scroll-target="#vessels-possible-delivery-content">3.1.1 Vessels’ Possible Delivery Content</a></li>
-  <li><a href="#vessels-possible-delivery-content-by-season" id="toc-vessels-possible-delivery-content-by-season" class="nav-link" data-scroll-target="#vessels-possible-delivery-content-by-season">3.1.2 Vessels’ Possible Delivery Content By Season</a></li>
-  <li><a href="#transponder-ping-pattern" id="toc-transponder-ping-pattern" class="nav-link" data-scroll-target="#transponder-ping-pattern">3.2.1 Transponder Ping Pattern</a></li>
-  <li><a href="#catch-content-comparison" id="toc-catch-content-comparison" class="nav-link" data-scroll-target="#catch-content-comparison">3.2.2 Catch Content Comparison</a></li>
+  <li><a href="#vessels-possible-delivery-content" id="toc-vessels-possible-delivery-content" class="nav-link" data-scroll-target="#vessels-possible-delivery-content">3.1 Vessels’ Possible Delivery Content</a>
+  <ul class="collapse">
+  <li><a href="#delivery-content-fish-species" id="toc-delivery-content-fish-species" class="nav-link" data-scroll-target="#delivery-content-fish-species">3.1.1 Delivery Content (Fish Species)</a></li>
+  <li><a href="#seasonal-trend-in-delivery-content" id="toc-seasonal-trend-in-delivery-content" class="nav-link" data-scroll-target="#seasonal-trend-in-delivery-content">3.1.2 Seasonal Trend in Delivery Content</a></li>
+  </ul></li>
+  <li><a href="#vessel-movement-and-catch-content-deep-dive" id="toc-vessel-movement-and-catch-content-deep-dive" class="nav-link" data-scroll-target="#vessel-movement-and-catch-content-deep-dive">3.2 Vessel Movement and Catch Content Deep Dive</a>
+  <ul class="collapse">
+  <li><a href="#vessel-movement" id="toc-vessel-movement" class="nav-link" data-scroll-target="#vessel-movement">3.2.1 Vessel Movement</a></li>
+  <li><a href="#catch-content-deep-dive" id="toc-catch-content-deep-dive" class="nav-link" data-scroll-target="#catch-content-deep-dive">3.2.2 Catch Content Deep Dive</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">4. Conclusion</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">5. References</a></li>
@@ -300,7 +306,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">June 1, 2024</p>
+      <p class="date-modified">June 3, 2024</p>
     </div>
   </div>
     
@@ -316,11 +322,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>1. Overview</h1>
 <section id="setting-the-scene" class="level2">
 <h2 class="anchored" data-anchor-id="setting-the-scene">1.1 Setting the scene</h2>
-<p>Vast Challenge also known as IEEE Visual Analytics Science and Technology (VAST) Challenge is Visual Analytics competition which aims to promote innovation in the field of data transformation and interactive visualization. Vast Challenge 2024 is based on the theme of detecting bias, illegal fishing behavior and temporal patterns in fishing industry in Oceanus, an island nation.</p>
+<p>Vast Challenge also known as IEEE Visual Analytics Science and Technology (VAST) Challenge is Visual Analytics competition which aims to promote innovation in the field of data transformation and interactive visualization. <a href="https://vast-challenge.github.io/2024/index.html">Vast Challenge 2024</a> is based on the theme of detecting bias, illegal fishing behavior and temporal patterns in fishing industry in Oceanus, an island nation.</p>
 </section>
 <section id="task" class="level2">
 <h2 class="anchored" data-anchor-id="task">1.2 Task</h2>
-<p>This exercise will be based on Mini-Challenge 2:<a href="https://vast-challenge.github.io/2024/MC2.html">MC2</a> of Vast Challenge 2024. The objective of the exercise is to help FishEye, a non-profit organization to detect and prevent illegal fishing behaviour, by performing geographic and temporal visual analysis. This exercise will aim to answer the following questions from MC2 of Vast Challenge through visual analytics:</p>
+<p>This exercise will be based on Mini-Challenge 2: <a href="https://vast-challenge.github.io/2024/MC2.html">MC2</a> of Vast Challenge 2024. The objective of the exercise is to help FishEye, a non-profit organization to detect and prevent illegal fishing behaviour, by performing geographic and temporal visual analysis. This exercise will aim to answer the following questions from MC2 of Vast Challenge through visual analytics:</p>
 <p><strong>Question 1:</strong></p>
 <div style="border: 2px dotted black; background-color: #e6e6fa; padding: 15px; margin: 10px 0; border-radius: 5px; display: flex; align-items: center;">
 <p><img src="fish_1826379.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"> Develop visualizations that illustrate the inappropriate behavior of SouthSeafood Express Corp vessels. FishEye analysts have long wanted to better understand the flow of commercially caught fish through Oceanus’s many ports. But as they were loading data into CatchNet, they discovered they had purchased the wrong port records. They wanted to get the ship off-load records, but they instead got the port-exit records (essentially trucks/trains leaving the port area). Port exit records do not include which vessel that delivered the products. Given this limitation, develop a visualization system to associate vessels with their probable cargos. Which vessels deliver which products and when? What are the seasonal trends and anomalies in the port exit records?.</p>
@@ -339,7 +345,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(jsonlite,tidyverse,igraph,ggraph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(jsonlite,tidyverse,igraph,ggraph,patchwork)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -540,7 +546,9 @@ $ fish_species_present &lt;list&gt; &lt;NULL&gt;, &lt;NULL&gt;, &lt;NULL&gt;, &l
 <section id="visualisation" class="level1">
 <h1>3. Visualisation</h1>
 <section id="vessels-possible-delivery-content" class="level2">
-<h2 class="anchored" data-anchor-id="vessels-possible-delivery-content">3.1.1 Vessels’ Possible Delivery Content</h2>
+<h2 class="anchored" data-anchor-id="vessels-possible-delivery-content">3.1 Vessels’ Possible Delivery Content</h2>
+<section id="delivery-content-fish-species" class="level3">
+<h3 class="anchored" data-anchor-id="delivery-content-fish-species">3.1.1 Delivery Content (Fish Species)</h3>
 <p>First, we need to associate Cargo in delivery doc to fish species info using Transaction and Fish Nodes data.</p>
 <div class="cell">
 <details class="code-fold">
@@ -581,7 +589,7 @@ $ fish_species_present &lt;list&gt; &lt;NULL&gt;, &lt;NULL&gt;, &lt;NULL&gt;, &l
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(N_Delivery_doc <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="st">"deliver_date"</span>,<span class="st">"cargo_id"</span>, <span class="st">"qty_tons"</span>, <span class="st">"fish_id"</span>, <span class="st">"fish_species"</span>), <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"date_only"</span> <span class="ot">=</span> <span class="st">"deliver_date"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Visualize which company possibly deliver which fish species.</p>
+<p>Visualize which company possibly delivers which fish species.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -589,17 +597,55 @@ $ fish_species_present &lt;list&gt; &lt;NULL&gt;, &lt;NULL&gt;, &lt;NULL&gt;, &l
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>distinct_species <span class="ot">&lt;-</span> Tping_to_Delivery <span class="sc">%&gt;%</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(vessel_company, fish_species) <span class="sc">%&gt;%</span> <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span> <span class="fu">select</span>(vessel_company, fish_species)</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating stacked bar chart</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(distinct_species, <span class="fu">aes</span>(<span class="at">x =</span> vessel_company, <span class="at">fill =</span> fish_species)) <span class="sc">+</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Probable Fish Species Delivered by Company"</span>,</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Vessel Company"</span>,</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Count of Fish Species"</span>) <span class="sc">+</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">6</span>),</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>)) <span class="sc">+</span></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="at">name =</span> <span class="st">"Fish Species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter to show only the first 50 companies alphabetically</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>companies1 <span class="ot">&lt;-</span> distinct_species <span class="sc">%&gt;%</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(vessel_company) <span class="sc">%&gt;%</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(vessel_company) <span class="sc">%&gt;%</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">50</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(vessel_company)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter the main dataframe to include only these companies</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>companies1_data <span class="ot">&lt;-</span> distinct_species <span class="sc">%&gt;%</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(vessel_company <span class="sc">%in%</span> companies1)</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating stacked bar chart</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(companies1_data, <span class="fu">aes</span>(<span class="at">x =</span> vessel_company, <span class="at">fill =</span> fish_species)) <span class="sc">+</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Probable Fish Species Delivered by Company"</span>,</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Vessel Company"</span>,</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Fish Species"</span>) <span class="sc">+</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="at">name =</span> <span class="st">"Fish Species"</span>) <span class="sc">+</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() </span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Get all company names excluding the first 50 alphabetically</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>companies2 <span class="ot">&lt;-</span> distinct_species <span class="sc">%&gt;%</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(vessel_company) <span class="sc">%&gt;%</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(vessel_company) <span class="sc">%&gt;%</span></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">51</span><span class="sc">:</span><span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(vessel_company)</span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter the main dataframe to include only these companies</span></span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>companies2_data <span class="ot">&lt;-</span> distinct_species <span class="sc">%&gt;%</span></span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(vessel_company <span class="sc">%in%</span> companies2)</span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating stacked bar chart</span></span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(companies2_data, <span class="fu">aes</span>(<span class="at">x =</span> vessel_company, <span class="at">fill =</span> fish_species)) <span class="sc">+</span></span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Probable Fish Species Delivered by Company"</span>,</span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Vessel Company"</span>,</span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Fish Species"</span>) <span class="sc">+</span></span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="at">name =</span> <span class="st">"Fish Species"</span>) <span class="sc">+</span></span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() </span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a>p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -609,28 +655,10 @@ $ fish_species_present &lt;list&gt; &lt;NULL&gt;, &lt;NULL&gt;, &lt;NULL&gt;, &l
 </div>
 </div>
 </div>
-</section>
-<section id="vessels-possible-delivery-content-by-season" class="level2">
-<h2 class="anchored" data-anchor-id="vessels-possible-delivery-content-by-season">3.1.2 Vessels’ Possible Delivery Content By Season</h2>
-</section>
-<section id="transponder-ping-pattern" class="level2">
-<h2 class="anchored" data-anchor-id="transponder-ping-pattern">3.2.1 Transponder Ping Pattern</h2>
-<p>Transponder ping data can provide the locations the vessels from shipping company has been to and give insight whether vessels have visited non-fishing areas. In this section, we will focus only on fishing vessels to understand fishing activities.</p>
-<p>Plot a network graph showing all the shipping vessel movements by different companies</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">from =</span> E_Tping_Fishing<span class="sc">$</span>vessel_company,</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">to =</span> E_Tping_Fishing<span class="sc">$</span>source</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a graph object</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(edges, <span class="at">directed =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the network</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(graph, <span class="at">vertex.size=</span><span class="dv">10</span>, <span class="at">vertex.label.cex=</span><span class="fl">0.8</span>, <span class="at">vertex.label.color=</span><span class="st">"black"</span>,</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">main=</span><span class="st">"Network Visualization of Vessel Movement"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>p1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -640,35 +668,31 @@ $ fish_species_present &lt;list&gt; &lt;NULL&gt;, &lt;NULL&gt;, &lt;NULL&gt;, &l
 </div>
 </div>
 </div>
-<p>Zoom into SouthSeafood Express Corp’s vessel movement to uncover any suspicious behavior.</p>
+</section>
+<section id="seasonal-trend-in-delivery-content" class="level3">
+<h3 class="anchored" data-anchor-id="seasonal-trend-in-delivery-content">3.1.2 Seasonal Trend in Delivery Content</h3>
+</section>
+</section>
+<section id="vessel-movement-and-catch-content-deep-dive" class="level2">
+<h2 class="anchored" data-anchor-id="vessel-movement-and-catch-content-deep-dive">3.2 Vessel Movement and Catch Content Deep Dive</h2>
+<section id="vessel-movement" class="level3">
+<h3 class="anchored" data-anchor-id="vessel-movement">3.2.1 Vessel Movement</h3>
+<p>Transponder ping data can provide the locations the vessels from shipping company has been to and give insight whether vessels have visited non-fishing areas. In this section, we will focus only on fishing vessels to understand fishing activities.</p>
+<p>Plot a network graph showing all the shipping vessel movements by different companies</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter SouthSeafood Express Corp Vessels Only</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>E_Tping_Fishing_SS <span class="ot">&lt;-</span> E_Tping_Fishing <span class="sc">%&gt;%</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(vessel_company <span class="sc">==</span> <span class="st">"SouthSeafood Express Corp"</span>)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>edges_ss <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">from =</span> E_Tping_Fishing_SS<span class="sc">$</span>vessel_company,</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">to =</span> E_Tping_Fishing_SS<span class="sc">$</span>source</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating graph object</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>graph_ss <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(edges_ss, <span class="at">directed =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Distinguish between boats, SouthSeafood, and other companies</span></span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(graph_ss)<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">V</span>(graph_ss)<span class="sc">$</span>name <span class="sc">==</span> <span class="st">"SouthSeafood Express Corp"</span>, <span class="st">"southseafood"</span>, </span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">ifelse</span>(<span class="fu">V</span>(graph)<span class="sc">$</span>name <span class="sc">%in%</span> E_Tping_Fishing_SS<span class="sc">$</span>vessel_id, <span class="st">"boat"</span>, <span class="st">"location"</span>))</span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the network with ggraph</span></span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggraph</span>(graph_ss, <span class="at">layout =</span> <span class="st">'fr'</span>) <span class="sc">+</span>  </span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">width =</span> <span class="dv">1</span>), <span class="at">edge_colour =</span> <span class="st">"grey"</span>) <span class="sc">+</span> </span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> type), <span class="at">size =</span> <span class="dv">5</span>) <span class="sc">+</span> </span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> name), <span class="at">repel =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span>  </span>
-<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"boat"</span> <span class="ot">=</span> <span class="st">"orange"</span>, <span class="st">"location"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"southseafood"</span> <span class="ot">=</span> <span class="st">"red"</span>)) <span class="sc">+</span> </span>
-<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span>  </span>
-<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Network Visualization of SouthSeafood Express Corp Vessel Movement"</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">from =</span> E_Tping_Fishing<span class="sc">$</span>vessel_company,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">to =</span> E_Tping_Fishing<span class="sc">$</span>source</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a graph object</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(edges, <span class="at">directed =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the network</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(graph, <span class="at">vertex.size=</span><span class="dv">10</span>, <span class="at">vertex.label.cex=</span><span class="fl">0.8</span>, <span class="at">vertex.label.color=</span><span class="st">"black"</span>,</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>     <span class="at">main=</span><span class="st">"Network Visualization of Vessel Movement"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -678,9 +702,48 @@ $ fish_species_present &lt;list&gt; &lt;NULL&gt;, &lt;NULL&gt;, &lt;NULL&gt;, &l
 </div>
 </div>
 </div>
+<p>Zoom into SouthSeafood Express Corp’s vessel movement to uncover any suspicious behavior.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter SouthSeafood Express Corp Vessels Only</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>E_Tping_Fishing_SS <span class="ot">&lt;-</span> E_Tping_Fishing <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(vessel_company <span class="sc">==</span> <span class="st">"SouthSeafood Express Corp"</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>edges_ss <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">from =</span> E_Tping_Fishing_SS<span class="sc">$</span>vessel_company,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">to =</span> E_Tping_Fishing_SS<span class="sc">$</span>source</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating graph object</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>graph_ss <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(edges_ss, <span class="at">directed =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Distinguish between boats, SouthSeafood, and other companies</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(graph_ss)<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">V</span>(graph_ss)<span class="sc">$</span>name <span class="sc">==</span> <span class="st">"SouthSeafood Express Corp"</span>, <span class="st">"southseafood"</span>, </span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">ifelse</span>(<span class="fu">V</span>(graph)<span class="sc">$</span>name <span class="sc">%in%</span> E_Tping_Fishing_SS<span class="sc">$</span>vessel_id, <span class="st">"boat"</span>, <span class="st">"location"</span>))</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the network with ggraph</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggraph</span>(graph_ss, <span class="at">layout =</span> <span class="st">'fr'</span>) <span class="sc">+</span>  </span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">width =</span> <span class="dv">1</span>), <span class="at">edge_colour =</span> <span class="st">"grey"</span>) <span class="sc">+</span> </span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> type), <span class="at">size =</span> <span class="dv">5</span>) <span class="sc">+</span> </span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> name), <span class="at">repel =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span>  </span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"boat"</span> <span class="ot">=</span> <span class="st">"orange"</span>, <span class="st">"location"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"southseafood"</span> <span class="ot">=</span> <span class="st">"red"</span>)) <span class="sc">+</span> </span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span>  </span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Network Visualization of SouthSeafood Express Corp Vessel Movement"</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="catch-content-comparison" class="level2">
-<h2 class="anchored" data-anchor-id="catch-content-comparison">3.2.2 Catch Content Comparison</h2>
+<section id="catch-content-deep-dive" class="level3">
+<h3 class="anchored" data-anchor-id="catch-content-deep-dive">3.2.2 Catch Content Deep Dive</h3>
+</section>
 </section>
 </section>
 <section id="conclusion" class="level1">
@@ -688,7 +751,7 @@ $ fish_species_present &lt;list&gt; &lt;NULL&gt;, &lt;NULL&gt;, &lt;NULL&gt;, &l
 </section>
 <section id="references" class="level1">
 <h1>5. References</h1>
-<p><a href="https://isss608-ay2023-24apr.netlify.app/vast/kickstarter2"><code>Working with Graph Data</code></a></p>
+<p><a href="https://isss608-ay2023-24apr.netlify.app/vast/kickstarter2">Working with Graph Data</a></p>
 
 
 </section>

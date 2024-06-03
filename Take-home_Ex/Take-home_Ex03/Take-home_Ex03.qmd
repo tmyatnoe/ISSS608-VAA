@@ -17,11 +17,11 @@ execute:
 
 ## 1.1 Setting the scene
 
-Vast Challenge also known as IEEE Visual Analytics Science and Technology (VAST) Challenge is Visual Analytics competition which aims to promote innovation in the field of data transformation and interactive visualization. Vast Challenge 2024 is based on the theme of detecting bias, illegal fishing behavior and temporal patterns in fishing industry in Oceanus, an island nation.
+Vast Challenge also known as IEEE Visual Analytics Science and Technology (VAST) Challenge is Visual Analytics competition which aims to promote innovation in the field of data transformation and interactive visualization. [Vast Challenge 2024](https://vast-challenge.github.io/2024/index.html) is based on the theme of detecting bias, illegal fishing behavior and temporal patterns in fishing industry in Oceanus, an island nation.
 
 ## 1.2 Task
 
-This exercise will be based on Mini-Challenge 2:[MC2](https://vast-challenge.github.io/2024/MC2.html) of Vast Challenge 2024. The objective of the exercise is to help FishEye, a non-profit organization to detect and prevent illegal fishing behaviour, by performing geographic and temporal visual analysis. This exercise will aim to answer the following questions from MC2 of Vast Challenge through visual analytics:
+This exercise will be based on Mini-Challenge 2: [MC2](https://vast-challenge.github.io/2024/MC2.html) of Vast Challenge 2024. The objective of the exercise is to help FishEye, a non-profit organization to detect and prevent illegal fishing behaviour, by performing geographic and temporal visual analysis. This exercise will aim to answer the following questions from MC2 of Vast Challenge through visual analytics:
 
 **Question 1:**
 
@@ -42,7 +42,7 @@ This exercise will be based on Mini-Challenge 2:[MC2](https://vast-challenge.git
 The code chunk below uses `p_load()` function from **pacman** package to check if packages listed are already installed in the computer. The packages are loaded if they are found to be installed. If they are not installed, the function will proceed to install and load them into R environment.
 
 ```{r}
-pacman::p_load(jsonlite,tidyverse,igraph,ggraph)
+pacman::p_load(jsonlite,tidyverse,igraph,ggraph,patchwork)
 ```
 
 ## 2.2 Importing Data
@@ -184,8 +184,8 @@ E_Tping_Fishing <- E_TransponderPing %>%
 ```
 
 # 3. Visualisation
-
-## 3.1.1 Vessels' Possible Delivery Content
+## 3.1 Vessels' Possible Delivery Content 
+### 3.1.1 Delivery Content (Fish Species)
 
 First, we need to associate Cargo in delivery doc to fish species info using Transaction and Fish Nodes data.
 
@@ -226,29 +226,72 @@ Tping_to_Delivery <- E_Tping_Fishing %>%
 
 ```
 
-Visualize which company possibly deliver which fish species.
+Visualize which company possibly delivers which fish species.
 
 ```{r}
 # Remove duplicate rows based on vessel_company and fish_species
 distinct_species <- Tping_to_Delivery %>%
   distinct(vessel_company, fish_species) %>% na.omit() %>% select(vessel_company, fish_species)
 
+# Filter to show only the first 50 companies alphabetically
+companies1 <- distinct_species %>%
+  distinct(vessel_company) %>%
+  arrange(vessel_company) %>%
+  head(50) %>%
+  pull(vessel_company)
+
+# Filter the main dataframe to include only these companies
+companies1_data <- distinct_species %>%
+  filter(vessel_company %in% companies1)
+
 # Creating stacked bar chart
-ggplot(distinct_species, aes(x = vessel_company, fill = fish_species)) +
+p1 <- ggplot(companies1_data, aes(x = vessel_company, fill = fish_species)) +
   geom_bar(position = "stack") +
   labs(title = "Probable Fish Species Delivered by Company",
        x = "Vessel Company",
-       y = "Count of Fish Species") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 6),
+       y = "Fish Species") +
+  theme(axis.text.x = element_blank(),
         axis.text.y = element_text(size = 8),
         legend.text = element_text(size = 8),
         legend.title = element_text(size = 8)) +
-  scale_fill_discrete(name = "Fish Species")
+  scale_fill_discrete(name = "Fish Species") +
+  coord_flip() 
+
+# Get all company names excluding the first 50 alphabetically
+companies2 <- distinct_species %>%
+  distinct(vessel_company) %>%
+  arrange(vessel_company) %>%
+  slice(51:n()) %>%
+  pull(vessel_company)
+
+# Filter the main dataframe to include only these companies
+companies2_data <- distinct_species %>%
+  filter(vessel_company %in% companies2)
+
+# Creating stacked bar chart
+p2 <- ggplot(companies2_data, aes(x = vessel_company, fill = fish_species)) +
+  geom_bar(position = "stack") +
+  labs(title = "Probable Fish Species Delivered by Company",
+       x = "Vessel Company",
+       y = "Fish Species") +
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_text(size = 8),
+        legend.text = element_text(size = 8),
+        legend.title = element_text(size = 8)) +
+  scale_fill_discrete(name = "Fish Species") +
+  coord_flip() 
+
+p2
 ```
 
-## 3.1.2 Vessels' Possible Delivery Content By Season
+```{r}
+p1
+```
 
-## 3.2.1 Transponder Ping Pattern
+### 3.1.2 Seasonal Trend in Delivery Content
+
+## 3.2 Vessel Movement and Catch Content Deep Dive
+### 3.2.1 Vessel Movement 
 
 Transponder ping data can provide the locations the vessels from shipping company has been to and give insight whether vessels have visited non-fishing areas. In this section, we will focus only on fishing vessels to understand fishing activities.
 
@@ -299,10 +342,10 @@ ggraph(graph_ss, layout = 'fr') +
 
 ```
 
-## 3.2.2 Catch Content Comparison
+### 3.2.2 Catch Content Deep Dive
 
 # 4. Conclusion
 
 # 5. References
 
-[`Working with Graph Data`](https://isss608-ay2023-24apr.netlify.app/vast/kickstarter2)
+[Working with Graph Data](https://isss608-ay2023-24apr.netlify.app/vast/kickstarter2)
