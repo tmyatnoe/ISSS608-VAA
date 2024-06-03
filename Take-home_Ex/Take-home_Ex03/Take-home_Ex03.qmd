@@ -184,7 +184,9 @@ E_Tping_Fishing <- E_TransponderPing %>%
 ```
 
 # 3. Visualisation
-## 3.1 Vessels' Possible Delivery Content 
+
+## 3.1 Visualisations for Question 1
+
 ### 3.1.1 Delivery Content (Fish Species)
 
 First, we need to associate Cargo in delivery doc to fish species info using Transaction and Fish Nodes data.
@@ -288,10 +290,35 @@ p2
 p1
 ```
 
+::: {style="border: 2px dotted black; background-color: #caf0f8; padding: 15px; margin: 10px 0; border-radius: 5px; display: flex; align-items: center;"}
+<img src="fish_1826379.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> **Observation:** It is observed that SouthSeafood Express Corp's catch content has fewer types of fish species comparing to rest of the companies which catch at least 8-9 species. SouthSeafood Express Corp's catch content shows 5 species of fish namely: Wrasse, Sockfish, Harland, Cod and Beauvoir. It is abnormal that SouthSeafood Express Corp is the only company with lowest number of fish species in the catch content while other companies catch at least 8-9 species. This observation calls for further deep dive in catch content and delivery document of SouthSeafood Express Corp since low catch content may indicate under-declaring the actual catch from fishing to officials.
+:::
+
 ### 3.1.2 Seasonal Trend in Delivery Content
 
-## 3.2 Vessel Movement and Catch Content Deep Dive
-### 3.2.1 Vessel Movement 
+```{r}
+# Convert deliver_date to a date format and extract year-month
+N_Delivery_doc <- N_Delivery_doc %>%
+  mutate(year_month = floor_date(deliver_date, "month"))
+
+# Aggregate data by year-month
+monthly_data <- N_Delivery_doc %>%
+  group_by(year_month) %>%
+  summarise(total_qty_tons = sum(qty_tons))
+
+# Plot the data
+ggplot(monthly_data, aes(x = year_month, y = total_qty_tons)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(title = "Total Quantity of Fish Fished per Month",
+       x = "Month",
+       y = "Total Quantity (tons)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## 3.2 Visualisations for Question 2
+
+### 3.2.1 Vessel Movement
 
 Transponder ping data can provide the locations the vessels from shipping company has been to and give insight whether vessels have visited non-fishing areas. In this section, we will focus only on fishing vessels to understand fishing activities.
 
@@ -349,3 +376,5 @@ ggraph(graph_ss, layout = 'fr') +
 # 5. References
 
 [Working with Graph Data](https://isss608-ay2023-24apr.netlify.app/vast/kickstarter2)
+
+[Working with Geographical Data](https://isss608-ay2023-24apr.netlify.app/vast/kickstarter3)
