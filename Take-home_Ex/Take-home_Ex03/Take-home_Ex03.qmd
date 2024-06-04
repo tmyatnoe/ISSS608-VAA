@@ -42,7 +42,7 @@ This exercise will be based on Mini-Challenge 2: [MC2](https://vast-challenge.gi
 The code chunk below uses `p_load()` function from **pacman** package to check if packages listed are already installed in the computer. The packages are loaded if they are found to be installed. If they are not installed, the function will proceed to install and load them into R environment.
 
 ```{r}
-pacman::p_load(jsonlite,tidyverse,igraph,ggraph,patchwork)
+pacman::p_load(jsonlite,tidyverse,igraph,ggraph,RColorBrewer,sf)
 ```
 
 ## 2.2 Importing Data
@@ -81,6 +81,8 @@ E_TransponderPing <- subset(mc2_edges,  mc2_edges$type == "Event.TransportEvent.
 E_HarborRpt <- subset(mc2_edges,  mc2_edges$type == "Event.HarborReport")
 E_Tx <- subset(mc2_edges, mc2_edges$type == "Event.Transaction")
 
+# save mc2_edges into R rds file format
+write_rds(mc2_edges, "data/rds/mc2_edges.rds")
 ```
 
 Take a look at mc2_edges to ensure data is processed correctly.
@@ -110,6 +112,16 @@ mc2_nodes <- mc2_nodes %>%
          "last_edited_date" = "_last_edited_date",
          "raw_source" = "_raw_source",
          "algorithm" = "_algorithm")
+
+mc2_nodes <- mc2_nodes %>%
+  mutate(Activities = gsub("c[(]", "", Activities)) %>% 
+  mutate(Activities = gsub("\"", "", Activities)) %>%
+  mutate(Activities = gsub("[)]", "", Activities)) 
+
+mc2_nodes <- mc2_nodes %>%
+  mutate(fish_species_present = gsub("c[(]", "", fish_species_present)) %>% 
+  mutate(fish_species_present = gsub("\"", "", fish_species_present)) %>%
+  mutate(fish_species_present = gsub("[)]", "", fish_species_present)) 
 
 # Divide different nodes into different table
 N_fish <- subset(mc2_nodes,  mc2_nodes$type == "Entity.Commodity.Fish") %>%
@@ -162,6 +174,9 @@ N_vessel <- mc2_nodes %>%
          vessel_name = Name,
          vessel_company = company) %>%
   select_if(~ !any(is.na(.)))
+
+# save mc2_nodes into R rds file format
+write_rds(mc2_nodes, "data/rds/mc2_nodes.rds")
 ```
 
 Take a look at mc2_nodes to ensure data is processed correctly.
@@ -183,6 +198,24 @@ E_Tping_Fishing <- E_TransponderPing %>%
   filter(vessel_type == "Fishing")
 ```
 
+### 2.2.4 Oceanus Geographical Data Processing
+Code chunk below uses st_read() of sf package to import Oceanus Geography and Oceanus Locations geographical file in geojson format into R.
+
+```{r}
+# import into R
+OceanusGeography = st_read("data/MC2/OceanusGeography.geojson") %>%
+  st_transform(crs = 4326)
+
+#save OceanusGeography into rds format for future use
+write_rds(OceanusGeography, "data/rds/OceanusGeography.rds")
+
+# import into R
+OceanusLocations <- st_read(dsn = "data/shp",
+  layer = "Oceanus Geography")
+
+#save OceanusGeography into rds format for future use
+write_rds(OceanusLocations, "data/rds/OceanusLocations.rds")
+```
 # 3. Visualisation
 
 ## 3.1 Visualisations for Question 1
@@ -257,7 +290,9 @@ p1 <- ggplot(companies1_data, aes(x = vessel_company, fill = fish_species)) +
         legend.text = element_text(size = 8),
         legend.title = element_text(size = 8)) +
   scale_fill_discrete(name = "Fish Species") +
-  coord_flip() 
+  scale_fill_brewer(palette = "Dark2") +
+  coord_flip() +
+  scale_fill_brewer(palette = "Paired")
 
 # Get all company names excluding the first 50 alphabetically
 companies2 <- distinct_species %>%
@@ -281,7 +316,8 @@ p2 <- ggplot(companies2_data, aes(x = vessel_company, fill = fish_species)) +
         legend.text = element_text(size = 8),
         legend.title = element_text(size = 8)) +
   scale_fill_discrete(name = "Fish Species") +
-  coord_flip() 
+  coord_flip() +
+  scale_fill_brewer(palette = "Paired")
 
 p2
 ```
@@ -291,7 +327,7 @@ p1
 ```
 
 ::: {style="border: 2px dotted black; background-color: #caf0f8; padding: 15px; margin: 10px 0; border-radius: 5px; display: flex; align-items: center;"}
-<img src="fish_1826379.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> **Observation:** It is observed that SouthSeafood Express Corp's catch content has fewer types of fish species comparing to rest of the companies which catch at least 8-9 species. SouthSeafood Express Corp's catch content shows 5 species of fish namely: Wrasse, Sockfish, Harland, Cod and Beauvoir. It is abnormal that SouthSeafood Express Corp is the only company with lowest number of fish species in the catch content while other companies catch at least 8-9 species. This observation calls for further deep dive in catch content and delivery document of SouthSeafood Express Corp since low catch content may indicate under-declaring the actual catch from fishing to officials.
+<img src="shark_4864506.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> **Observation:** It is observed that SouthSeafood Express Corp's catch content has fewer types of fish species comparing to rest of the companies which catch at least 8-9 species. SouthSeafood Express Corp's catch content shows 5 species of fish namely: Wrasse, Sockfish, Harland, Cod and Beauvoir. It is abnormal that SouthSeafood Express Corp is the only company with lowest number of fish species in the catch content while other companies catch at least 8-9 species. This observation calls for further deep dive in catch content and delivery document of SouthSeafood Express Corp since low catch content may indicate under-declaring the actual catch from fishing to officials.
 :::
 
 ### 3.1.2 Seasonal Trend in Delivery Content
@@ -306,14 +342,17 @@ monthly_data <- N_Delivery_doc %>%
   group_by(year_month) %>%
   summarise(total_qty_tons = sum(qty_tons))
 
+# Extract the month from the 'date' column
+monthly_data$month <- format(monthly_data$year_month, "%B")
+
 # Plot the data
 ggplot(monthly_data, aes(x = year_month, y = total_qty_tons)) +
-  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_bar(stat = "identity", fill = "plum4") +
   labs(title = "Total Quantity of Fish Fished per Month",
        x = "Month",
        y = "Total Quantity (tons)") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+  scale_x_continuous(breaks = monthly_data$year_month) 
 ```
 
 ## 3.2 Visualisations for Question 2
@@ -322,25 +361,13 @@ ggplot(monthly_data, aes(x = year_month, y = total_qty_tons)) +
 
 Transponder ping data can provide the locations the vessels from shipping company has been to and give insight whether vessels have visited non-fishing areas. In this section, we will focus only on fishing vessels to understand fishing activities.
 
-Plot a network graph showing all the shipping vessel movements by different companies
-
-```{r}
-edges <- data.frame(
-  from = E_Tping_Fishing$vessel_company,
-  to = E_Tping_Fishing$source
-)
-
-# Create a graph object
-graph <- graph_from_data_frame(edges, directed = FALSE)
-
-# Plot the network
-plot(graph, vertex.size=10, vertex.label.cex=0.8, vertex.label.color="black",
-     main="Network Visualization of Vessel Movement")
-```
-
 Zoom into SouthSeafood Express Corp's vessel movement to uncover any suspicious behavior.
 
+::: panel-tabset
+## Plot
+
 ```{r}
+#| echo: false
 # Filter SouthSeafood Express Corp Vessels Only
 E_Tping_Fishing_SS <- E_Tping_Fishing %>%
   filter(vessel_company == "SouthSeafood Express Corp")
@@ -354,20 +381,187 @@ edges_ss <- data.frame(
 graph_ss <- graph_from_data_frame(edges_ss, directed = FALSE)
 
 
-# Distinguish between boats, SouthSeafood, and other companies
+# Distinguish between SouthSeafood and location
 V(graph_ss)$type <- ifelse(V(graph_ss)$name == "SouthSeafood Express Corp", "southseafood", 
-                        ifelse(V(graph)$name %in% E_Tping_Fishing_SS$vessel_id, "boat", "location"))
+                        ifelse(V(graph_ss)$name %in% E_Tping_Fishing_SS$vessel_id, "boat", "location"))
 
 # Plot the network with ggraph
 ggraph(graph_ss, layout = 'fr') +  
   geom_edge_link(aes(width = 1), edge_colour = "grey") + 
   geom_node_point(aes(color = type), size = 5) + 
   geom_node_text(aes(label = name), repel = TRUE, size = 3, color = "black") +  
-  scale_color_manual(values = c("boat" = "orange", "location" = "blue", "southseafood" = "red")) + 
+  scale_color_manual(values = c("boat" = "orange", "location" = "plum", "southseafood" = "maroon3")) + 
   theme_void() +  
   labs(title = "Network Visualization of SouthSeafood Express Corp Vessel Movement")  
 
 ```
+
+## Code
+
+```{r}
+#| eval: false
+# Filter SouthSeafood Express Corp Vessels Only
+E_Tping_Fishing_SS <- E_Tping_Fishing %>%
+  filter(vessel_company == "SouthSeafood Express Corp")
+
+edges_ss <- data.frame(
+  from = E_Tping_Fishing_SS$vessel_company,
+  to = E_Tping_Fishing_SS$source
+)
+
+# Creating graph object
+graph_ss <- graph_from_data_frame(edges_ss, directed = FALSE)
+
+
+# Distinguish between SouthSeafood and location
+V(graph_ss)$type <- ifelse(V(graph_ss)$name == "SouthSeafood Express Corp", "southseafood", 
+                        ifelse(V(graph_ss)$name %in% E_Tping_Fishing_SS$vessel_id, "boat", "location"))
+
+# Plot the network with ggraph
+ggraph(graph_ss, layout = 'fr') +  
+  geom_edge_link(aes(width = 1), edge_colour = "grey") + 
+  geom_node_point(aes(color = type), size = 5) + 
+  geom_node_text(aes(label = name), repel = TRUE, size = 3, color = "black") +  
+  scale_color_manual(values = c("boat" = "orange", "location" = "plum", "southseafood" = "maroon3")) + 
+  theme_void() +  
+  labs(title = "Network Visualization of SouthSeafood Express Corp Vessel Movement")  
+
+```
+:::
+
+
+::: {style="border: 2px dotted black; background-color: #caf0f8; padding: 15px; margin: 10px 0; border-radius: 5px; display: flex; align-items: center;"}
+<img src="ship_1826384.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> **Observation:** One anomaly noted here is that SouthSeafood Express Corp Vessels visited [Ghoti Preserve]{.underline} which is not a fishing ground but ecological reserve.
+:::
+
+Creating vessel movement data table based in transponder ping and adding corresponding co-oridinates to data for further visualisation.
+```{r}
+# Create vessel movement data table
+vessel_movement_data <- E_TransponderPing %>%
+    select(time, dwell, source, vessel_id)
+
+# Tidy source column
+vessel_movement_data <- vessel_movement_data%>%
+  mutate(source = gsub("^City of", "", source)) %>%
+  mutate(source = gsub("^\\s+", "", source))
+
+# Add X, Y coordinates to vessel movement data table
+coords <- st_coordinates(OceanusLocations)
+
+OceanusLocations_df <- OceanusLocations %>%
+  st_drop_geometry()
+
+OceanusLocations_df$XCOORD <- coords[, "X"]
+OceanusLocations_df$YCOORD <- coords[, "Y"]
+
+OceanusLocations_df <- OceanusLocations_df %>%
+  select(Name, X.Kind, XCOORD, YCOORD) %>%
+  rename(Loc_Type = X.Kind)
+
+vessel_movement_data <- vessel_movement_data %>%
+  left_join(OceanusLocations_df,
+            by = c("source" = "Name"))
+
+# save data as rds format
+write_rds(vessel_movement_data, "data/rds/vessel_movement_data.rds")
+```
+
+
+Below code is used to create Vessel Trajectory Data.
+```{r}
+vessel_movement_sf <- vessel_movement_data %>%
+  st_as_sf(coords = c("XCOORD", "YCOORD"), 
+           crs = 4326)
+
+vessel_movement_sf <- vessel_movement_sf %>%
+  arrange(vessel_id, time)
+
+vessel_trajectory <- vessel_movement_sf %>%
+  group_by(vessel_id) %>%
+  summarize(do_union = FALSE) %>%
+  st_cast("LINESTRING")
+
+```
+Below visualization shows Geo-Temporal Patterns of the SouthSeafood Express Corp Vessels.
+
+::: panel-tabset
+## snappersnatcher7be
+
+```{r}
+#| echo: false
+vessel_trajectory_selected1 <- vessel_trajectory %>%
+  filter(vessel_id == "snappersnatcher7be")
+
+ggplot() +
+  geom_sf(data = OceanusGeography) +
+  geom_sf(data = vessel_trajectory_selected1, 
+          aes(color = factor(vessel_id)), 
+          size = 1) +
+  geom_text(data = OceanusLocations_df, 
+            aes(x = XCOORD, y = YCOORD, label = Name), 
+            size = 3, hjust = 1, vjust = 1) +
+  theme_minimal() +
+  labs(title = "Trajectories of snappersnatcher7be", 
+  x = "Longitude", y = "Latitude", color = "ID")
+```
+
+## roachrobberdb6
+
+```{r}
+#| echo: false
+vessel_trajectory_selected2 <- vessel_trajectory %>%
+  filter(vessel_id == "roachrobberdb6")
+
+ggplot() +
+  geom_sf(data = OceanusGeography) +
+  geom_sf(data = vessel_trajectory_selected2, 
+          aes(color = factor(vessel_id)), 
+          size = 1) +
+  geom_text(data = OceanusLocations_df, 
+            aes(x = XCOORD, y = YCOORD, label = Name), 
+            size = 3, hjust = 1, vjust = 1) +
+  theme_minimal() +
+  labs(title = "Trajectories of snappersnatcher7be", 
+  x = "Longitude", y = "Latitude", color = "ID")
+```
+
+## Code
+
+```{r}
+#| eval: false
+### snappersnatcher7be
+vessel_trajectory_selected1 <- vessel_trajectory %>%
+  filter(vessel_id == "snappersnatcher7be")
+
+ggplot() +
+  geom_sf(data = OceanusGeography) +
+  geom_sf(data = vessel_trajectory_selected1, 
+          aes(color = factor(vessel_id)), 
+          size = 1) +
+  geom_text(data = OceanusLocations_df, 
+            aes(x = XCOORD, y = YCOORD, label = Name), 
+            size = 3, hjust = 1, vjust = 1) +
+  theme_minimal() +
+  labs(title = "Trajectories of snappersnatcher7be", 
+  x = "Longitude", y = "Latitude", color = "ID")
+
+### roachrobberdb6
+vessel_trajectory_selected2 <- vessel_trajectory %>%
+  filter(vessel_id == "roachrobberdb6")
+
+ggplot() +
+  geom_sf(data = OceanusGeography) +
+  geom_sf(data = vessel_trajectory_selected2, 
+          aes(color = factor(vessel_id)), 
+          size = 1) +
+  geom_text(data = OceanusLocations_df, 
+            aes(x = XCOORD, y = YCOORD, label = Name), 
+            size = 3, hjust = 1, vjust = 1) +
+  theme_minimal() +
+  labs(title = "Trajectories of snappersnatcher7be", 
+  x = "Longitude", y = "Latitude", color = "ID")
+```
+:::
 
 ### 3.2.2 Catch Content Deep Dive
 
@@ -378,3 +572,5 @@ ggraph(graph_ss, layout = 'fr') +
 [Working with Graph Data](https://isss608-ay2023-24apr.netlify.app/vast/kickstarter2)
 
 [Working with Geographical Data](https://isss608-ay2023-24apr.netlify.app/vast/kickstarter3)
+
+[Icons used](https://www.freepik.com/)
