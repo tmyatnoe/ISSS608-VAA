@@ -102,6 +102,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<link href="../../site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+<script src="../../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<script src="../../site_libs/plotly-binding-4.10.4/plotly.js"></script>
+
+<script src="../../site_libs/typedarray-0.1/typedarray.min.js"></script>
+
+<script src="../../site_libs/jquery-3.5.1/jquery.min.js"></script>
+
+<link href="../../site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+
+<script src="../../site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+
+<link href="../../site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+
+<script src="../../site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
 
 
 <link rel="stylesheet" href="../../styles.css">
@@ -307,7 +325,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">June 4, 2024</p>
+      <p class="date-modified">June 5, 2024</p>
     </div>
   </div>
     
@@ -346,7 +364,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(jsonlite,tidyverse,igraph,ggraph,RColorBrewer,sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(jsonlite,tidyverse,igraph,ggraph,RColorBrewer,sf,plotly)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -755,21 +773,57 @@ Geodetic CRS:  WGS 84</code></pre>
 <span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the month from the 'date' column</span></span>
 <span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>monthly_data<span class="sc">$</span>month <span class="ot">&lt;-</span> <span class="fu">format</span>(monthly_data<span class="sc">$</span>year_month, <span class="st">"%B"</span>)</span>
 <span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the data</span></span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(monthly_data, <span class="fu">aes</span>(<span class="at">x =</span> year_month, <span class="at">y =</span> total_qty_tons)) <span class="sc">+</span></span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">fill =</span> <span class="st">"plum4"</span>) <span class="sc">+</span></span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Total Quantity of Fish Fished per Month"</span>,</span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Month"</span>,</span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Total Quantity (tons)"</span>) <span class="sc">+</span></span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>))<span class="sc">+</span></span>
-<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> monthly_data<span class="sc">$</span>year_month) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the graph using plotly</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(<span class="at">data =</span> monthly_data, </span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="sc">~</span>month, </span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="sc">~</span>total_qty_tons, </span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">type =</span> <span class="st">'bar'</span>, </span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">marker =</span> <span class="fu">list</span>(<span class="at">color =</span> <span class="st">'#800080'</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layout</span>(<span class="at">title =</span> <span class="st">'Total Quantity of Fish Delivered per Month'</span>,</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>         <span class="at">xaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">'Month'</span>, </span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>                      <span class="at">tickvals =</span> monthly_data<span class="sc">$</span>month), </span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>         <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">'Total Quantity (tons)'</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<div class="plotly html-widget html-fill-item" id="htmlwidget-67fc66e61b54d32bc87f" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-67fc66e61b54d32bc87f">{"x":{"visdat":{"91f09c071cb":["function () ","plotlyVisDat"]},"cur_data":"91f09c071cb","attrs":{"91f09c071cb":{"x":{},"y":{},"marker":{"color":"#800080"},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"bar"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Total Quantity of Fish Delivered per Month","xaxis":{"domain":[0,1],"automargin":true,"title":"Month","tickvals":["February","March","April","May","June","July","August","September","October","November"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"Total Quantity (tons)"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["February","March","April","May","June","July","August","September","October","November"],"y":[1307,2321.125,2993.125,5004.125,5089.5,8811.625,18698.125,23255.375,29765.25,29016.5],"marker":{"color":"#800080","line":{"color":"rgba(31,119,180,1)"}},"type":"bar","error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
+</div>
+<p>It is observed that total catch quantity shows increasing trend from beginner of the year to end of the year. Next, above chart will be further broken down by fish species to check any seasonality in fish species caught.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Group by year_month &amp; fish_species and sum up total_qty_tons</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>group_by_fish_species <span class="ot">&lt;-</span> N_Delivery_doc <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year_month, fish_species) <span class="sc">%&gt;%</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_qty_tons =</span> <span class="fu">sum</span>(qty_tons), <span class="at">.groups =</span> <span class="st">'drop'</span>) </span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove scientific name in fish species</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>group_by_fish_species <span class="ot">&lt;-</span> group_by_fish_species <span class="sc">%&gt;%</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fish_species =</span> <span class="fu">sub</span>(<span class="st">"/.*"</span>, <span class="st">""</span>, fish_species))</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure year_month is in Date format</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>group_by_fish_species <span class="ot">&lt;-</span> group_by_fish_species <span class="sc">%&gt;%</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year_month =</span> <span class="fu">as.Date</span>(year_month))</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the graph using ggplot</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(group_by_fish_species, <span class="fu">aes</span>(<span class="at">x =</span> year_month, <span class="at">y =</span> total_qty_tons, <span class="at">fill =</span> fish_species)) <span class="sc">+</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Total Quantity of Fish Delivered per Month (Breakdown by Fish Species)"</span>,</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Month"</span>,</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Total Quantity (tons)"</span>,</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Fish Species"</span>) <span class="sc">+</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">date_breaks =</span> <span class="st">"1 month"</span>, <span class="at">date_labels =</span> <span class="st">"%b %Y"</span>) <span class="sc">+</span></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Paired"</span>)</span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Create interactive plot using ggplotly</span></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-41490138cace44e69ea3" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-41490138cace44e69ea3">{"x":{"data":[{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[2199.625,2475,4541.875,4786.75,7831,14750.375,22410,27217.75,23512.375],"x":[23799,23830,23860,23891,23921,23952,23983,24013,24044],"y":[121.5,518.125,462.25,302.75,980.625,3947.75,845.375,2547.5,5504.125],"text":["year_month: 2035-02-28<br />total_qty_tons:   121.500<br />fish_species: Beauvoir","year_month: 2035-03-31<br />total_qty_tons:   518.125<br />fish_species: Beauvoir","year_month: 2035-04-30<br />total_qty_tons:   462.250<br />fish_species: Beauvoir","year_month: 2035-05-31<br />total_qty_tons:   302.750<br />fish_species: Beauvoir","year_month: 2035-06-30<br />total_qty_tons:   980.625<br />fish_species: Beauvoir","year_month: 2035-07-31<br />total_qty_tons:  3947.750<br />fish_species: Beauvoir","year_month: 2035-08-31<br />total_qty_tons:   845.375<br />fish_species: Beauvoir","year_month: 2035-09-30<br />total_qty_tons:  2547.500<br />fish_species: Beauvoir","year_month: 2035-10-31<br />total_qty_tons:  5504.125<br />fish_species: Beauvoir"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(166,206,227,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Beauvoir","legendgroup":"Beauvoir","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[4329.875,4600.5,6625.625,13515.125,19567.75,23122.875,19309.125],"x":[23860,23891,23921,23952,23983,24013,24044],"y":[212,186.25,1205.375,1235.25,2842.25,4094.875,4203.25],"text":["year_month: 2035-04-30<br />total_qty_tons:   212.000<br />fish_species: Birdseye","year_month: 2035-05-31<br />total_qty_tons:   186.250<br />fish_species: Birdseye","year_month: 2035-06-30<br />total_qty_tons:  1205.375<br />fish_species: Birdseye","year_month: 2035-07-31<br />total_qty_tons:  1235.250<br />fish_species: Birdseye","year_month: 2035-08-31<br />total_qty_tons:  2842.250<br />fish_species: Birdseye","year_month: 2035-09-30<br />total_qty_tons:  4094.875<br />fish_species: Birdseye","year_month: 2035-10-31<br />total_qty_tons:  4203.250<br />fish_species: Birdseye"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(31,120,180,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Birdseye","legendgroup":"Birdseye","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[1871,2411.25,3973.25,3725.875,5035,7997.125,9568.75,10999.625,12879.875],"x":[23799,23830,23860,23891,23921,23952,23983,24013,24044],"y":[328.625,63.75,356.625,874.625,1590.625,5518,9999,12123.25,6429.25],"text":["year_month: 2035-02-28<br />total_qty_tons:   328.625<br />fish_species: Cod","year_month: 2035-03-31<br />total_qty_tons:    63.750<br />fish_species: Cod","year_month: 2035-04-30<br />total_qty_tons:   356.625<br />fish_species: Cod","year_month: 2035-05-31<br />total_qty_tons:   874.625<br />fish_species: Cod","year_month: 2035-06-30<br />total_qty_tons:  1590.625<br />fish_species: Cod","year_month: 2035-07-31<br />total_qty_tons:  5518.000<br />fish_species: Cod","year_month: 2035-08-31<br />total_qty_tons:  9999.000<br />fish_species: Cod","year_month: 2035-09-30<br />total_qty_tons: 12123.250<br />fish_species: Cod","year_month: 2035-10-31<br />total_qty_tons:  6429.250<br />fish_species: Cod"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(178,223,138,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Cod","legendgroup":"Cod","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[1855.25,1517,3052.625,2879.125,4189.875,7565,8259.625,8232.5,9769.125],"x":[23799,23830,23860,23891,23921,23952,23983,24013,24044],"y":[15.75,894.25,920.625,846.75,845.125,432.125,1309.125,2767.125,3110.75],"text":["year_month: 2035-02-28<br />total_qty_tons:    15.750<br />fish_species: Harland","year_month: 2035-03-31<br />total_qty_tons:   894.250<br />fish_species: Harland","year_month: 2035-04-30<br />total_qty_tons:   920.625<br />fish_species: Harland","year_month: 2035-05-31<br />total_qty_tons:   846.750<br />fish_species: Harland","year_month: 2035-06-30<br />total_qty_tons:   845.125<br />fish_species: Harland","year_month: 2035-07-31<br />total_qty_tons:   432.125<br />fish_species: Harland","year_month: 2035-08-31<br />total_qty_tons:  1309.125<br />fish_species: Harland","year_month: 2035-09-30<br />total_qty_tons:  2767.125<br />fish_species: Harland","year_month: 2035-10-31<br />total_qty_tons:  3110.750<br />fish_species: Harland"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(51,160,44,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Harland","legendgroup":"Harland","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[2931,2846.75,4060.375,7499.375,8197.125,9569.625],"x":[23860,23891,23921,23952,24013,24044],"y":[121.625,32.375,129.5,65.625,35.375,199.5],"text":["year_month: 2035-04-30<br />total_qty_tons:   121.625<br />fish_species: Helenaa","year_month: 2035-05-31<br />total_qty_tons:    32.375<br />fish_species: Helenaa","year_month: 2035-06-30<br />total_qty_tons:   129.500<br />fish_species: Helenaa","year_month: 2035-07-31<br />total_qty_tons:    65.625<br />fish_species: Helenaa","year_month: 2035-09-30<br />total_qty_tons:    35.375<br />fish_species: Helenaa","year_month: 2035-10-31<br />total_qty_tons:   199.500<br />fish_species: Helenaa"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(251,154,153,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Helenaa","legendgroup":"Helenaa","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709],"base":[7954.25,7401.25,7270.375],"x":[23983,24013,24044],"y":[305.375,795.875,2299.25],"text":["year_month: 2035-08-31<br />total_qty_tons:   305.375<br />fish_species: Offidiaa","year_month: 2035-09-30<br />total_qty_tons:   795.875<br />fish_species: Offidiaa","year_month: 2035-10-31<br />total_qty_tons:  2299.250<br />fish_species: Offidiaa"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(227,26,28,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Offidiaa","legendgroup":"Offidiaa","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[3728.375,5643.25,5108.625,6358.875],"x":[23921,23952,23983,24013],"y":[332,1856.125,2845.625,1042.375],"text":["year_month: 2035-06-30<br />total_qty_tons:   332.000<br />fish_species: Salmon","year_month: 2035-07-31<br />total_qty_tons:  1856.125<br />fish_species: Salmon","year_month: 2035-08-31<br />total_qty_tons:  2845.625<br />fish_species: Salmon","year_month: 2035-09-30<br />total_qty_tons:  1042.375<br />fish_species: Salmon"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(253,191,111,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Salmon","legendgroup":"Salmon","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[1505.625,1799.5,2229.375,3026.125,4248.875,4105.625,4503.875,4487.375],"x":[23830,23860,23891,23921,23952,23983,24013,24044],"y":[11.375,1131.5,617.375,702.25,1394.375,1003,1855,2783],"text":["year_month: 2035-03-31<br />total_qty_tons:    11.375<br />fish_species: Sockfish","year_month: 2035-04-30<br />total_qty_tons:  1131.500<br />fish_species: Sockfish","year_month: 2035-05-31<br />total_qty_tons:   617.375<br />fish_species: Sockfish","year_month: 2035-06-30<br />total_qty_tons:   702.250<br />fish_species: Sockfish","year_month: 2035-07-31<br />total_qty_tons:  1394.375<br />fish_species: Sockfish","year_month: 2035-08-31<br />total_qty_tons:  1003.000<br />fish_species: Sockfish","year_month: 2035-09-30<br />total_qty_tons:  1855.000<br />fish_species: Sockfish","year_month: 2035-10-31<br />total_qty_tons:  2783.000<br />fish_species: Sockfish"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(255,127,0,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Sockfish","legendgroup":"Sockfish","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709],"base":[4234.125,4398],"x":[24013,24044],"y":[269.75,89.375],"text":["year_month: 2035-09-30<br />total_qty_tons:   269.750<br />fish_species: Tuna","year_month: 2035-10-31<br />total_qty_tons:    89.375<br />fish_species: Tuna"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(202,178,214,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Tuna","legendgroup":"Tuna","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[0,0,0,0,0,0,0,0,0,0],"x":[23771,23799,23830,23860,23891,23921,23952,23983,24013,24044],"y":[1307,1855.25,1505.625,1799.5,2229.375,3026.125,4248.875,4105.625,4234.125,4398],"text":["year_month: 2035-01-31<br />total_qty_tons:  1307.000<br />fish_species: Wrasse","year_month: 2035-02-28<br />total_qty_tons:  1855.250<br />fish_species: Wrasse","year_month: 2035-03-31<br />total_qty_tons:  1505.625<br />fish_species: Wrasse","year_month: 2035-04-30<br />total_qty_tons:  1799.500<br />fish_species: Wrasse","year_month: 2035-05-31<br />total_qty_tons:  2229.375<br />fish_species: Wrasse","year_month: 2035-06-30<br />total_qty_tons:  3026.125<br />fish_species: Wrasse","year_month: 2035-07-31<br />total_qty_tons:  4248.875<br />fish_species: Wrasse","year_month: 2035-08-31<br />total_qty_tons:  4105.625<br />fish_species: Wrasse","year_month: 2035-09-30<br />total_qty_tons:  4234.125<br />fish_species: Wrasse","year_month: 2035-10-31<br />total_qty_tons:  4398.000<br />fish_species: Wrasse"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(106,61,154,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Wrasse","legendgroup":"Wrasse","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.762557077625573,"r":7.3059360730593621,"b":75.251141552511427,"l":54.794520547945211},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Total Quantity of Fish Delivered per Month (Breakdown by Fish Species)","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[23743.490000000002,24071.509999999998],"tickmode":"array","ticktext":["Feb 2035","Mar 2035","Apr 2035","May 2035","Jun 2035","Jul 2035","Aug 2035","Sep 2035","Oct 2035","Nov 2035"],"tickvals":[23772,23800,23831,23861,23892,23922,23953,23984,24014,24045],"categoryorder":"array","categoryarray":["Feb 2035","Mar 2035","Apr 2035","May 2035","Jun 2035","Jul 2035","Aug 2035","Sep 2035","Oct 2035","Nov 2035"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-90,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Month","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1488.2625,31253.512500000001],"tickmode":"array","ticktext":["0","10000","20000","30000"],"tickvals":[0,10000,20000,30000],"categoryorder":"array","categoryarray":["0","10000","20000","30000"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Total Quantity (tons)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"Fish Species","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"91f06aec2df7":{"x":{},"y":{},"fill":{},"type":"bar"}},"cur_data":"91f06aec2df7","visdat":{"91f06aec2df7":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -788,7 +842,7 @@ Geodetic CRS:  WGS 84</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -798,31 +852,31 @@ Geodetic CRS:  WGS 84</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter SouthSeafood Express Corp Vessels Only</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>E_Tping_Fishing_SS <span class="ot">&lt;-</span> E_Tping_Fishing <span class="sc">%&gt;%</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(vessel_company <span class="sc">==</span> <span class="st">"SouthSeafood Express Corp"</span>)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>edges_ss <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">from =</span> E_Tping_Fishing_SS<span class="sc">$</span>vessel_company,</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">to =</span> E_Tping_Fishing_SS<span class="sc">$</span>source</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating graph object</span></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>graph_ss <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(edges_ss, <span class="at">directed =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Distinguish between SouthSeafood and location</span></span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(graph_ss)<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">V</span>(graph_ss)<span class="sc">$</span>name <span class="sc">==</span> <span class="st">"SouthSeafood Express Corp"</span>, <span class="st">"southseafood"</span>, </span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">ifelse</span>(<span class="fu">V</span>(graph_ss)<span class="sc">$</span>name <span class="sc">%in%</span> E_Tping_Fishing_SS<span class="sc">$</span>vessel_id, <span class="st">"boat"</span>, <span class="st">"location"</span>))</span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the network with ggraph</span></span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggraph</span>(graph_ss, <span class="at">layout =</span> <span class="st">'fr'</span>) <span class="sc">+</span>  </span>
-<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">width =</span> <span class="dv">1</span>), <span class="at">edge_colour =</span> <span class="st">"grey"</span>) <span class="sc">+</span> </span>
-<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> type), <span class="at">size =</span> <span class="dv">5</span>) <span class="sc">+</span> </span>
-<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> name), <span class="at">repel =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span>  </span>
-<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"boat"</span> <span class="ot">=</span> <span class="st">"orange"</span>, <span class="st">"location"</span> <span class="ot">=</span> <span class="st">"plum"</span>, <span class="st">"southseafood"</span> <span class="ot">=</span> <span class="st">"maroon3"</span>)) <span class="sc">+</span> </span>
-<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span>  </span>
-<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Network Visualization of SouthSeafood Express Corp Vessel Movement"</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter SouthSeafood Express Corp Vessels Only</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>E_Tping_Fishing_SS <span class="ot">&lt;-</span> E_Tping_Fishing <span class="sc">%&gt;%</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(vessel_company <span class="sc">==</span> <span class="st">"SouthSeafood Express Corp"</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>edges_ss <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">from =</span> E_Tping_Fishing_SS<span class="sc">$</span>vessel_company,</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">to =</span> E_Tping_Fishing_SS<span class="sc">$</span>source</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating graph object</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>graph_ss <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(edges_ss, <span class="at">directed =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Distinguish between SouthSeafood and location</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="fu">V</span>(graph_ss)<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">V</span>(graph_ss)<span class="sc">$</span>name <span class="sc">==</span> <span class="st">"SouthSeafood Express Corp"</span>, <span class="st">"southseafood"</span>, </span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">ifelse</span>(<span class="fu">V</span>(graph_ss)<span class="sc">$</span>name <span class="sc">%in%</span> E_Tping_Fishing_SS<span class="sc">$</span>vessel_id, <span class="st">"boat"</span>, <span class="st">"location"</span>))</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the network with ggraph</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggraph</span>(graph_ss, <span class="at">layout =</span> <span class="st">'fr'</span>) <span class="sc">+</span>  </span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_edge_link</span>(<span class="fu">aes</span>(<span class="at">width =</span> <span class="dv">1</span>), <span class="at">edge_colour =</span> <span class="st">"grey"</span>) <span class="sc">+</span> </span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> type), <span class="at">size =</span> <span class="dv">5</span>) <span class="sc">+</span> </span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_node_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> name), <span class="at">repel =</span> <span class="cn">TRUE</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span>  </span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"boat"</span> <span class="ot">=</span> <span class="st">"orange"</span>, <span class="st">"location"</span> <span class="ot">=</span> <span class="st">"plum"</span>, <span class="st">"southseafood"</span> <span class="ot">=</span> <span class="st">"maroon3"</span>)) <span class="sc">+</span> </span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span>  </span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Network Visualization of SouthSeafood Express Corp Vessel Movement"</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </div>
@@ -835,51 +889,51 @@ Geodetic CRS:  WGS 84</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create vessel movement data table</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>vessel_movement_data <span class="ot">&lt;-</span> E_TransponderPing <span class="sc">%&gt;%</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(time, dwell, source, vessel_id)</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Tidy source column</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>vessel_movement_data <span class="ot">&lt;-</span> vessel_movement_data<span class="sc">%&gt;%</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">source =</span> <span class="fu">gsub</span>(<span class="st">"^City of"</span>, <span class="st">""</span>, source)) <span class="sc">%&gt;%</span></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">source =</span> <span class="fu">gsub</span>(<span class="st">"^</span><span class="sc">\\</span><span class="st">s+"</span>, <span class="st">""</span>, source))</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Add X, Y coordinates to vessel movement data table</span></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>coords <span class="ot">&lt;-</span> <span class="fu">st_coordinates</span>(OceanusLocations)</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>OceanusLocations_df <span class="ot">&lt;-</span> OceanusLocations <span class="sc">%&gt;%</span></span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>()</span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>OceanusLocations_df<span class="sc">$</span>XCOORD <span class="ot">&lt;-</span> coords[, <span class="st">"X"</span>]</span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>OceanusLocations_df<span class="sc">$</span>YCOORD <span class="ot">&lt;-</span> coords[, <span class="st">"Y"</span>]</span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>OceanusLocations_df <span class="ot">&lt;-</span> OceanusLocations_df <span class="sc">%&gt;%</span></span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Name, X.Kind, XCOORD, YCOORD) <span class="sc">%&gt;%</span></span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Loc_Type =</span> X.Kind)</span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>vessel_movement_data <span class="ot">&lt;-</span> vessel_movement_data <span class="sc">%&gt;%</span></span>
-<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(OceanusLocations_df,</span>
-<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"source"</span> <span class="ot">=</span> <span class="st">"Name"</span>))</span>
-<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a><span class="co"># save data as rds format</span></span>
-<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(vessel_movement_data, <span class="st">"data/rds/vessel_movement_data.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create vessel movement data table</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>vessel_movement_data <span class="ot">&lt;-</span> E_TransponderPing <span class="sc">%&gt;%</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(time, dwell, source, vessel_id)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Tidy source column</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>vessel_movement_data <span class="ot">&lt;-</span> vessel_movement_data<span class="sc">%&gt;%</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">source =</span> <span class="fu">gsub</span>(<span class="st">"^City of"</span>, <span class="st">""</span>, source)) <span class="sc">%&gt;%</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">source =</span> <span class="fu">gsub</span>(<span class="st">"^</span><span class="sc">\\</span><span class="st">s+"</span>, <span class="st">""</span>, source))</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Add X, Y coordinates to vessel movement data table</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>coords <span class="ot">&lt;-</span> <span class="fu">st_coordinates</span>(OceanusLocations)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>OceanusLocations_df <span class="ot">&lt;-</span> OceanusLocations <span class="sc">%&gt;%</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>()</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>OceanusLocations_df<span class="sc">$</span>XCOORD <span class="ot">&lt;-</span> coords[, <span class="st">"X"</span>]</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>OceanusLocations_df<span class="sc">$</span>YCOORD <span class="ot">&lt;-</span> coords[, <span class="st">"Y"</span>]</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>OceanusLocations_df <span class="ot">&lt;-</span> OceanusLocations_df <span class="sc">%&gt;%</span></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Name, X.Kind, XCOORD, YCOORD) <span class="sc">%&gt;%</span></span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Loc_Type =</span> X.Kind)</span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>vessel_movement_data <span class="ot">&lt;-</span> vessel_movement_data <span class="sc">%&gt;%</span></span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(OceanusLocations_df,</span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"source"</span> <span class="ot">=</span> <span class="st">"Name"</span>))</span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a><span class="co"># save data as rds format</span></span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(vessel_movement_data, <span class="st">"data/rds/vessel_movement_data.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Below code is used to create Vessel Trajectory Data.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>vessel_movement_sf <span class="ot">&lt;-</span> vessel_movement_data <span class="sc">%&gt;%</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sf</span>(<span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"XCOORD"</span>, <span class="st">"YCOORD"</span>), </span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">crs =</span> <span class="dv">4326</span>)</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>vessel_movement_sf <span class="ot">&lt;-</span> vessel_movement_sf <span class="sc">%&gt;%</span></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(vessel_id, time)</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>vessel_trajectory <span class="ot">&lt;-</span> vessel_movement_sf <span class="sc">%&gt;%</span></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(vessel_id) <span class="sc">%&gt;%</span></span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">do_union =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_cast</span>(<span class="st">"LINESTRING"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>vessel_movement_sf <span class="ot">&lt;-</span> vessel_movement_data <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sf</span>(<span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"XCOORD"</span>, <span class="st">"YCOORD"</span>), </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">crs =</span> <span class="dv">4326</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>vessel_movement_sf <span class="ot">&lt;-</span> vessel_movement_sf <span class="sc">%&gt;%</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(vessel_id, time)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>vessel_trajectory <span class="ot">&lt;-</span> vessel_movement_sf <span class="sc">%&gt;%</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(vessel_id) <span class="sc">%&gt;%</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">do_union =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_cast</span>(<span class="st">"LINESTRING"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Below visualization shows Geo-Temporal Patterns of the SouthSeafood Express Corp Vessels.</p>
@@ -891,7 +945,7 @@ Geodetic CRS:  WGS 84</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -902,7 +956,7 @@ Geodetic CRS:  WGS 84</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -912,37 +966,37 @@ Geodetic CRS:  WGS 84</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="do">### snappersnatcher7be</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>vessel_trajectory_selected1 <span class="ot">&lt;-</span> vessel_trajectory <span class="sc">%&gt;%</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(vessel_id <span class="sc">==</span> <span class="st">"snappersnatcher7be"</span>)</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> OceanusGeography) <span class="sc">+</span></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> vessel_trajectory_selected1, </span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>          <span class="fu">aes</span>(<span class="at">color =</span> <span class="fu">factor</span>(vessel_id)), </span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> OceanusLocations_df, </span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> XCOORD, <span class="at">y =</span> YCOORD, <span class="at">label =</span> Name), </span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">3</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Trajectories of snappersnatcher7be"</span>, </span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="st">"Longitude"</span>, <span class="at">y =</span> <span class="st">"Latitude"</span>, <span class="at">color =</span> <span class="st">"ID"</span>)</span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="do">### roachrobberdb6</span></span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>vessel_trajectory_selected2 <span class="ot">&lt;-</span> vessel_trajectory <span class="sc">%&gt;%</span></span>
-<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(vessel_id <span class="sc">==</span> <span class="st">"roachrobberdb6"</span>)</span>
-<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> OceanusGeography) <span class="sc">+</span></span>
-<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> vessel_trajectory_selected2, </span>
-<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>          <span class="fu">aes</span>(<span class="at">color =</span> <span class="fu">factor</span>(vessel_id)), </span>
-<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> OceanusLocations_df, </span>
-<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> XCOORD, <span class="at">y =</span> YCOORD, <span class="at">label =</span> Name), </span>
-<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">3</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Trajectories of snappersnatcher7be"</span>, </span>
-<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="st">"Longitude"</span>, <span class="at">y =</span> <span class="st">"Latitude"</span>, <span class="at">color =</span> <span class="st">"ID"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">### snappersnatcher7be</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>vessel_trajectory_selected1 <span class="ot">&lt;-</span> vessel_trajectory <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(vessel_id <span class="sc">==</span> <span class="st">"snappersnatcher7be"</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> OceanusGeography) <span class="sc">+</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> vessel_trajectory_selected1, </span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>          <span class="fu">aes</span>(<span class="at">color =</span> <span class="fu">factor</span>(vessel_id)), </span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> OceanusLocations_df, </span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> XCOORD, <span class="at">y =</span> YCOORD, <span class="at">label =</span> Name), </span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">3</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Trajectories of snappersnatcher7be"</span>, </span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="st">"Longitude"</span>, <span class="at">y =</span> <span class="st">"Latitude"</span>, <span class="at">color =</span> <span class="st">"ID"</span>)</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="do">### roachrobberdb6</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>vessel_trajectory_selected2 <span class="ot">&lt;-</span> vessel_trajectory <span class="sc">%&gt;%</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(vessel_id <span class="sc">==</span> <span class="st">"roachrobberdb6"</span>)</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> OceanusGeography) <span class="sc">+</span></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> vessel_trajectory_selected2, </span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>          <span class="fu">aes</span>(<span class="at">color =</span> <span class="fu">factor</span>(vessel_id)), </span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> OceanusLocations_df, </span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> XCOORD, <span class="at">y =</span> YCOORD, <span class="at">label =</span> Name), </span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">3</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Trajectories of snappersnatcher7be"</span>, </span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="st">"Longitude"</span>, <span class="at">y =</span> <span class="st">"Latitude"</span>, <span class="at">color =</span> <span class="st">"ID"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </div>

@@ -42,7 +42,7 @@ This exercise will be based on Mini-Challenge 2: [MC2](https://vast-challenge.gi
 The code chunk below uses `p_load()` function from **pacman** package to check if packages listed are already installed in the computer. The packages are loaded if they are found to be installed. If they are not installed, the function will proceed to install and load them into R environment.
 
 ```{r}
-pacman::p_load(jsonlite,tidyverse,igraph,ggraph,RColorBrewer,sf)
+pacman::p_load(jsonlite,tidyverse,igraph,ggraph,RColorBrewer,sf,plotly)
 ```
 
 ## 2.2 Importing Data
@@ -345,14 +345,49 @@ monthly_data <- N_Delivery_doc %>%
 # Extract the month from the 'date' column
 monthly_data$month <- format(monthly_data$year_month, "%B")
 
-# Plot the data
-ggplot(monthly_data, aes(x = year_month, y = total_qty_tons)) +
-  geom_bar(stat = "identity", fill = "plum4") +
-  labs(title = "Total Quantity of Fish Fished per Month",
+# Plot the graph using plotly
+plot_ly(data = monthly_data, 
+        x = ~month, 
+        y = ~total_qty_tons, 
+        type = 'bar', 
+        marker = list(color = '#800080')) %>%
+  layout(title = 'Total Quantity of Fish Delivered per Month',
+         xaxis = list(title = 'Month', 
+                      tickvals = monthly_data$month), 
+         yaxis = list(title = 'Total Quantity (tons)')) 
+```
+
+It is observed that total catch quantity shows increasing trend from beginner of the year to end of the year. Next, above chart will be further broken down by fish species to check any seasonality in fish species caught.
+
+```{r}
+
+# Group by year_month & fish_species and sum up total_qty_tons
+group_by_fish_species <- N_Delivery_doc %>%
+  group_by(year_month, fish_species) %>%
+  summarise(total_qty_tons = sum(qty_tons), .groups = 'drop') 
+
+
+# Remove scientific name in fish species
+group_by_fish_species <- group_by_fish_species %>%
+  mutate(fish_species = sub("/.*", "", fish_species))
+
+# Ensure year_month is in Date format
+group_by_fish_species <- group_by_fish_species %>%
+  mutate(year_month = as.Date(year_month))
+
+# Plot the graph using ggplot
+p <- ggplot(group_by_fish_species, aes(x = year_month, y = total_qty_tons, fill = fish_species)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Total Quantity of Fish Delivered per Month (Breakdown by Fish Species)",
        x = "Month",
-       y = "Total Quantity (tons)") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))+
-  scale_x_continuous(breaks = monthly_data$year_month) 
+       y = "Total Quantity (tons)",
+       fill = "Fish Species") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  scale_x_date(date_breaks = "1 month", date_labels = "%b %Y") +
+  scale_fill_brewer(palette = "Paired")
+
+# Create interactive plot using ggplotly
+ggplotly(p)
 ```
 
 ## 3.2 Visualisations for Question 2
