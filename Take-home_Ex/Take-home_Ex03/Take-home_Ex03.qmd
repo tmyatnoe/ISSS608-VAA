@@ -357,7 +357,7 @@ plot_ly(data = monthly_data,
          yaxis = list(title = 'Total Quantity (tons)')) 
 ```
 
-It is observed that total catch quantity shows increasing trend from beginner of the year to end of the year. Next, above chart will be further broken down by fish species to check any seasonality in fish species caught.
+It is observed that total catch quantity shows increasing trend from beginning of the year to end of the year. Next, above chart will be further broken down by fish species to check any seasonality in fish species caught.
 
 ```{r}
 
@@ -556,7 +556,7 @@ ggplot() +
             aes(x = XCOORD, y = YCOORD, label = Name), 
             size = 3, hjust = 1, vjust = 1) +
   theme_minimal() +
-  labs(title = "Trajectories of snappersnatcher7be", 
+  labs(title = "Trajectories of roachrobberdb6", 
   x = "Longitude", y = "Latitude", color = "ID")
 ```
 
@@ -596,6 +596,197 @@ ggplot() +
   labs(title = "Trajectories of snappersnatcher7be", 
   x = "Longitude", y = "Latitude", color = "ID")
 ```
+:::
+
+It can be observed from above visualisations that snappersnatcher7be of SouthSeafood Express Corp is the vessel that visited Ghoti Preserve which is not meant for commercial fishing. Next, SouthSeafood Express Corp Vessels routes above will be compared with randomly chosen fishing vessel routes to uncover any anomaly in fishing route.
+
+::: panel-tabset
+## lobsterlooterd41
+
+```{r}
+#| echo: false
+vessel_trajectory_selected3 <- vessel_trajectory %>%
+  filter(vessel_id == "lobsterlooterd41") # Wolf and Sons
+
+ggplot() +
+  geom_sf(data = OceanusGeography) +
+  geom_sf(data = vessel_trajectory_selected3, 
+          aes(color = factor(vessel_id)), 
+          size = 1) +
+  geom_text(data = OceanusLocations_df, 
+            aes(x = XCOORD, y = YCOORD, label = Name), 
+            size = 3, hjust = 1, vjust = 1) +
+  theme_minimal() +
+  labs(title = "Trajectories of lobsterlooterd41", 
+  x = "Longitude", y = "Latitude", color = "ID")
+```
+
+## wavewarrior5d7
+
+```{r}
+#| echo: false
+vessel_trajectory_selected4 <- vessel_trajectory %>%
+  filter(vessel_id == "wavewarrior5d7") # Rivera Group
+
+ggplot() +
+  geom_sf(data = OceanusGeography) +
+  geom_sf(data = vessel_trajectory_selected4, 
+          aes(color = factor(vessel_id)), 
+          size = 1) +
+  geom_text(data = OceanusLocations_df, 
+            aes(x = XCOORD, y = YCOORD, label = Name), 
+            size = 3, hjust = 1, vjust = 1) +
+  theme_minimal() +
+  labs(title = "Trajectories of wavewarrior5d7", 
+  x = "Longitude", y = "Latitude", color = "ID")
+```
+
+## spanishmackerelmaster037
+
+```{r}
+#| echo: false
+vessel_trajectory_selected5 <- vessel_trajectory %>%
+  filter(vessel_id == "spanishmackerelmaster037") # Ritter Ltd
+
+ggplot() +
+  geom_sf(data = OceanusGeography) +
+  geom_sf(data = vessel_trajectory_selected5, 
+          aes(color = factor(vessel_id)), 
+          size = 1) +
+  geom_text(data = OceanusLocations_df, 
+            aes(x = XCOORD, y = YCOORD, label = Name), 
+            size = 3, hjust = 1, vjust = 1) +
+  theme_minimal() +
+  labs(title = "Trajectories of spanishmackerelmaster037", 
+  x = "Longitude", y = "Latitude", color = "ID")
+```
+## redfishraider677
+
+```{r}
+#| echo: false
+vessel_trajectory_selected6 <- vessel_trajectory %>%
+  filter(vessel_id == "redfishraider677") # House Group
+
+ggplot() +
+  geom_sf(data = OceanusGeography) +
+  geom_sf(data = vessel_trajectory_selected6, 
+          aes(color = factor(vessel_id)), 
+          size = 1) +
+  geom_text(data = OceanusLocations_df, 
+            aes(x = XCOORD, y = YCOORD, label = Name), 
+            size = 3, hjust = 1, vjust = 1) +
+  theme_minimal() +
+  labs(title = "Trajectories of redfishraider677", 
+  x = "Longitude", y = "Latitude", color = "ID")
+```
+
+## herringhunter30b
+```{r}
+#| echo: false
+vessel_trajectory_selected7 <- vessel_trajectory %>%
+  filter(vessel_id == "herringhunter30b") # Mooney, Stevenson and Miller
+
+ggplot() +
+  geom_sf(data = OceanusGeography) +
+  geom_sf(data = vessel_trajectory_selected7, 
+          aes(color = factor(vessel_id)), 
+          size = 1) +
+  geom_text(data = OceanusLocations_df, 
+            aes(x = XCOORD, y = YCOORD, label = Name), 
+            size = 3, hjust = 1, vjust = 1) +
+  theme_minimal() +
+  labs(title = "Trajectories of herringhunter30b", 
+  x = "Longitude", y = "Latitude", color = "ID")
+```
+
+## Code
+
+```{r}
+#| eval: false
+### lobsterlooterd41
+vessel_trajectory_selected3 <- vessel_trajectory %>%
+  filter(vessel_id == "lobsterlooterd41") # Wolf and Sons
+
+ggplot() +
+  geom_sf(data = OceanusGeography) +
+  geom_sf(data = vessel_trajectory_selected3, 
+          aes(color = factor(vessel_id)), 
+          size = 1) +
+  geom_text(data = OceanusLocations_df, 
+            aes(x = XCOORD, y = YCOORD, label = Name), 
+            size = 3, hjust = 1, vjust = 1) +
+  theme_minimal() +
+  labs(title = "Trajectories of lobsterlooterd41", 
+  x = "Longitude", y = "Latitude", color = "ID")
+
+### wavewarrior5d7
+vessel_trajectory_selected4 <- vessel_trajectory %>%
+  filter(vessel_id == "wavewarrior5d7") # Rivera Group
+
+ggplot() +
+  geom_sf(data = OceanusGeography) +
+  geom_sf(data = vessel_trajectory_selected4, 
+          aes(color = factor(vessel_id)), 
+          size = 1) +
+  geom_text(data = OceanusLocations_df, 
+            aes(x = XCOORD, y = YCOORD, label = Name), 
+            size = 3, hjust = 1, vjust = 1) +
+  theme_minimal() +
+  labs(title = "Trajectories of wavewarrior5d7", 
+  x = "Longitude", y = "Latitude", color = "ID")
+
+### spanishmackerelmaster037
+vessel_trajectory_selected5 <- vessel_trajectory %>%
+  filter(vessel_id == "spanishmackerelmaster037") # Ritter Ltd
+
+ggplot() +
+  geom_sf(data = OceanusGeography) +
+  geom_sf(data = vessel_trajectory_selected5, 
+          aes(color = factor(vessel_id)), 
+          size = 1) +
+  geom_text(data = OceanusLocations_df, 
+            aes(x = XCOORD, y = YCOORD, label = Name), 
+            size = 3, hjust = 1, vjust = 1) +
+  theme_minimal() +
+  labs(title = "Trajectories of spanishmackerelmaster037", 
+  x = "Longitude", y = "Latitude", color = "ID")
+
+### redfishraider677
+vessel_trajectory_selected6 <- vessel_trajectory %>%
+  filter(vessel_id == "redfishraider677") # House Group
+
+ggplot() +
+  geom_sf(data = OceanusGeography) +
+  geom_sf(data = vessel_trajectory_selected6, 
+          aes(color = factor(vessel_id)), 
+          size = 1) +
+  geom_text(data = OceanusLocations_df, 
+            aes(x = XCOORD, y = YCOORD, label = Name), 
+            size = 3, hjust = 1, vjust = 1) +
+  theme_minimal() +
+  labs(title = "Trajectories of redfishraider677", 
+  x = "Longitude", y = "Latitude", color = "ID")
+
+### herringhunter30b
+vessel_trajectory_selected7 <- vessel_trajectory %>%
+  filter(vessel_id == "herringhunter30b") # Mooney, Stevenson and Miller
+
+ggplot() +
+  geom_sf(data = OceanusGeography) +
+  geom_sf(data = vessel_trajectory_selected7, 
+          aes(color = factor(vessel_id)), 
+          size = 1) +
+  geom_text(data = OceanusLocations_df, 
+            aes(x = XCOORD, y = YCOORD, label = Name), 
+            size = 3, hjust = 1, vjust = 1) +
+  theme_minimal() +
+  labs(title = "Trajectories of herringhunter30b", 
+  x = "Longitude", y = "Latitude", color = "ID")
+```
+:::
+
+::: {style="border: 2px dotted black; background-color: #caf0f8; padding: 15px; margin: 10px 0; border-radius: 5px; display: flex; align-items: center;"}
+<img src="ship_1826384.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> **Observation:** We can see from the routes of 5 random vessels that except from wavewarrior5d7, all the other vessels visited Ecological Preserves such as Ghoti Preserve and Nemo Reef which are not meant for commercial fishing. This suggests there may be many fishing companies that are engaging in illegal fishing practices.
 :::
 
 ### 3.2.2 Catch Content Deep Dive
