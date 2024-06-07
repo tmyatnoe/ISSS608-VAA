@@ -199,6 +199,7 @@ E_Tping_Fishing <- E_TransponderPing %>%
 ```
 
 ### 2.2.4 Oceanus Geographical Data Processing
+
 Code chunk below uses st_read() of sf package to import Oceanus Geography and Oceanus Locations geographical file in geojson format into R.
 
 ```{r}
@@ -216,6 +217,7 @@ OceanusLocations <- st_read(dsn = "data/shp",
 #save OceanusGeography into rds format for future use
 write_rds(OceanusLocations, "data/rds/OceanusLocations.rds")
 ```
+
 # 3. Visualisation
 
 ## 3.1 Visualisations for Question 1
@@ -327,7 +329,7 @@ p1
 ```
 
 ::: {style="border: 2px dotted black; background-color: #caf0f8; padding: 15px; margin: 10px 0; border-radius: 5px; display: flex; align-items: center;"}
-<img src="shark_4864506.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> **Observation:** It is observed that SouthSeafood Express Corp's catch content has fewer types of fish species comparing to rest of the companies which catch at least 8-9 species. SouthSeafood Express Corp's catch content shows 5 species of fish namely: Wrasse, Sockfish, Harland, Cod and Beauvoir. It is abnormal that SouthSeafood Express Corp is the only company with lowest number of fish species in the catch content while other companies catch at least 8-9 species. This observation calls for further deep dive in catch content and delivery document of SouthSeafood Express Corp since low catch content may indicate under-declaring the actual catch from fishing to officials.
+<img src="shark_4864506.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> **Observation:** It is observed that SouthSeafood Express Corp's catch content has fewer types of fish species comparing to rest of the companies which catch at least 8-9 species. SouthSeafood Express Corp's catch content shows 5 species of fish namely: Wrasse, Sockfish, Harland, Cod and Beauvoir. It is abnormal that SouthSeafood Express Corp is the only company with lowest number of fish species in the catch content while other companies catch at least 8-9 species. This observation calls for further deep dive in catch content and delivery document of SouthSeafood Express Corp since low catch content may indicate non-reporting/ misreporting the actual catch from fishing to officials which is a form of Illegal, unreported and unregulated (IUU) fishing.
 :::
 
 ### 3.1.2 Seasonal Trend in Delivery Content
@@ -389,6 +391,10 @@ p <- ggplot(group_by_fish_species, aes(x = year_month, y = total_qty_tons, fill 
 # Create interactive plot using ggplotly
 ggplotly(p)
 ```
+
+::: {style="border: 2px dotted black; background-color: #e6e6fa; padding: 15px; margin: 10px 0; border-radius: 5px; display: flex; align-items: center;"}
+<img src="fish_1826379.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> From plots above, general increasing trend is observed in the total fish caught and delivered to port from February to November. There is significant increase in cod fish catches stating from August. However, this could be attributed to starting of [best time for cod fishing](https://www.saltwatersportsman.com/howto/cod-hotspots/) which is winter.
+:::
 
 ## 3.2 Visualisations for Question 2
 
@@ -464,12 +470,12 @@ ggraph(graph_ss, layout = 'fr') +
 ```
 :::
 
-
 ::: {style="border: 2px dotted black; background-color: #caf0f8; padding: 15px; margin: 10px 0; border-radius: 5px; display: flex; align-items: center;"}
 <img src="ship_1826384.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> **Observation:** One anomaly noted here is that SouthSeafood Express Corp Vessels visited [Ghoti Preserve]{.underline} which is not a fishing ground but ecological reserve.
 :::
 
 Creating vessel movement data table based in transponder ping and adding corresponding co-oridinates to data for further visualisation.
+
 ```{r}
 # Create vessel movement data table
 vessel_movement_data <- E_TransponderPing %>%
@@ -501,8 +507,8 @@ vessel_movement_data <- vessel_movement_data %>%
 write_rds(vessel_movement_data, "data/rds/vessel_movement_data.rds")
 ```
 
-
 Below code is used to create Vessel Trajectory Data.
+
 ```{r}
 vessel_movement_sf <- vessel_movement_data %>%
   st_as_sf(coords = c("XCOORD", "YCOORD"), 
@@ -517,6 +523,7 @@ vessel_trajectory <- vessel_movement_sf %>%
   st_cast("LINESTRING")
 
 ```
+
 Below visualization shows Geo-Temporal Patterns of the SouthSeafood Express Corp Vessels.
 
 ::: panel-tabset
@@ -660,6 +667,7 @@ ggplot() +
   labs(title = "Trajectories of spanishmackerelmaster037", 
   x = "Longitude", y = "Latitude", color = "ID")
 ```
+
 ## redfishraider677
 
 ```{r}
@@ -681,6 +689,7 @@ ggplot() +
 ```
 
 ## herringhunter30b
+
 ```{r}
 #| echo: false
 vessel_trajectory_selected7 <- vessel_trajectory %>%
@@ -798,5 +807,7 @@ ggplot() +
 [Working with Graph Data](https://isss608-ay2023-24apr.netlify.app/vast/kickstarter2)
 
 [Working with Geographical Data](https://isss608-ay2023-24apr.netlify.app/vast/kickstarter3)
+
+[Best time for cod fishing](https://www.saltwatersportsman.com/howto/cod-hotspots/)
 
 [Icons used](https://www.freepik.com/)
