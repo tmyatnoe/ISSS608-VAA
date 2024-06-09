@@ -17,11 +17,11 @@ execute:
 
 ## 1.1 Setting the scene
 
-Vast Challenge also known as IEEE Visual Analytics Science and Technology (VAST) Challenge is Visual Analytics competition which aims to promote innovation in the field of data transformation and interactive visualization. [Vast Challenge 2024](https://vast-challenge.github.io/2024/index.html) is based on the theme of detecting bias, illegal fishing behavior and temporal patterns in fishing industry in Oceanus, an island nation.
+**Vast Challenge** also known as IEEE Visual Analytics Science and Technology (VAST) Challenge is Visual Analytics competition which aims to promote innovation in the field of data transformation and interactive visualization. [Vast Challenge 2024](https://vast-challenge.github.io/2024/index.html) is based on the theme of detecting bias, illegal fishing behavior and temporal patterns in fishing industry in Oceanus, an island nation.
 
 ## 1.2 Task
 
-This exercise will be based on Mini-Challenge 2: [MC2](https://vast-challenge.github.io/2024/MC2.html) of Vast Challenge 2024. The objective of the exercise is to help FishEye, a non-profit organization to detect and prevent illegal fishing behaviour, by performing geographic and temporal visual analysis. This exercise will aim to answer the following questions from MC2 of Vast Challenge through visual analytics:
+This exercise will be based on **Mini-Challenge 2: [MC2](https://vast-challenge.github.io/2024/MC2.html)** of Vast Challenge 2024. The objective of the exercise is to help FishEye, a non-profit organization to detect and prevent illegal fishing behaviour, by performing geographic and temporal visual analysis. This exercise will aim to answer the following questions from MC2 of Vast Challenge through visual analytics:
 
 **Question 1:**
 
@@ -39,6 +39,16 @@ This exercise will be based on Mini-Challenge 2: [MC2](https://vast-challenge.gi
 
 ## 2.1 Installing and loading the required libraries
 
+| Package                                                                         | Description                                                                                                                           |
+|------------------------|-----------------------------------------------|
+| [jsonlite](https://cran.r-project.org/web/packages/jsonlite/index.html)         | Fast JSON parser and generator, optimized for statistical data and the web. Offers simple, flexible tools for working with JSON in R. |
+| [tidyverse](https://www.tidyverse.org/)                                         | Used for data import, tidying, manipulation, and data visualization. Packages like readr, dplyr, lubridate are part of tidyverse.     |
+| [igraph](https://igraph.org/)                                                   | Used for network analysis.                                                                                                            |
+| [ggraph](https://ggraph.data-imaginist.com/)                                    | Extension of ggplot2 intended for using with networks, graphs and trees.                                                              |
+| [RColorBrewer](https://cran.r-project.org/web/packages/RColorBrewer/index.html) | Color schemes for plots.                                                                                                              |
+| [sf](https://cran.r-project.org/web/packages/sf/index.html)                     | Used for encoding spatial vector data.                                                                                                |
+| [plotly](https://plotly.com/r/)                                                 | Used for interactive, publication quality charts.                                                                                     |
+
 The code chunk below uses `p_load()` function from **pacman** package to check if packages listed are already installed in the computer. The packages are loaded if they are found to be installed. If they are not installed, the function will proceed to install and load them into R environment.
 
 ```{r}
@@ -47,7 +57,7 @@ pacman::p_load(jsonlite,tidyverse,igraph,ggraph,RColorBrewer,sf,plotly)
 
 ## 2.2 Importing Data
 
-Below code import MC2 data using fromJSON command from jsonlite package.
+Below code import MC2 data using `fromJSON()` command from **jsonlite** package.
 
 ```{r}
 mc2_data <- fromJSON("data/MC2/mc2.json")
@@ -85,7 +95,7 @@ E_Tx <- subset(mc2_edges, mc2_edges$type == "Event.Transaction")
 write_rds(mc2_edges, "data/rds/mc2_edges.rds")
 ```
 
-Take a look at mc2_edges to ensure data is processed correctly.
+Take a look at **mc2_edges** to ensure data is processed correctly.
 
 ```{r}
 glimpse(mc2_edges)
@@ -178,7 +188,7 @@ N_vessel <- mc2_nodes %>%
 write_rds(mc2_nodes, "data/rds/mc2_nodes.rds")
 ```
 
-Take a look at mc2_nodes to ensure data is processed correctly.
+Take a look at **mc2_nodes** to ensure data is processed correctly.
 
 ```{r}
 glimpse(mc2_nodes)
@@ -199,7 +209,7 @@ E_Tping_Fishing <- E_TransponderPing %>%
 
 ### 2.2.4 Oceanus Geographical Data Processing
 
-Code chunk below uses st_read() of sf package to import Oceanus Geography and Oceanus Locations geographical file in geojson format into R.
+Code chunk below uses `st_read()` of **sf** package to import Oceanus Geography and Oceanus Locations geographical file in geojson format into R.
 
 ```{r}
 # Import into R
@@ -396,7 +406,7 @@ ggplotly(p)
 
 ## 3.2 Visualisations for Question 2
 
-### 3.2.1 Vessel Movement
+### 3.2.1 Understanding Vessel Movement
 
 Transponder ping data can provide the locations the vessels from shipping company has been to or in the vicinity and give insight whether vessels may be conducting illegal fishing activities in non-fishing areas. In this section, we will focus only on fishing vessels to understand fishing activities.
 
@@ -524,33 +534,9 @@ vessel_trajectory <- vessel_movement_sf %>%
 
 Below visualization shows Geo-Temporal Patterns of the SouthSeafood Express Corp Vessels.
 
-::: panel-tabset
-## snappersnatcher7be
-
 ```{r}
-#| echo: false
-vessel_trajectory_selected1 <- vessel_trajectory %>%
-  filter(vessel_id == "snappersnatcher7be")
-
-ggplot() +
-  geom_sf(data = OceanusGeography) +
-  geom_sf(data = vessel_trajectory_selected1, 
-          aes(color = factor(vessel_id)), 
-          size = 1) +
-  geom_text(data = OceanusLocations_df, 
-            aes(x = XCOORD, y = YCOORD, label = Name), 
-            size = 3, hjust = 1, vjust = 1) +
-  theme_minimal() +
-  labs(title = "Trajectories of snappersnatcher7be", 
-  x = "Longitude", y = "Latitude", color = "ID")
-```
-
-## roachrobberdb6
-
-```{r}
-#| echo: false
 vessel_trajectory_selected2 <- vessel_trajectory %>%
-  filter(vessel_id == "roachrobberdb6")
+  filter(vessel_id %in% c("roachrobberdb6", "snappersnatcher7be"))
 
 ggplot() +
   geom_sf(data = OceanusGeography) +
@@ -561,47 +547,9 @@ ggplot() +
             aes(x = XCOORD, y = YCOORD, label = Name), 
             size = 3, hjust = 1, vjust = 1) +
   theme_minimal() +
-  labs(title = "Trajectories of roachrobberdb6", 
+  labs(title = "Trajectories of SouthSeafood Express Corp Vessels", 
   x = "Longitude", y = "Latitude", color = "ID")
 ```
-
-## Code
-
-```{r}
-#| eval: false
-### snappersnatcher7be
-vessel_trajectory_selected1 <- vessel_trajectory %>%
-  filter(vessel_id == "snappersnatcher7be")
-
-ggplot() +
-  geom_sf(data = OceanusGeography) +
-  geom_sf(data = vessel_trajectory_selected1, 
-          aes(color = factor(vessel_id)), 
-          size = 1) +
-  geom_text(data = OceanusLocations_df, 
-            aes(x = XCOORD, y = YCOORD, label = Name), 
-            size = 3, hjust = 1, vjust = 1) +
-  theme_minimal() +
-  labs(title = "Trajectories of snappersnatcher7be", 
-  x = "Longitude", y = "Latitude", color = "ID")
-
-### roachrobberdb6
-vessel_trajectory_selected2 <- vessel_trajectory %>%
-  filter(vessel_id == "roachrobberdb6")
-
-ggplot() +
-  geom_sf(data = OceanusGeography) +
-  geom_sf(data = vessel_trajectory_selected2, 
-          aes(color = factor(vessel_id)), 
-          size = 1) +
-  geom_text(data = OceanusLocations_df, 
-            aes(x = XCOORD, y = YCOORD, label = Name), 
-            size = 3, hjust = 1, vjust = 1) +
-  theme_minimal() +
-  labs(title = "Trajectories of snappersnatcher7be", 
-  x = "Longitude", y = "Latitude", color = "ID")
-```
-:::
 
 It can be observed from above visualizations that snappersnatcher7be of SouthSeafood Express Corp is the vessel which had transponder pings around Ghoti Preserve which is not meant for commercial fishing. Next, SouthSeafood Express Corp Vessels routes above will be compared with randomly chosen fishing vessel routes to uncover any anomaly in fishing route.
 
@@ -796,7 +744,7 @@ ggplot() +
 <img src="ship_1826384.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> **Observation:** We can see from the routes of 5 random vessels that except from wavewarrior5d7, all the other vessels have been in areas of Ecological Preserves such as Ghoti Preserve and Nemo Reef which are not meant for commercial fishing. This suggests there may be many fishing companies that are engaging in illegal fishing practices.
 :::
 
-### 3.2.2 Understanding when SouthSeafood Express Corp vessels performed their illegal fishing
+### 3.2.2 Understanding When SouthSeafood Performed Illegal Fishing
 
 To understand when SouthSeafood Express Corp vessels performed their illegal fishing, let's take a look at the locations that SouthSeafood Express Corp vessels frequently visited. This can be done by plotting transponder ping data on calendar map.
 
@@ -848,11 +796,18 @@ ggplot(dwell, aes(x = date_only, y = total_dwell, color = vessel_id)) +
   facet_wrap(~ source) +
   theme_minimal()
 ```
+
 ::: {style="border: 2px dotted black; background-color: #e6e6fa; padding: 15px; margin: 10px 0; border-radius: 5px; display: flex; align-items: center;"}
-<img src="schedule_3652191.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> Apart from port locations (City of Himark and City of Lomark) where higher dwell times are expected, high dwell times are also observed at Wrasse Beds, Cod Table, Ghoti Preserve and Exit East (only one occurence). Long dwell time similar at Ghoti Preserve similar to that of Wrasse Beds and even higher than dwell time at Cod Table further validate the initial suspicions that SouthSeafood Express Corp vessel particularly (snappersnatcher7be) may be performing illegal fishing in the Ghoti Preserve area. High dwell time at Ghoti Preserve were observed in February time frame and it is highly likely  that illegal fishing activities were performed during this time period in Ghoti Preserve.
+<img src="schedule_3652191.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> Apart from port locations (City of Himark and City of Lomark) where higher dwell times are expected, high dwell times are also observed at Wrasse Beds, Cod Table, Ghoti Preserve and Exit East (only one occurence). Long dwell time similar at Ghoti Preserve similar to that of Wrasse Beds and even higher than dwell time at Cod Table further validate the initial suspicions that SouthSeafood Express Corp vessel particularly (snappersnatcher7be) may be performing illegal fishing in the Ghoti Preserve area. High dwell time at Ghoti Preserve were observed in February time frame and it is highly likely that illegal fishing activities were performed during this time period in Ghoti Preserve.
 :::
 
 # 4. Conclusion
+
+-   By connecting possible cargo to vessels and their company, SouthSeafood Express Corp showed anomaly in number of fish species caught which is lower than all other fishing companies which suggests potential non-reporting/ misreporting the actual catch from fishing to officials.
+
+-   Investigating the SouthSeafood Express Corp Vessels' fishing route based on transponder ping data, suspicious pattern is discovered which shows vessel were in the area of Ghoti Preserve which is not meant for commercial fishing. Further comparison of this to other vessels in Oceanus showed that many companies may also be engaging in illegal fishing activities since they have been in areas of Ecological Preserves such as Ghoti Preserve and Nemo Reef which are Ecological preserves and not designated for commercial fishing.
+
+-   Transponder ping Frequency per location and total dwell time per day at different locations show that SouthSeafood Express Corp may have indeed performed illegal fishing activities at Ghoti Preserve since long dwell times were observed in this area similar or higher than dwell times spent by SouthSeafood's vessel at commercial fishing spots like Wrasse Beds and Cod Table.
 
 # 5. References
 

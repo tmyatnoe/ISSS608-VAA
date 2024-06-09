@@ -299,8 +299,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#visualisations-for-question-2" id="toc-visualisations-for-question-2" class="nav-link" data-scroll-target="#visualisations-for-question-2">3.2 Visualisations for Question 2</a>
   <ul class="collapse">
-  <li><a href="#vessel-movement" id="toc-vessel-movement" class="nav-link" data-scroll-target="#vessel-movement">3.2.1 Vessel Movement</a></li>
-  <li><a href="#understanding-when-southseafood-express-corp-vessels-performed-their-illegal-fishing" id="toc-understanding-when-southseafood-express-corp-vessels-performed-their-illegal-fishing" class="nav-link" data-scroll-target="#understanding-when-southseafood-express-corp-vessels-performed-their-illegal-fishing">3.2.2 Understanding when SouthSeafood Express Corp vessels performed their illegal fishing</a></li>
+  <li><a href="#understanding-vessel-movement" id="toc-understanding-vessel-movement" class="nav-link" data-scroll-target="#understanding-vessel-movement">3.2.1 Understanding Vessel Movement</a></li>
+  <li><a href="#understanding-when-southseafood-performed-illegal-fishing" id="toc-understanding-when-southseafood-performed-illegal-fishing" class="nav-link" data-scroll-target="#understanding-when-southseafood-performed-illegal-fishing">3.2.2 Understanding When SouthSeafood Performed Illegal Fishing</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">4. Conclusion</a></li>
@@ -353,11 +353,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>1. Overview</h1>
 <section id="setting-the-scene" class="level2">
 <h2 class="anchored" data-anchor-id="setting-the-scene">1.1 Setting the scene</h2>
-<p>Vast Challenge also known as IEEE Visual Analytics Science and Technology (VAST) Challenge is Visual Analytics competition which aims to promote innovation in the field of data transformation and interactive visualization. <a href="https://vast-challenge.github.io/2024/index.html">Vast Challenge 2024</a> is based on the theme of detecting bias, illegal fishing behavior and temporal patterns in fishing industry in Oceanus, an island nation.</p>
+<p><strong>Vast Challenge</strong> also known as IEEE Visual Analytics Science and Technology (VAST) Challenge is Visual Analytics competition which aims to promote innovation in the field of data transformation and interactive visualization. <a href="https://vast-challenge.github.io/2024/index.html">Vast Challenge 2024</a> is based on the theme of detecting bias, illegal fishing behavior and temporal patterns in fishing industry in Oceanus, an island nation.</p>
 </section>
 <section id="task" class="level2">
 <h2 class="anchored" data-anchor-id="task">1.2 Task</h2>
-<p>This exercise will be based on Mini-Challenge 2: <a href="https://vast-challenge.github.io/2024/MC2.html">MC2</a> of Vast Challenge 2024. The objective of the exercise is to help FishEye, a non-profit organization to detect and prevent illegal fishing behaviour, by performing geographic and temporal visual analysis. This exercise will aim to answer the following questions from MC2 of Vast Challenge through visual analytics:</p>
+<p>This exercise will be based on <strong>Mini-Challenge 2: <a href="https://vast-challenge.github.io/2024/MC2.html">MC2</a></strong> of Vast Challenge 2024. The objective of the exercise is to help FishEye, a non-profit organization to detect and prevent illegal fishing behaviour, by performing geographic and temporal visual analysis. This exercise will aim to answer the following questions from MC2 of Vast Challenge through visual analytics:</p>
 <p><strong>Question 1:</strong></p>
 <div style="border: 2px dotted black; background-color: #e6e6fa; padding: 15px; margin: 10px 0; border-radius: 5px; display: flex; align-items: center;">
 <p><img src="fish_1826379.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"> Develop visualizations that illustrate the inappropriate behavior of SouthSeafood Express Corp vessels. FishEye analysts have long wanted to better understand the flow of commercially caught fish through Oceanus’s many ports. But as they were loading data into CatchNet, they discovered they had purchased the wrong port records. They wanted to get the ship off-load records, but they instead got the port-exit records (essentially trucks/trains leaving the port area). Port exit records do not include which vessel that delivered the products. Given this limitation, develop a visualization system to associate vessels with their probable cargos. Which vessels deliver which products and when? What are the seasonal trends and anomalies in the port exit records?.</p>
@@ -372,6 +372,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>2. Getting Started</h1>
 <section id="installing-and-loading-the-required-libraries" class="level2">
 <h2 class="anchored" data-anchor-id="installing-and-loading-the-required-libraries">2.1 Installing and loading the required libraries</h2>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Package</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://cran.r-project.org/web/packages/jsonlite/index.html">jsonlite</a></td>
+<td>Fast JSON parser and generator, optimized for statistical data and the web. Offers simple, flexible tools for working with JSON in R.</td>
+</tr>
+<tr class="even">
+<td><a href="https://www.tidyverse.org/">tidyverse</a></td>
+<td>Used for data import, tidying, manipulation, and data visualization. Packages like readr, dplyr, lubridate are part of tidyverse.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://igraph.org/">igraph</a></td>
+<td>Used for network analysis.</td>
+</tr>
+<tr class="even">
+<td><a href="https://ggraph.data-imaginist.com/">ggraph</a></td>
+<td>Extension of ggplot2 intended for using with networks, graphs and trees.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://cran.r-project.org/web/packages/RColorBrewer/index.html">RColorBrewer</a></td>
+<td>Color schemes for plots.</td>
+</tr>
+<tr class="even">
+<td><a href="https://cran.r-project.org/web/packages/sf/index.html">sf</a></td>
+<td>Used for encoding spatial vector data.</td>
+</tr>
+<tr class="odd">
+<td><a href="https://plotly.com/r/">plotly</a></td>
+<td>Used for interactive, publication quality charts.</td>
+</tr>
+</tbody>
+</table>
 <p>The code chunk below uses <code>p_load()</code> function from <strong>pacman</strong> package to check if packages listed are already installed in the computer. The packages are loaded if they are found to be installed. If they are not installed, the function will proceed to install and load them into R environment.</p>
 <div class="cell">
 <details class="code-fold">
@@ -382,7 +420,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="importing-data" class="level2">
 <h2 class="anchored" data-anchor-id="importing-data">2.2 Importing Data</h2>
-<p>Below code import MC2 data using fromJSON command from jsonlite package.</p>
+<p>Below code import MC2 data using <code>fromJSON()</code> command from <strong>jsonlite</strong> package.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -422,7 +460,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(mc2_edges, <span class="st">"data/rds/mc2_edges.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Take a look at mc2_edges to ensure data is processed correctly.</p>
+<p>Take a look at <strong>mc2_edges</strong> to ensure data is processed correctly.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -539,7 +577,7 @@ $ `saying of the sea` &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA
 <span id="cb6-80"><a href="#cb6-80" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(mc2_nodes, <span class="st">"data/rds/mc2_nodes.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Take a look at mc2_nodes to ensure data is processed correctly.</p>
+<p>Take a look at <strong>mc2_nodes</strong> to ensure data is processed correctly.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -589,7 +627,7 @@ $ fish_species_present &lt;chr&gt; "NULL", "NULL", "NULL", "NULL", "NULL", "NULL
 </section>
 <section id="oceanus-geographical-data-processing" class="level3">
 <h3 class="anchored" data-anchor-id="oceanus-geographical-data-processing">2.2.4 Oceanus Geographical Data Processing</h3>
-<p>Code chunk below uses st_read() of sf package to import Oceanus Geography and Oceanus Locations geographical file in geojson format into R.</p>
+<p>Code chunk below uses <code>st_read()</code> of <strong>sf</strong> package to import Oceanus Geography and Oceanus Locations geographical file in geojson format into R.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -796,8 +834,8 @@ Geodetic CRS:  WGS 84</code></pre>
 <span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>         <span class="at">yaxis =</span> <span class="fu">list</span>(<span class="at">title =</span> <span class="st">'Total Quantity (tons)'</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="plotly html-widget html-fill-item" id="htmlwidget-31ad72254045d88dc820" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-31ad72254045d88dc820">{"x":{"visdat":{"b9e4dabf9f":["function () ","plotlyVisDat"]},"cur_data":"b9e4dabf9f","attrs":{"b9e4dabf9f":{"x":{},"y":{},"marker":{"color":"#800080"},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"bar"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Total Quantity of Fish Delivered per Month","xaxis":{"domain":[0,1],"automargin":true,"title":"Month","tickvals":["February","March","April","May","June","July","August","September","October","November"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"Total Quantity (tons)"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["February","March","April","May","June","July","August","September","October","November"],"y":[1307,2321.125,2993.125,5004.125,5089.5,8811.625,18698.125,23255.375,29765.25,29016.5],"marker":{"color":"#800080","line":{"color":"rgba(31,119,180,1)"}},"type":"bar","error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div class="plotly html-widget html-fill-item" id="htmlwidget-d4bf05e60611b8e552d1" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-d4bf05e60611b8e552d1">{"x":{"visdat":{"3786c2e6bea":["function () ","plotlyVisDat"]},"cur_data":"3786c2e6bea","attrs":{"3786c2e6bea":{"x":{},"y":{},"marker":{"color":"#800080"},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"bar"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Total Quantity of Fish Delivered per Month","xaxis":{"domain":[0,1],"automargin":true,"title":"Month","tickvals":["February","March","April","May","June","July","August","September","October","November"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"Total Quantity (tons)"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["February","March","April","May","June","July","August","September","October","November"],"y":[1307,2321.125,2993.125,5004.125,5089.5,8811.625,18698.125,23255.375,29765.25,29016.5],"marker":{"color":"#800080","line":{"color":"rgba(31,119,180,1)"}},"type":"bar","error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <p>It is observed that total catch quantity shows increasing trend from beginning of the year to end of the year. Next, above chart will be further broken down by fish species to check any seasonality in fish species caught.</p>
@@ -833,8 +871,8 @@ Geodetic CRS:  WGS 84</code></pre>
 <span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="plotly html-widget html-fill-item" id="htmlwidget-fff62aaf1e20d49b27e3" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-fff62aaf1e20d49b27e3">{"x":{"data":[{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[2199.625,2475,4541.875,4786.75,7831,14750.375,22410,27217.75,23512.375],"x":[23799,23830,23860,23891,23921,23952,23983,24013,24044],"y":[121.5,518.125,462.25,302.75,980.625,3947.75,845.375,2547.5,5504.125],"text":["year_month: 2035-02-28<br />total_qty_tons:   121.500<br />fish_species: Beauvoir","year_month: 2035-03-31<br />total_qty_tons:   518.125<br />fish_species: Beauvoir","year_month: 2035-04-30<br />total_qty_tons:   462.250<br />fish_species: Beauvoir","year_month: 2035-05-31<br />total_qty_tons:   302.750<br />fish_species: Beauvoir","year_month: 2035-06-30<br />total_qty_tons:   980.625<br />fish_species: Beauvoir","year_month: 2035-07-31<br />total_qty_tons:  3947.750<br />fish_species: Beauvoir","year_month: 2035-08-31<br />total_qty_tons:   845.375<br />fish_species: Beauvoir","year_month: 2035-09-30<br />total_qty_tons:  2547.500<br />fish_species: Beauvoir","year_month: 2035-10-31<br />total_qty_tons:  5504.125<br />fish_species: Beauvoir"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(166,206,227,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Beauvoir","legendgroup":"Beauvoir","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[4329.875,4600.5,6625.625,13515.125,19567.75,23122.875,19309.125],"x":[23860,23891,23921,23952,23983,24013,24044],"y":[212,186.25,1205.375,1235.25,2842.25,4094.875,4203.25],"text":["year_month: 2035-04-30<br />total_qty_tons:   212.000<br />fish_species: Birdseye","year_month: 2035-05-31<br />total_qty_tons:   186.250<br />fish_species: Birdseye","year_month: 2035-06-30<br />total_qty_tons:  1205.375<br />fish_species: Birdseye","year_month: 2035-07-31<br />total_qty_tons:  1235.250<br />fish_species: Birdseye","year_month: 2035-08-31<br />total_qty_tons:  2842.250<br />fish_species: Birdseye","year_month: 2035-09-30<br />total_qty_tons:  4094.875<br />fish_species: Birdseye","year_month: 2035-10-31<br />total_qty_tons:  4203.250<br />fish_species: Birdseye"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(31,120,180,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Birdseye","legendgroup":"Birdseye","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[1871,2411.25,3973.25,3725.875,5035,7997.125,9568.75,10999.625,12879.875],"x":[23799,23830,23860,23891,23921,23952,23983,24013,24044],"y":[328.625,63.75,356.625,874.625,1590.625,5518,9999,12123.25,6429.25],"text":["year_month: 2035-02-28<br />total_qty_tons:   328.625<br />fish_species: Cod","year_month: 2035-03-31<br />total_qty_tons:    63.750<br />fish_species: Cod","year_month: 2035-04-30<br />total_qty_tons:   356.625<br />fish_species: Cod","year_month: 2035-05-31<br />total_qty_tons:   874.625<br />fish_species: Cod","year_month: 2035-06-30<br />total_qty_tons:  1590.625<br />fish_species: Cod","year_month: 2035-07-31<br />total_qty_tons:  5518.000<br />fish_species: Cod","year_month: 2035-08-31<br />total_qty_tons:  9999.000<br />fish_species: Cod","year_month: 2035-09-30<br />total_qty_tons: 12123.250<br />fish_species: Cod","year_month: 2035-10-31<br />total_qty_tons:  6429.250<br />fish_species: Cod"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(178,223,138,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Cod","legendgroup":"Cod","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[1855.25,1517,3052.625,2879.125,4189.875,7565,8259.625,8232.5,9769.125],"x":[23799,23830,23860,23891,23921,23952,23983,24013,24044],"y":[15.75,894.25,920.625,846.75,845.125,432.125,1309.125,2767.125,3110.75],"text":["year_month: 2035-02-28<br />total_qty_tons:    15.750<br />fish_species: Harland","year_month: 2035-03-31<br />total_qty_tons:   894.250<br />fish_species: Harland","year_month: 2035-04-30<br />total_qty_tons:   920.625<br />fish_species: Harland","year_month: 2035-05-31<br />total_qty_tons:   846.750<br />fish_species: Harland","year_month: 2035-06-30<br />total_qty_tons:   845.125<br />fish_species: Harland","year_month: 2035-07-31<br />total_qty_tons:   432.125<br />fish_species: Harland","year_month: 2035-08-31<br />total_qty_tons:  1309.125<br />fish_species: Harland","year_month: 2035-09-30<br />total_qty_tons:  2767.125<br />fish_species: Harland","year_month: 2035-10-31<br />total_qty_tons:  3110.750<br />fish_species: Harland"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(51,160,44,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Harland","legendgroup":"Harland","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[2931,2846.75,4060.375,7499.375,8197.125,9569.625],"x":[23860,23891,23921,23952,24013,24044],"y":[121.625,32.375,129.5,65.625,35.375,199.5],"text":["year_month: 2035-04-30<br />total_qty_tons:   121.625<br />fish_species: Helenaa","year_month: 2035-05-31<br />total_qty_tons:    32.375<br />fish_species: Helenaa","year_month: 2035-06-30<br />total_qty_tons:   129.500<br />fish_species: Helenaa","year_month: 2035-07-31<br />total_qty_tons:    65.625<br />fish_species: Helenaa","year_month: 2035-09-30<br />total_qty_tons:    35.375<br />fish_species: Helenaa","year_month: 2035-10-31<br />total_qty_tons:   199.500<br />fish_species: Helenaa"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(251,154,153,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Helenaa","legendgroup":"Helenaa","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709],"base":[7954.25,7401.25,7270.375],"x":[23983,24013,24044],"y":[305.375,795.875,2299.25],"text":["year_month: 2035-08-31<br />total_qty_tons:   305.375<br />fish_species: Offidiaa","year_month: 2035-09-30<br />total_qty_tons:   795.875<br />fish_species: Offidiaa","year_month: 2035-10-31<br />total_qty_tons:  2299.250<br />fish_species: Offidiaa"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(227,26,28,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Offidiaa","legendgroup":"Offidiaa","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[3728.375,5643.25,5108.625,6358.875],"x":[23921,23952,23983,24013],"y":[332,1856.125,2845.625,1042.375],"text":["year_month: 2035-06-30<br />total_qty_tons:   332.000<br />fish_species: Salmon","year_month: 2035-07-31<br />total_qty_tons:  1856.125<br />fish_species: Salmon","year_month: 2035-08-31<br />total_qty_tons:  2845.625<br />fish_species: Salmon","year_month: 2035-09-30<br />total_qty_tons:  1042.375<br />fish_species: Salmon"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(253,191,111,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Salmon","legendgroup":"Salmon","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[1505.625,1799.5,2229.375,3026.125,4248.875,4105.625,4503.875,4487.375],"x":[23830,23860,23891,23921,23952,23983,24013,24044],"y":[11.375,1131.5,617.375,702.25,1394.375,1003,1855,2783],"text":["year_month: 2035-03-31<br />total_qty_tons:    11.375<br />fish_species: Sockfish","year_month: 2035-04-30<br />total_qty_tons:  1131.500<br />fish_species: Sockfish","year_month: 2035-05-31<br />total_qty_tons:   617.375<br />fish_species: Sockfish","year_month: 2035-06-30<br />total_qty_tons:   702.250<br />fish_species: Sockfish","year_month: 2035-07-31<br />total_qty_tons:  1394.375<br />fish_species: Sockfish","year_month: 2035-08-31<br />total_qty_tons:  1003.000<br />fish_species: Sockfish","year_month: 2035-09-30<br />total_qty_tons:  1855.000<br />fish_species: Sockfish","year_month: 2035-10-31<br />total_qty_tons:  2783.000<br />fish_species: Sockfish"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(255,127,0,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Sockfish","legendgroup":"Sockfish","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709],"base":[4234.125,4398],"x":[24013,24044],"y":[269.75,89.375],"text":["year_month: 2035-09-30<br />total_qty_tons:   269.750<br />fish_species: Tuna","year_month: 2035-10-31<br />total_qty_tons:    89.375<br />fish_species: Tuna"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(202,178,214,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Tuna","legendgroup":"Tuna","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[0,0,0,0,0,0,0,0,0,0],"x":[23771,23799,23830,23860,23891,23921,23952,23983,24013,24044],"y":[1307,1855.25,1505.625,1799.5,2229.375,3026.125,4248.875,4105.625,4234.125,4398],"text":["year_month: 2035-01-31<br />total_qty_tons:  1307.000<br />fish_species: Wrasse","year_month: 2035-02-28<br />total_qty_tons:  1855.250<br />fish_species: Wrasse","year_month: 2035-03-31<br />total_qty_tons:  1505.625<br />fish_species: Wrasse","year_month: 2035-04-30<br />total_qty_tons:  1799.500<br />fish_species: Wrasse","year_month: 2035-05-31<br />total_qty_tons:  2229.375<br />fish_species: Wrasse","year_month: 2035-06-30<br />total_qty_tons:  3026.125<br />fish_species: Wrasse","year_month: 2035-07-31<br />total_qty_tons:  4248.875<br />fish_species: Wrasse","year_month: 2035-08-31<br />total_qty_tons:  4105.625<br />fish_species: Wrasse","year_month: 2035-09-30<br />total_qty_tons:  4234.125<br />fish_species: Wrasse","year_month: 2035-10-31<br />total_qty_tons:  4398.000<br />fish_species: Wrasse"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(106,61,154,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Wrasse","legendgroup":"Wrasse","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.762557077625573,"r":7.3059360730593621,"b":75.251141552511427,"l":54.794520547945211},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Total Quantity of Fish Delivered per Month (Breakdown by Fish Species)","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[23743.490000000002,24071.509999999998],"tickmode":"array","ticktext":["Feb 2035","Mar 2035","Apr 2035","May 2035","Jun 2035","Jul 2035","Aug 2035","Sep 2035","Oct 2035","Nov 2035"],"tickvals":[23772,23800,23831,23861,23892,23922,23953,23984,24014,24045],"categoryorder":"array","categoryarray":["Feb 2035","Mar 2035","Apr 2035","May 2035","Jun 2035","Jul 2035","Aug 2035","Sep 2035","Oct 2035","Nov 2035"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-90,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Month","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1488.2625,31253.512500000001],"tickmode":"array","ticktext":["0","10000","20000","30000"],"tickvals":[0,10000,20000,30000],"categoryorder":"array","categoryarray":["0","10000","20000","30000"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Total Quantity (tons)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"Fish Species","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"b9e45eb02bcd":{"x":{},"y":{},"fill":{},"type":"bar"}},"cur_data":"b9e45eb02bcd","visdat":{"b9e45eb02bcd":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div class="plotly html-widget html-fill-item" id="htmlwidget-014f3426b33e4655a0b1" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-014f3426b33e4655a0b1">{"x":{"data":[{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[2199.625,2475,4541.875,4786.75,7831,14750.375,22410,27217.75,23512.375],"x":[23799,23830,23860,23891,23921,23952,23983,24013,24044],"y":[121.5,518.125,462.25,302.75,980.625,3947.75,845.375,2547.5,5504.125],"text":["year_month: 2035-02-28<br />total_qty_tons:   121.500<br />fish_species: Beauvoir","year_month: 2035-03-31<br />total_qty_tons:   518.125<br />fish_species: Beauvoir","year_month: 2035-04-30<br />total_qty_tons:   462.250<br />fish_species: Beauvoir","year_month: 2035-05-31<br />total_qty_tons:   302.750<br />fish_species: Beauvoir","year_month: 2035-06-30<br />total_qty_tons:   980.625<br />fish_species: Beauvoir","year_month: 2035-07-31<br />total_qty_tons:  3947.750<br />fish_species: Beauvoir","year_month: 2035-08-31<br />total_qty_tons:   845.375<br />fish_species: Beauvoir","year_month: 2035-09-30<br />total_qty_tons:  2547.500<br />fish_species: Beauvoir","year_month: 2035-10-31<br />total_qty_tons:  5504.125<br />fish_species: Beauvoir"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(166,206,227,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Beauvoir","legendgroup":"Beauvoir","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[4329.875,4600.5,6625.625,13515.125,19567.75,23122.875,19309.125],"x":[23860,23891,23921,23952,23983,24013,24044],"y":[212,186.25,1205.375,1235.25,2842.25,4094.875,4203.25],"text":["year_month: 2035-04-30<br />total_qty_tons:   212.000<br />fish_species: Birdseye","year_month: 2035-05-31<br />total_qty_tons:   186.250<br />fish_species: Birdseye","year_month: 2035-06-30<br />total_qty_tons:  1205.375<br />fish_species: Birdseye","year_month: 2035-07-31<br />total_qty_tons:  1235.250<br />fish_species: Birdseye","year_month: 2035-08-31<br />total_qty_tons:  2842.250<br />fish_species: Birdseye","year_month: 2035-09-30<br />total_qty_tons:  4094.875<br />fish_species: Birdseye","year_month: 2035-10-31<br />total_qty_tons:  4203.250<br />fish_species: Birdseye"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(31,120,180,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Birdseye","legendgroup":"Birdseye","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[1871,2411.25,3973.25,3725.875,5035,7997.125,9568.75,10999.625,12879.875],"x":[23799,23830,23860,23891,23921,23952,23983,24013,24044],"y":[328.625,63.75,356.625,874.625,1590.625,5518,9999,12123.25,6429.25],"text":["year_month: 2035-02-28<br />total_qty_tons:   328.625<br />fish_species: Cod","year_month: 2035-03-31<br />total_qty_tons:    63.750<br />fish_species: Cod","year_month: 2035-04-30<br />total_qty_tons:   356.625<br />fish_species: Cod","year_month: 2035-05-31<br />total_qty_tons:   874.625<br />fish_species: Cod","year_month: 2035-06-30<br />total_qty_tons:  1590.625<br />fish_species: Cod","year_month: 2035-07-31<br />total_qty_tons:  5518.000<br />fish_species: Cod","year_month: 2035-08-31<br />total_qty_tons:  9999.000<br />fish_species: Cod","year_month: 2035-09-30<br />total_qty_tons: 12123.250<br />fish_species: Cod","year_month: 2035-10-31<br />total_qty_tons:  6429.250<br />fish_species: Cod"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(178,223,138,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Cod","legendgroup":"Cod","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[1855.25,1517,3052.625,2879.125,4189.875,7565,8259.625,8232.5,9769.125],"x":[23799,23830,23860,23891,23921,23952,23983,24013,24044],"y":[15.75,894.25,920.625,846.75,845.125,432.125,1309.125,2767.125,3110.75],"text":["year_month: 2035-02-28<br />total_qty_tons:    15.750<br />fish_species: Harland","year_month: 2035-03-31<br />total_qty_tons:   894.250<br />fish_species: Harland","year_month: 2035-04-30<br />total_qty_tons:   920.625<br />fish_species: Harland","year_month: 2035-05-31<br />total_qty_tons:   846.750<br />fish_species: Harland","year_month: 2035-06-30<br />total_qty_tons:   845.125<br />fish_species: Harland","year_month: 2035-07-31<br />total_qty_tons:   432.125<br />fish_species: Harland","year_month: 2035-08-31<br />total_qty_tons:  1309.125<br />fish_species: Harland","year_month: 2035-09-30<br />total_qty_tons:  2767.125<br />fish_species: Harland","year_month: 2035-10-31<br />total_qty_tons:  3110.750<br />fish_species: Harland"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(51,160,44,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Harland","legendgroup":"Harland","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[2931,2846.75,4060.375,7499.375,8197.125,9569.625],"x":[23860,23891,23921,23952,24013,24044],"y":[121.625,32.375,129.5,65.625,35.375,199.5],"text":["year_month: 2035-04-30<br />total_qty_tons:   121.625<br />fish_species: Helenaa","year_month: 2035-05-31<br />total_qty_tons:    32.375<br />fish_species: Helenaa","year_month: 2035-06-30<br />total_qty_tons:   129.500<br />fish_species: Helenaa","year_month: 2035-07-31<br />total_qty_tons:    65.625<br />fish_species: Helenaa","year_month: 2035-09-30<br />total_qty_tons:    35.375<br />fish_species: Helenaa","year_month: 2035-10-31<br />total_qty_tons:   199.500<br />fish_species: Helenaa"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(251,154,153,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Helenaa","legendgroup":"Helenaa","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709],"base":[7954.25,7401.25,7270.375],"x":[23983,24013,24044],"y":[305.375,795.875,2299.25],"text":["year_month: 2035-08-31<br />total_qty_tons:   305.375<br />fish_species: Offidiaa","year_month: 2035-09-30<br />total_qty_tons:   795.875<br />fish_species: Offidiaa","year_month: 2035-10-31<br />total_qty_tons:  2299.250<br />fish_species: Offidiaa"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(227,26,28,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Offidiaa","legendgroup":"Offidiaa","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[3728.375,5643.25,5108.625,6358.875],"x":[23921,23952,23983,24013],"y":[332,1856.125,2845.625,1042.375],"text":["year_month: 2035-06-30<br />total_qty_tons:   332.000<br />fish_species: Salmon","year_month: 2035-07-31<br />total_qty_tons:  1856.125<br />fish_species: Salmon","year_month: 2035-08-31<br />total_qty_tons:  2845.625<br />fish_species: Salmon","year_month: 2035-09-30<br />total_qty_tons:  1042.375<br />fish_species: Salmon"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(253,191,111,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Salmon","legendgroup":"Salmon","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[1505.625,1799.5,2229.375,3026.125,4248.875,4105.625,4503.875,4487.375],"x":[23830,23860,23891,23921,23952,23983,24013,24044],"y":[11.375,1131.5,617.375,702.25,1394.375,1003,1855,2783],"text":["year_month: 2035-03-31<br />total_qty_tons:    11.375<br />fish_species: Sockfish","year_month: 2035-04-30<br />total_qty_tons:  1131.500<br />fish_species: Sockfish","year_month: 2035-05-31<br />total_qty_tons:   617.375<br />fish_species: Sockfish","year_month: 2035-06-30<br />total_qty_tons:   702.250<br />fish_species: Sockfish","year_month: 2035-07-31<br />total_qty_tons:  1394.375<br />fish_species: Sockfish","year_month: 2035-08-31<br />total_qty_tons:  1003.000<br />fish_species: Sockfish","year_month: 2035-09-30<br />total_qty_tons:  1855.000<br />fish_species: Sockfish","year_month: 2035-10-31<br />total_qty_tons:  2783.000<br />fish_species: Sockfish"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(255,127,0,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Sockfish","legendgroup":"Sockfish","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709],"base":[4234.125,4398],"x":[24013,24044],"y":[269.75,89.375],"text":["year_month: 2035-09-30<br />total_qty_tons:   269.750<br />fish_species: Tuna","year_month: 2035-10-31<br />total_qty_tons:    89.375<br />fish_species: Tuna"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(202,178,214,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Tuna","legendgroup":"Tuna","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709,25.19999999999709],"base":[0,0,0,0,0,0,0,0,0,0],"x":[23771,23799,23830,23860,23891,23921,23952,23983,24013,24044],"y":[1307,1855.25,1505.625,1799.5,2229.375,3026.125,4248.875,4105.625,4234.125,4398],"text":["year_month: 2035-01-31<br />total_qty_tons:  1307.000<br />fish_species: Wrasse","year_month: 2035-02-28<br />total_qty_tons:  1855.250<br />fish_species: Wrasse","year_month: 2035-03-31<br />total_qty_tons:  1505.625<br />fish_species: Wrasse","year_month: 2035-04-30<br />total_qty_tons:  1799.500<br />fish_species: Wrasse","year_month: 2035-05-31<br />total_qty_tons:  2229.375<br />fish_species: Wrasse","year_month: 2035-06-30<br />total_qty_tons:  3026.125<br />fish_species: Wrasse","year_month: 2035-07-31<br />total_qty_tons:  4248.875<br />fish_species: Wrasse","year_month: 2035-08-31<br />total_qty_tons:  4105.625<br />fish_species: Wrasse","year_month: 2035-09-30<br />total_qty_tons:  4234.125<br />fish_species: Wrasse","year_month: 2035-10-31<br />total_qty_tons:  4398.000<br />fish_species: Wrasse"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(106,61,154,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Wrasse","legendgroup":"Wrasse","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.762557077625573,"r":7.3059360730593621,"b":75.251141552511427,"l":54.794520547945211},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Total Quantity of Fish Delivered per Month (Breakdown by Fish Species)","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[23743.490000000002,24071.509999999998],"tickmode":"array","ticktext":["Feb 2035","Mar 2035","Apr 2035","May 2035","Jun 2035","Jul 2035","Aug 2035","Sep 2035","Oct 2035","Nov 2035"],"tickvals":[23772,23800,23831,23861,23892,23922,23953,23984,24014,24045],"categoryorder":"array","categoryarray":["Feb 2035","Mar 2035","Apr 2035","May 2035","Jun 2035","Jul 2035","Aug 2035","Sep 2035","Oct 2035","Nov 2035"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-90,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Month","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-1488.2625,31253.512500000001],"tickmode":"array","ticktext":["0","10000","20000","30000"],"tickvals":[0,10000,20000,30000],"categoryorder":"array","categoryarray":["0","10000","20000","30000"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Total Quantity (tons)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"Fish Species","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"3784b22870":{"x":{},"y":{},"fill":{},"type":"bar"}},"cur_data":"3784b22870","visdat":{"3784b22870":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <div style="border: 2px dotted black; background-color: #e6e6fa; padding: 15px; margin: 10px 0; border-radius: 5px; display: flex; align-items: center;">
@@ -844,8 +882,8 @@ Geodetic CRS:  WGS 84</code></pre>
 </section>
 <section id="visualisations-for-question-2" class="level2">
 <h2 class="anchored" data-anchor-id="visualisations-for-question-2">3.2 Visualisations for Question 2</h2>
-<section id="vessel-movement" class="level3">
-<h3 class="anchored" data-anchor-id="vessel-movement">3.2.1 Vessel Movement</h3>
+<section id="understanding-vessel-movement" class="level3">
+<h3 class="anchored" data-anchor-id="understanding-vessel-movement">3.2.1 Understanding Vessel Movement</h3>
 <p>Transponder ping data can provide the locations the vessels from shipping company has been to or in the vicinity and give insight whether vessels may be conducting illegal fishing activities in non-fishing areas. In this section, we will focus only on fishing vessels to understand fishing activities.</p>
 <p>Zoom into SouthSeafood Express Corp’s vessel movement to uncover any suspicious behavior.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
@@ -951,11 +989,24 @@ Geodetic CRS:  WGS 84</code></pre>
 </details>
 </div>
 <p>Below visualization shows Geo-Temporal Patterns of the SouthSeafood Express Corp Vessels.</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">snappersnatcher7be</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">roachrobberdb6</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">Code</a></li></ul>
-<div class="tab-content">
-<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>vessel_trajectory_selected2 <span class="ot">&lt;-</span> vessel_trajectory <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(vessel_id <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"roachrobberdb6"</span>, <span class="st">"snappersnatcher7be"</span>))</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> OceanusGeography) <span class="sc">+</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> vessel_trajectory_selected2, </span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>          <span class="fu">aes</span>(<span class="at">color =</span> <span class="fu">factor</span>(vessel_id)), </span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> OceanusLocations_df, </span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> XCOORD, <span class="at">y =</span> YCOORD, <span class="at">label =</span> Name), </span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">3</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Trajectories of SouthSeafood Express Corp Vessels"</span>, </span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="st">"Longitude"</span>, <span class="at">y =</span> <span class="st">"Latitude"</span>, <span class="at">color =</span> <span class="st">"ID"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -964,8 +1015,11 @@ Geodetic CRS:  WGS 84</code></pre>
 </div>
 </div>
 </div>
-</div>
-<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p>It can be observed from above visualizations that snappersnatcher7be of SouthSeafood Express Corp is the vessel which had transponder pings around Ghoti Preserve which is not meant for commercial fishing. Next, SouthSeafood Express Corp Vessels routes above will be compared with randomly chosen fishing vessel routes to uncover any anomaly in fishing route.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">lobsterlooterd41</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">wavewarrior5d7</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">spanishmackerelmaster037</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false">redfishraider677</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-5" role="tab" aria-controls="tabset-2-5" aria-selected="false">herringhunter30b</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-6" role="tab" aria-controls="tabset-2-6" aria-selected="false">Code</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -976,51 +1030,18 @@ Geodetic CRS:  WGS 84</code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">### snappersnatcher7be</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>vessel_trajectory_selected1 <span class="ot">&lt;-</span> vessel_trajectory <span class="sc">%&gt;%</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(vessel_id <span class="sc">==</span> <span class="st">"snappersnatcher7be"</span>)</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> OceanusGeography) <span class="sc">+</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> vessel_trajectory_selected1, </span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>          <span class="fu">aes</span>(<span class="at">color =</span> <span class="fu">factor</span>(vessel_id)), </span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> OceanusLocations_df, </span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> XCOORD, <span class="at">y =</span> YCOORD, <span class="at">label =</span> Name), </span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">3</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Trajectories of snappersnatcher7be"</span>, </span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="st">"Longitude"</span>, <span class="at">y =</span> <span class="st">"Latitude"</span>, <span class="at">color =</span> <span class="st">"ID"</span>)</span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="do">### roachrobberdb6</span></span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>vessel_trajectory_selected2 <span class="ot">&lt;-</span> vessel_trajectory <span class="sc">%&gt;%</span></span>
-<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(vessel_id <span class="sc">==</span> <span class="st">"roachrobberdb6"</span>)</span>
-<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> OceanusGeography) <span class="sc">+</span></span>
-<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> vessel_trajectory_selected2, </span>
-<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>          <span class="fu">aes</span>(<span class="at">color =</span> <span class="fu">factor</span>(vessel_id)), </span>
-<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> OceanusLocations_df, </span>
-<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> XCOORD, <span class="at">y =</span> YCOORD, <span class="at">label =</span> Name), </span>
-<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">3</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Trajectories of snappersnatcher7be"</span>, </span>
-<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="st">"Longitude"</span>, <span class="at">y =</span> <span class="st">"Latitude"</span>, <span class="at">color =</span> <span class="st">"ID"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
 </div>
 </div>
-<p>It can be observed from above visualizations that snappersnatcher7be of SouthSeafood Express Corp is the vessel which had transponder pings around Ghoti Preserve which is not meant for commercial fishing. Next, SouthSeafood Express Corp Vessels routes above will be compared with randomly chosen fishing vessel routes to uncover any anomaly in fishing route.</p>
-<div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">lobsterlooterd41</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">wavewarrior5d7</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false">spanishmackerelmaster037</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-4" role="tab" aria-controls="tabset-3-4" aria-selected="false">redfishraider677</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-5" role="tab" aria-controls="tabset-3-5" aria-selected="false">herringhunter30b</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-6" role="tab" aria-controls="tabset-3-6" aria-selected="false">Code</a></li></ul>
-<div class="tab-content">
-<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -1031,7 +1052,7 @@ Geodetic CRS:  WGS 84</code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -1042,7 +1063,7 @@ Geodetic CRS:  WGS 84</code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-3-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-3-tab">
+<div id="tabset-2-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-5-tab">
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -1053,29 +1074,7 @@ Geodetic CRS:  WGS 84</code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-3-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-4-tab">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<div id="tabset-3-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-5-tab">
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<div id="tabset-3-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-6-tab">
+<div id="tabset-2-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-6-tab">
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1167,8 +1166,8 @@ Geodetic CRS:  WGS 84</code></pre>
 <p><img src="ship_1826384.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"> <strong>Observation:</strong> We can see from the routes of 5 random vessels that except from wavewarrior5d7, all the other vessels have been in areas of Ecological Preserves such as Ghoti Preserve and Nemo Reef which are not meant for commercial fishing. This suggests there may be many fishing companies that are engaging in illegal fishing practices.</p>
 </div>
 </section>
-<section id="understanding-when-southseafood-express-corp-vessels-performed-their-illegal-fishing" class="level3">
-<h3 class="anchored" data-anchor-id="understanding-when-southseafood-express-corp-vessels-performed-their-illegal-fishing">3.2.2 Understanding when SouthSeafood Express Corp vessels performed their illegal fishing</h3>
+<section id="understanding-when-southseafood-performed-illegal-fishing" class="level3">
+<h3 class="anchored" data-anchor-id="understanding-when-southseafood-performed-illegal-fishing">3.2.2 Understanding When SouthSeafood Performed Illegal Fishing</h3>
 <p>To understand when SouthSeafood Express Corp vessels performed their illegal fishing, let’s take a look at the locations that SouthSeafood Express Corp vessels frequently visited. This can be done by plotting transponder ping data on calendar map.</p>
 <div class="cell">
 <details class="code-fold">
@@ -1203,7 +1202,7 @@ Geodetic CRS:  WGS 84</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1231,7 +1230,7 @@ Geodetic CRS:  WGS 84</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Take-home_Ex03_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1244,6 +1243,11 @@ Geodetic CRS:  WGS 84</code></pre>
 </section>
 <section id="conclusion" class="level1">
 <h1>4. Conclusion</h1>
+<ul>
+<li><p>By connecting possible cargo to vessels and their company, SouthSeafood Express Corp showed anomaly in number of fish species caught which is lower than all other fishing companies which suggests potential non-reporting/ misreporting the actual catch from fishing to officials.</p></li>
+<li><p>Investigating the SouthSeafood Express Corp Vessels’ fishing route based on transponder ping data, suspicious pattern is discovered which shows vessel were in the area of Ghoti Preserve which is not meant for commercial fishing. Further comparison of this to other vessels in Oceanus showed that many companies may also be engaging in illegal fishing activities since they have been in areas of Ecological Preserves such as Ghoti Preserve and Nemo Reef which are Ecological preserves and not designated for commercial fishing.</p></li>
+<li><p>Transponder ping Frequency per location and total dwell time per day at different locations show that SouthSeafood Express Corp may have indeed performed illegal fishing activities at Ghoti Preserve since long dwell times were observed in this area similar or higher than dwell times spent by SouthSeafood’s vessel at commercial fishing spots like Wrasse Beds and Cod Table.</p></li>
+</ul>
 </section>
 <section id="references" class="level1">
 <h1>5. References</h1>
