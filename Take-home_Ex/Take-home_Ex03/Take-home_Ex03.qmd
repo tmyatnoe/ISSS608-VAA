@@ -123,6 +123,7 @@ mc2_nodes <- mc2_nodes %>%
          "raw_source" = "_raw_source",
          "algorithm" = "_algorithm")
 
+# Tidy column contents
 mc2_nodes <- mc2_nodes %>%
   mutate(Activities = gsub("c[(]", "", Activities)) %>% 
   mutate(Activities = gsub("\"", "", Activities)) %>%
@@ -196,6 +197,7 @@ glimpse(mc2_nodes)
 
 ### 2.2.3 Processing Transponder Ping Data
 
+Below code vessel type and company to transponder ping data and filter by fishing vessels only.
 ```{r}
 # Rename target column as vessel_id
 E_TransponderPing <- E_TransponderPing %>%
@@ -233,10 +235,10 @@ write_rds(OceanusLocations, "data/rds/OceanusLocations.rds")
 
 ### 3.1.1 Delivery Content (Fish Species)
 
-First, we need to associate Cargo in delivery doc to fish species info using Transaction and Fish Nodes data.
+First, we need to associate Cargo in delivery doc to fish species and port city info using Transaction, city and Fish Nodes data.
 
 ```{r}
-# Extract Cargo to Fish data from Transaction Event data
+# Extract Cargo to Fish relation data from Transaction Event data
 Cargo_to_Fish <- E_Tx %>%
   filter(target %in% N_fish$fish_id) %>% select(source, target)
 
@@ -251,6 +253,18 @@ N_Delivery_doc <- N_Delivery_doc %>%
 # Rename Target Column in N_Delivery_doc to Fish Id
 N_Delivery_doc <- N_Delivery_doc %>% 
   rename(fish_id = target)
+
+# Extract Cargo to Port relation data from Transaction Event data
+Cargo_to_City <- E_Tx %>%
+  filter(target %in% NL_City$city_id) %>% select(source, target)
+
+# Match Cargo Id in delivery doc to fish Id from Transaction data
+N_Delivery_doc <- N_Delivery_doc %>%
+  left_join(Cargo_to_City, by = c("cargo_id" = "source"))
+
+# Rename Target Column in N_Delivery_doc to Port
+N_Delivery_doc <- N_Delivery_doc %>% 
+  rename(port = target)
 ```
 
 Next, extract date only from time column of transponder data.
@@ -261,13 +275,13 @@ E_Tping_Fishing <- E_Tping_Fishing %>%
   mutate(date_only = as.Date(time))
 ```
 
-Connect possible cargo to vessels using date as connection.
+Connect possible cargo (from delivery doc) to vessels (transponder ping data) using date as connection. This will give probable cargo delivered by each vessel.
 
 ```{r}
 # Merge the datasets based on the date
 Tping_to_Delivery <- E_Tping_Fishing %>%
   filter(source %in% NL_City$city_id) %>%
-  left_join(N_Delivery_doc %>% select("deliver_date","cargo_id", "qty_tons", "fish_id", "fish_species"), by = c("date_only" = "deliver_date"))
+  left_join(N_Delivery_doc %>% select("deliver_date","port","cargo_id", "qty_tons", "fish_id", "fish_species"), by = c("date_only" = "deliver_date", "source" = "port"))
 
 ```
 
@@ -337,7 +351,7 @@ p1
 ```
 
 ::: {style="border: 2px dotted black; background-color: #caf0f8; padding: 15px; margin: 10px 0; border-radius: 5px; display: flex; align-items: center;"}
-<img src="shark_4864506.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> **Observation:** It is observed that SouthSeafood Express Corp's catch content has fewer types of fish species comparing to rest of the companies which catch at least 8-9 species. SouthSeafood Express Corp's catch content shows 5 species of fish namely: Wrasse, Sockfish, Harland, Cod and Beauvoir. It is abnormal that SouthSeafood Express Corp is the only company with lowest number of fish species in the catch content while other companies catch at least 8-9 species. This observation calls for further deep dive in catch content and delivery document of SouthSeafood Express Corp since low catch content may indicate non-reporting/ misreporting the actual catch from fishing to officials which is a form of Illegal, unreported and unregulated (IUU) fishing.
+<img src="shark_4864506.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> **Observation:** It is observed that SouthSeafood Express Corp's catch content has fewer types of fish species comparing to majority of the companies which catch at least 8 species. SouthSeafood Express Corp's catch content shows 5 species of fish namely: Wrasse, Sockfish, Harland, Cod and Beauvoir. This observation calls for further deep dive in catch content and delivery document of SouthSeafood Express Corp since low catch content may indicate non-reporting/ misreporting the actual catch from fishing to officials which is a form of Illegal, unreported and unregulated (IUU) fishing.
 :::
 
 ### 3.1.2 Seasonal Trend in Delivery Content
@@ -803,7 +817,7 @@ ggplot(dwell, aes(x = date_only, y = total_dwell, color = vessel_id)) +
 
 # 4. Conclusion
 
--   By connecting possible cargo to vessels and their company, SouthSeafood Express Corp showed anomaly in number of fish species caught which is lower than all other fishing companies which suggests potential non-reporting/ misreporting the actual catch from fishing to officials.
+-   By connecting possible cargo to vessels and their company, SouthSeafood Express Corp showed anomaly in number of fish species caught which is lower than majority of other fishing companies which suggests potential non-reporting/ misreporting the actual catch from fishing to officials.
 
 -   Investigating the SouthSeafood Express Corp Vessels' fishing route based on transponder ping data, suspicious pattern is discovered which shows vessel were in the area of Ghoti Preserve which is not meant for commercial fishing. Further comparison of this to other vessels in Oceanus showed that many companies may also be engaging in illegal fishing activities since they have been in areas of Ecological Preserves such as Ghoti Preserve and Nemo Reef which are Ecological preserves and not designated for commercial fishing.
 
