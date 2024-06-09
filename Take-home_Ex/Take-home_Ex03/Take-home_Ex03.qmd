@@ -40,7 +40,7 @@ This exercise will be based on **Mini-Challenge 2: [MC2](https://vast-challenge.
 ## 2.1 Installing and loading the required libraries
 
 | Package                                                                         | Description                                                                                                                           |
-|-------------------------|-----------------------------------------------|
+|-------------------------|----------------------------------------------|
 | [jsonlite](https://cran.r-project.org/web/packages/jsonlite/index.html)         | Fast JSON parser and generator, optimized for statistical data and the web. Offers simple, flexible tools for working with JSON in R. |
 | [tidyverse](https://www.tidyverse.org/)                                         | Used for data import, tidying, manipulation, and data visualization. Packages like readr, dplyr, lubridate are part of tidyverse.     |
 | [igraph](https://igraph.org/)                                                   | Used for network analysis.                                                                                                            |
@@ -352,7 +352,7 @@ p1
 ```
 
 ::: {style="border: 2px dotted black; background-color: #caf0f8; padding: 15px; margin: 10px 0; border-radius: 5px; display: flex; align-items: center;"}
-<img src="shark_4864506.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> **Observation:** It is observed that SouthSeafood Express Corp's catch content has fewer types of fish species comparing to majority of the companies which catch at least 8 species. SouthSeafood Express Corp's catch content shows 5 species of fish namely: Wrasse, Sockfish, Harland, Cod and Beauvoir. This observation calls for further deep dive in catch content and delivery document of SouthSeafood Express Corp since low catch content may indicate non-reporting/ misreporting the actual catch from fishing to officials which is a form of Illegal, unreported and unregulated (IUU) fishing.
+<img src="shark_4864506.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> **Observation:** It is observed that SouthSeafood Express Corp's catch content has fewer types of fish species comparing to majority of the companies which catch at least 8 species. SouthSeafood Express Corp's catch content shows 5 species of fish namely: Wrasse, Sockfish, Harland, Cod and Beauvoir. This observation calls for further deep dive in catch content and delivery document of SouthSeafood Express Corp since low catch content may indicate non-reporting/ misreporting the actual catch from fishing to officials or tanshipment which are a form of Illegal, unreported and unregulated (IUU) fishing.
 :::
 
 ### 3.1.2 Seasonal Trend in Delivery Content
@@ -779,6 +779,22 @@ ggplot() +
 <img src="ship_1826384.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> **Observation:** We can see from the routes of 5 random vessels that except from wavewarrior5d7, all the other vessels have been in areas of Ecological Preserves such as Ghoti Preserve and Nemo Reef which are not meant for commercial fishing. This suggests there may be many fishing companies that are engaging in illegal fishing practices.
 :::
 
+```{r}
+# Filter locations excluding Cities
+E_Tping_Fishing_no_city <- E_Tping_Fishing %>% 
+  filter(!(source %in% NL_City$city_id))
+
+# Create the plot
+ggplot(E_Tping_Fishing_no_city, aes(x=source)) +
+  geom_bar(fill="skyblue") +
+  labs(title="Number of Pings Per Locations", x="Source", y="Number of Pings") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 0.5))
+```
+
+::: {style="border: 2px dotted black; background-color: #caf0f8; padding: 15px; margin: 10px 0; border-radius: 5px; display: flex; align-items: center;"}
+<img src="ship_1826384.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> **Observation:** Above plot give more insights into other potential illegal fishing activitis area apart from Ghoti Preserve. Based on all fishing vessels movement, there are reasonably high transponder pings detected at Nemo Reef, Exit East and Nav 2 even though they are not commercial fishing grounds. Nemo Reef (Fish present: Wrasse, Tuna, Birdseye, Beauvoir, Helenaa) and Exit East (Deep Sea Fishing) are potential illegal fishing area since there are fish present. Presence of vessels in these areas calls for further investigation into potential fishing in unauthorized area. Nav2 is closed to Ghoti Preserve and authorities should investigate this area as well for potential unauthorized fishing.
+:::
+
 ### 3.2.2 Understanding When SouthSeafood Performed Illegal Fishing
 
 To understand when SouthSeafood Express Corp vessels performed their illegal fishing, let's take a look at the locations that SouthSeafood Express Corp vessels frequently visited. This can be done by plotting transponder ping data on calendar map.
@@ -838,13 +854,15 @@ ggplot(dwell, aes(x = date_only, y = total_dwell, color = vessel_id)) +
 
 # 4. Conclusion
 
--   By connecting possible cargo to vessels and their company, SouthSeafood Express Corp showed anomaly in number of fish species caught which is lower than majority of other fishing companies which suggests potential **non-reporting/ misreporting the actual catch** from fishing to officials.
+-   By connecting possible cargo to vessels and their company, SouthSeafood Express Corp showed anomaly in number of fish species caught which is lower than majority of other fishing companies which suggests potential **non-reporting/ misreporting the actual catch** from fishing to officials or **transhipment**.
 
 -   From total tonnes of fish delivered to ports plots by month, general increasing trend is observed in the total fish caught and delivered to port from February to November. There is significant increase in cod fish catches stating from August. This may be a sign of illegal fishing which is **taking fish in excess quota** or this could be attributed to starting of best time for cod fishing which is winter.
 
 -   Investigating the SouthSeafood Express Corp Vessels' fishing route based on transponder ping data, suspicious pattern is discovered which shows vessels were in the area of **Ghoti Preserve which is not meant for commercial fishing.** Further comparison of this to other vessels in Oceanus showed that many companies may also be engaging in illegal fishing activities since they have been in areas of Ecological Preserves such as Ghoti Preserve and Nemo Reef which are not designated for commercial fishing.
 
--   Transponder ping Frequency per location and total dwell time per day at different locations show that SouthSeafood Express Corp may have indeed performed **illegal fishing activities at Ghoti Preserve** since long dwell times were observed in this area similar or higher than dwell times spent by SouthSeafood's vessel at commercial fishing spots like Wrasse Beds and Cod Table.
+-   Based on all fishing vessels movement, there are reasonably high transponder pings detected at Nemo Reef, Exit East and Nav 2 even though they are not commercial fishing grounds. Nemo Reef (Fish present: Wrasse, Tuna, Birdseye, Beauvoir, Helenaa) and Exit East (Deep Sea Fishing) are potential illegal fishing area since there are fish present. Presence of vessels in these areas calls for further investigation into **potential fishing in unauthorized area**. Nav2 is closed to Ghoti Preserve and authorities should investigate this area as well for potential unauthorized fishing.
+
+-   Transponder ping Frequency per location and total dwell time per day at different locations show that SouthSeafood Express Corp may have indeed performed **illegal fishing activities at Ghoti Preserve** since long dwell times were observed in this area similar or higher than dwell times spent by SouthSeafood's vessel at commercial fishing spots like Wrasse Beds and Cod Table. High dwell time at Ghoti Preserve were observed in February time frame and it is highly likely that illegal fishing activities were performed during this time period in Ghoti Preserve.
 
 # 5. References
 
