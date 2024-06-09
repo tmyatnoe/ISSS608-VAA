@@ -839,11 +839,13 @@ ggplot(dwell, aes(x = date_only, y = total_dwell, color = vessel_id)) +
 
 -   By connecting possible cargo to vessels and their company, SouthSeafood Express Corp showed anomaly in number of fish species caught which is lower than majority of other fishing companies which suggests potential non-reporting/ misreporting the actual catch from fishing to officials.
 
--   Investigating the SouthSeafood Express Corp Vessels' fishing route based on transponder ping data, suspicious pattern is discovered which shows vessel were in the area of Ghoti Preserve which is not meant for commercial fishing. Further comparison of this to other vessels in Oceanus showed that many companies may also be engaging in illegal fishing activities since they have been in areas of Ecological Preserves such as Ghoti Preserve and Nemo Reef which are Ecological preserves and not designated for commercial fishing.
+-   Investigating the SouthSeafood Express Corp Vessels' fishing route based on transponder ping data, suspicious pattern is discovered which shows vessels were in the area of Ghoti Preserve which is not meant for commercial fishing. Further comparison of this to other vessels in Oceanus showed that many companies may also be engaging in illegal fishing activities since they have been in areas of Ecological Preserves such as Ghoti Preserve and Nemo Reef which are not designated for commercial fishing.
 
 -   Transponder ping Frequency per location and total dwell time per day at different locations show that SouthSeafood Express Corp may have indeed performed illegal fishing activities at Ghoti Preserve since long dwell times were observed in this area similar or higher than dwell times spent by SouthSeafood's vessel at commercial fishing spots like Wrasse Beds and Cod Table.
 
 # 5. References
+
+[Illegal, unreported and unregulated fishing and corruption](https://www.u4.no/publications/illegal-unreported-and-unregulated-fishing-and-corruption)
 
 [Working with Graph Data](https://isss608-ay2023-24apr.netlify.app/vast/kickstarter2)
 
