@@ -413,7 +413,7 @@ ggplotly(p)
 ```
 
 ::: {style="border: 2px dotted black; background-color: #caf0f8; padding: 15px; margin: 10px 0; border-radius: 5px; display: flex; align-items: center;"}
-<img src="schedule_3652191.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> From plots above, general increasing trend is observed in the total fish caught and delivered to port from February to November. There is significant increase in cod fish catches stating from August. However, this could be attributed to starting of [best time for cod fishing](https://www.saltwatersportsman.com/howto/cod-hotspots/) which is winter.
+<img src="schedule_3652191.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> **Observation:** From plots above, general increasing trend is observed in the total fish caught and delivered to port from February to November. There is significant increase in cod fish catches stating from August. However, this could be attributed to starting of [best time for cod fishing](https://www.saltwatersportsman.com/howto/cod-hotspots/) which is winter.
 :::
 
 ## 3.2 Visualisations for Question 2
@@ -832,7 +832,7 @@ ggplot(dwell, aes(x = date_only, y = total_dwell, color = vessel_id)) +
 ```
 
 ::: {style="border: 2px dotted black; background-color: #caf0f8; padding: 15px; margin: 10px 0; border-radius: 5px; display: flex; align-items: center;"}
-<img src="schedule_3652191.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> Apart from port locations (City of Himark and City of Lomark) where higher dwell times are expected, high dwell times are also observed at Wrasse Beds, Cod Table, Ghoti Preserve and Exit East (only one occurence). Long dwell time similar at Ghoti Preserve similar to that of Wrasse Beds and even higher than dwell time at Cod Table further validate the initial suspicions that SouthSeafood Express Corp vessel particularly (snappersnatcher7be) may be performing illegal fishing in the Ghoti Preserve area. High dwell time at Ghoti Preserve were observed in February time frame and it is highly likely that illegal fishing activities were performed during this time period in Ghoti Preserve.
+<img src="schedule_3652191.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> **Observation:** Apart from port locations (City of Himark and City of Lomark) where higher dwell times are expected, high dwell times are also observed at Wrasse Beds, Cod Table, Ghoti Preserve and Exit East (only one occurence). Long dwell time similar at Ghoti Preserve similar to that of Wrasse Beds and even higher than dwell time at Cod Table further validate the initial suspicions that SouthSeafood Express Corp vessel particularly (snappersnatcher7be) may be performing illegal fishing in the Ghoti Preserve area. High dwell time at Ghoti Preserve were observed in February time frame and it is highly likely that illegal fishing activities were performed during this time period in Ghoti Preserve.
 :::
 
 # 4. Conclusion
