@@ -299,11 +299,11 @@ companies1 <- distinct_species %>%
   head(50) %>%
   pull(vessel_company)
 
-# Filter the main dataframe to include only these companies
+# Filter data to include only these first 50 companies alphabetically
 companies1_data <- distinct_species %>%
   filter(vessel_company %in% companies1)
 
-# Creating stacked bar chart
+# Creating stacked bar chart for first 50 companies alphabetically
 p1 <- ggplot(companies1_data, aes(x = vessel_company, fill = fish_species)) +
   geom_bar(position = "stack") +
   labs(title = "Probable Fish Species Delivered by Company",
@@ -325,11 +325,11 @@ companies2 <- distinct_species %>%
   slice(51:n()) %>%
   pull(vessel_company)
 
-# Filter the main dataframe to include only these companies
+# Filter data to include only 51st to last company alphabetically
 companies2_data <- distinct_species %>%
   filter(vessel_company %in% companies2)
 
-# Creating stacked bar chart
+# Creating stacked bar chart for 51st to last company alphabetically
 p2 <- ggplot(companies2_data, aes(x = vessel_company, fill = fish_species)) +
   geom_bar(position = "stack") +
   labs(title = "Probable Fish Species Delivered by Company",
@@ -357,16 +357,16 @@ p1
 ### 3.1.2 Seasonal Trend in Delivery Content
 
 ```{r}
-# Convert deliver_date to a date format and extract year-month
+# Convert deliver_date to a date format and extract year_month from deliver_date
 N_Delivery_doc <- N_Delivery_doc %>%
   mutate(year_month = floor_date(deliver_date, "month"))
 
-# Group data by year-month
+# Group data by year_month
 monthly_data <- N_Delivery_doc %>%
   group_by(year_month) %>%
   summarise(total_qty_tons = sum(qty_tons))
 
-# Extract the month from the 'date' column
+# Extract the month (Full month name format) from the 'date' column
 monthly_data$month <- format(monthly_data$year_month, "%B")
 
 # Plot the graph using plotly
@@ -384,18 +384,16 @@ plot_ly(data = monthly_data,
 It is observed that total catch quantity shows increasing trend from beginning of the year to end of the year. Next, above chart will be further broken down by fish species to check any seasonality in fish species caught.
 
 ```{r}
-
-# Group by year_month & fish_species and sum up total_qty_tons
+# Group data by year_month & fish_species and sum up total_qty_tons
 group_by_fish_species <- N_Delivery_doc %>%
   group_by(year_month, fish_species) %>%
   summarise(total_qty_tons = sum(qty_tons), .groups = 'drop') 
-
 
 # Remove scientific name in fish species
 group_by_fish_species <- group_by_fish_species %>%
   mutate(fish_species = sub("/.*", "", fish_species))
 
-# Ensure year_month is in Date format
+# Update year_month to Date format
 group_by_fish_species <- group_by_fish_species %>%
   mutate(year_month = as.Date(year_month))
 
@@ -445,15 +443,15 @@ graph_ss <- graph_from_data_frame(edges_ss, directed = FALSE)
 
 
 # Distinguish between SouthSeafood and location
-V(graph_ss)$type <- ifelse(V(graph_ss)$name == "SouthSeafood Express Corp", "southseafood", 
-                        ifelse(V(graph_ss)$name %in% E_Tping_Fishing_SS$vessel_id, "boat", "location"))
+V(graph_ss)$type <- ifelse(V(graph_ss)$name == "SouthSeafood Express Corp", "southseafood", "location")
+                       
 
 # Plot the network with ggraph
 ggraph(graph_ss, layout = 'fr') +  
   geom_edge_link(aes(width = 1), edge_colour = "grey") + 
   geom_node_point(aes(color = type), size = 5) + 
   geom_node_text(aes(label = name), repel = TRUE, size = 3, color = "black") +  
-  scale_color_manual(values = c("boat" = "orange", "location" = "plum", "southseafood" = "maroon3")) + 
+  scale_color_manual(values = c("location" = "plum", "southseafood" = "maroon3")) + 
   theme_void() +  
   labs(title = "Network Visualization of SouthSeafood Express Corp Vessel Movement")  
 
@@ -477,23 +475,23 @@ graph_ss <- graph_from_data_frame(edges_ss, directed = FALSE)
 
 
 # Distinguish between SouthSeafood and location
-V(graph_ss)$type <- ifelse(V(graph_ss)$name == "SouthSeafood Express Corp", "southseafood", 
-                        ifelse(V(graph_ss)$name %in% E_Tping_Fishing_SS$vessel_id, "boat", "location"))
+V(graph_ss)$type <- ifelse(V(graph_ss)$name == "SouthSeafood Express Corp", "southseafood", "location")
+                       
 
 # Plot the network with ggraph
 ggraph(graph_ss, layout = 'fr') +  
   geom_edge_link(aes(width = 1), edge_colour = "grey") + 
   geom_node_point(aes(color = type), size = 5) + 
   geom_node_text(aes(label = name), repel = TRUE, size = 3, color = "black") +  
-  scale_color_manual(values = c("boat" = "orange", "location" = "plum", "southseafood" = "maroon3")) + 
+  scale_color_manual(values = c("location" = "plum", "southseafood" = "maroon3")) + 
   theme_void() +  
-  labs(title = "Network Visualization of SouthSeafood Express Corp Vessel Movement")  
+  labs(title = "Network Visualization of SouthSeafood Express Corp Vessel Movement")
 
 ```
 :::
 
 ::: {style="border: 2px dotted black; background-color: #caf0f8; padding: 15px; margin: 10px 0; border-radius: 5px; display: flex; align-items: center;"}
-<img src="ship_1826384.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> **Observation:** One anomaly noted here is that SouthSeafood Express Corp Vessels visited or has been in vicinity [Ghoti Preserve]{.underline} which is not a fishing ground but ecological reserve.
+<img src="ship_1826384.png" alt="Icon" style="width: 48px; height: 48px; margin-right: 10px;"/> **Observation:** One anomaly noted here is that SouthSeafood Express Corp Vessels visited or has been in vicinity [Ghoti Preserve]{.underline} which is not a fishing ground but ecological reserve. Length of each branch indicate frequency of transponder ping to each location, shorter being more frequent transponder pings.
 :::
 
 Creating vessel movement data table based in transponder ping and adding corresponding co-ordinates to data for further visualization.
@@ -549,9 +547,11 @@ vessel_trajectory <- vessel_movement_sf %>%
 Below visualization shows Geo-Temporal Patterns of the SouthSeafood Express Corp Vessels.
 
 ```{r}
+# Filter SouthSeafood Express Corp Vessel
 vessel_trajectory_selected2 <- vessel_trajectory %>%
   filter(vessel_id %in% c("roachrobberdb6", "snappersnatcher7be"))
 
+# Plot the chart
 ggplot() +
   geom_sf(data = OceanusGeography) +
   geom_sf(data = vessel_trajectory_selected2, 
@@ -572,9 +572,11 @@ It can be observed from above visualizations that snappersnatcher7be of SouthSea
 
 ```{r}
 #| echo: false
+# Filter Vessel data
 vessel_trajectory_selected3 <- vessel_trajectory %>%
   filter(vessel_id == "lobsterlooterd41") # Wolf and Sons
 
+# Plot the chart
 ggplot() +
   geom_sf(data = OceanusGeography) +
   geom_sf(data = vessel_trajectory_selected3, 
@@ -592,9 +594,11 @@ ggplot() +
 
 ```{r}
 #| echo: false
+# Filter Vessel data
 vessel_trajectory_selected4 <- vessel_trajectory %>%
   filter(vessel_id == "wavewarrior5d7") # Rivera Group
 
+# Plot the chart
 ggplot() +
   geom_sf(data = OceanusGeography) +
   geom_sf(data = vessel_trajectory_selected4, 
@@ -612,9 +616,11 @@ ggplot() +
 
 ```{r}
 #| echo: false
+# Filter Vessel data
 vessel_trajectory_selected5 <- vessel_trajectory %>%
   filter(vessel_id == "spanishmackerelmaster037") # Ritter Ltd
 
+# Plot the chart
 ggplot() +
   geom_sf(data = OceanusGeography) +
   geom_sf(data = vessel_trajectory_selected5, 
@@ -632,9 +638,11 @@ ggplot() +
 
 ```{r}
 #| echo: false
+# Filter Vessel data
 vessel_trajectory_selected6 <- vessel_trajectory %>%
   filter(vessel_id == "redfishraider677") # House Group
 
+# Plot the chart
 ggplot() +
   geom_sf(data = OceanusGeography) +
   geom_sf(data = vessel_trajectory_selected6, 
@@ -652,9 +660,11 @@ ggplot() +
 
 ```{r}
 #| echo: false
+# Filter Vessel data
 vessel_trajectory_selected7 <- vessel_trajectory %>%
   filter(vessel_id == "herringhunter30b") # Mooney, Stevenson and Miller
 
+# Plot the chart
 ggplot() +
   geom_sf(data = OceanusGeography) +
   geom_sf(data = vessel_trajectory_selected7, 
@@ -673,9 +683,11 @@ ggplot() +
 ```{r}
 #| eval: false
 ### lobsterlooterd41
+# Filter Vessel data
 vessel_trajectory_selected3 <- vessel_trajectory %>%
   filter(vessel_id == "lobsterlooterd41") # Wolf and Sons
 
+# Plot the chart
 ggplot() +
   geom_sf(data = OceanusGeography) +
   geom_sf(data = vessel_trajectory_selected3, 
@@ -689,9 +701,11 @@ ggplot() +
   x = "Longitude", y = "Latitude", color = "ID")
 
 ### wavewarrior5d7
+# Filter Vessel data
 vessel_trajectory_selected4 <- vessel_trajectory %>%
   filter(vessel_id == "wavewarrior5d7") # Rivera Group
 
+# Plot the chart
 ggplot() +
   geom_sf(data = OceanusGeography) +
   geom_sf(data = vessel_trajectory_selected4, 
@@ -705,9 +719,11 @@ ggplot() +
   x = "Longitude", y = "Latitude", color = "ID")
 
 ### spanishmackerelmaster037
+# Filter Vessel data
 vessel_trajectory_selected5 <- vessel_trajectory %>%
   filter(vessel_id == "spanishmackerelmaster037") # Ritter Ltd
 
+# Plot the chart
 ggplot() +
   geom_sf(data = OceanusGeography) +
   geom_sf(data = vessel_trajectory_selected5, 
@@ -721,9 +737,11 @@ ggplot() +
   x = "Longitude", y = "Latitude", color = "ID")
 
 ### redfishraider677
+# Filter Vessel data
 vessel_trajectory_selected6 <- vessel_trajectory %>%
   filter(vessel_id == "redfishraider677") # House Group
 
+# Plot the chart
 ggplot() +
   geom_sf(data = OceanusGeography) +
   geom_sf(data = vessel_trajectory_selected6, 
@@ -737,9 +755,11 @@ ggplot() +
   x = "Longitude", y = "Latitude", color = "ID")
 
 ### herringhunter30b
+# Filter Vessel data
 vessel_trajectory_selected7 <- vessel_trajectory %>%
   filter(vessel_id == "herringhunter30b") # Mooney, Stevenson and Miller
 
+# Plot the chart
 ggplot() +
   geom_sf(data = OceanusGeography) +
   geom_sf(data = vessel_trajectory_selected7, 
@@ -782,7 +802,7 @@ scale_fill_gradient(name = "# of Transponder Pings",
                     high = "dark blue") +
 labs(x = NULL, 
      y = NULL, 
-     title = "Transponder Pings by date and location") +
+     title = "Transponder Pings by Date and Location") +
 theme(axis.ticks = element_blank(),
       axis.text.y = element_text(size = rel(0.7)),
       plot.title = element_text(hjust = 0.5),
