@@ -112,7 +112,7 @@ realis2018_summarised <- realis2018 %>%
             `Median Transacted Price` = median(`Transacted Price ($)`, na.rm = TRUE))
 ```
 
-## **16.4 Designing Treemap with treemap Package**
+## 16.4 Designing Treemap with treemap Package
 
 **treemap** package is a R package specially designed to offer great flexibility in drawing treemaps. The core function, namely: *treemap()* offers at least 43 arguments. In this section, we will only explore the major arguments for designing elegent and yet truthful treemaps.
 
