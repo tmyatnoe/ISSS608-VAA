@@ -1,0 +1,11 @@
+---
+title: "Hands-on Exercise 9e"
+author: "Thet Myat Noe"
+date: "Jun 14, 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+---
