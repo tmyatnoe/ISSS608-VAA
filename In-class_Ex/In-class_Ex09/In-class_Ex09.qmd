@@ -1,0 +1,78 @@
+---
+title: "In-class Exercise 09"
+author: "Thet Myat Noe"
+date: "Jun 15, 2024"
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+---
+
+# 1. Loading R Packages
+```{r}
+pacman::p_load(scatterPlotMatrix,parallelPlot,cluster,factoextra,tidyverse)
+```
+
+# 2. Importing the data
+```{r}
+wine <- read_csv("data/wine_quality.csv")
+```
+
+# 3. Visualisation
+
+## 3.1 ScatterPlotMatrix
+```{r}
+ggplot(data = wine,
+       aes (x=type))+
+  geom_bar()
+```
+
+
+```{r}
+whitewine <- wine %>%
+  filter(type == "white") %>%
+  select(c(1:11))
+```
+
+
+```{r}
+scatterPlotMatrix(whitewine,
+                  corrPlotType = "Text",
+                  distribType = 2,
+                  width = 500,
+                  height = 500,
+                  rotateTitle = TRUE)
+```
+
+## 3.2 Clustering
+
+```{r}
+set.seed(123)
+kmeans4 <- kmeans(whitewine, 4, nstart = 25)
+print(kmeans4)
+```
+
+```{r}
+fviz_cluster(kmeans4, data = whitewine)
+```
+
+
+```{r}
+whitewine <- whitewine %>%
+  mutate(Cluster = kmeans4$cluster)
+```
+
+```{r}
+whitewine$Cluster <-
+  as_factor(whitewine$Cluster)
+```
+
+```{r}
+whitewine %>%
+  parallelPlot(refColumnDim = "Cluster",
+               width = 300,
+               height = 250,
+               rotateTitle = TRUE)
+```
