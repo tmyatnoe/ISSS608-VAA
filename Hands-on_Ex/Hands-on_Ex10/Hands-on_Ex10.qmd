@@ -63,7 +63,7 @@ odbcClose(con)
 
 Note: Before running the code chunk, you need to change the R system to 32bit version. This is because the `odbcConnectAccess()` is based on 32bit and not 64bit
 
-### **31.3.3 Data Preparation**
+### 31.3.3 Data Preparation
 
 The code chunk below is used to import *CoffeeChain.rds* into R.
 
@@ -83,7 +83,7 @@ product <- coffeechain %>%
   ungroup()
 ```
 
-### **31.3.4 Bullet chart in ggplot2**
+### 31.3.4 Bullet chart in ggplot2
 
 The code chunk below is used to plot the bullet charts using ggplot2 functions.
 
@@ -112,7 +112,7 @@ ggplot(product, aes(Product, current)) +
 
 In this section, you will learn how to plot sparklines by using ggplot2.
 
-### **31.4.1 Preparing the data**
+### 31.4.1 Preparing the data
 
 ```{r}
 sales_report <- coffeechain %>%
@@ -147,7 +147,7 @@ quarts <- sales_report %>%
   right_join(sales_report)
 ```
 
-### **31.4.2 sparklines in ggplot2**
+### 31.4.2 sparklines in ggplot2
 
 The code chunk used.
 
