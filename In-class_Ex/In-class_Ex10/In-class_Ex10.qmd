@@ -3,6 +3,13 @@ title: "My first Quarto Dashboard"
 format: 
   dashboard:
     orientation: columns
+    logo: img/smu.png
+execute:
+  eval: true
+  echo: false
+  warning: false
+  message: false
+  freeze: true
 ---
 
 ```{r}

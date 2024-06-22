@@ -1,0 +1,17 @@
+{
+  "hash": "b4db44d44845dc746fe8143e8a53f0de",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"My first Quarto Dashboard\"\nformat: \n  dashboard:\n    orientation: columns\n    logo: img/smu.png\nexecute:\n  eval: true\n  echo: false\n  warning: false\n  message: false\n  freeze: true\n---\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n\n## Column {width=50%}\n\n\n::: {.cell title='Sales by products'}\n::: {.cell-output-display}\n![](In-class_Ex10_files/figure-html/unnamed-chunk-5-1.png){width=768}\n:::\n:::\n\n\n## Column {width=50%}\n\n\n::: {.cell title='Profit by products'}\n::: {.cell-output-display}\n![](In-class_Ex10_files/figure-html/unnamed-chunk-6-1.png){width=768}\n:::\n:::",
+    "supporting": [
+      "In-class_Ex10_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
